@@ -98,7 +98,7 @@ ns.TEX_SKINS = {
     -- Feral: archivos internos seleccionados; colores de energia/ira se
     -- aplican por unidad en Units.lua y respetan el color manual del usuario.
     { folder = "Feral\\", label = "Друид — Feral (кошка/медведь)", id = "feral",
-      msqSkin = "Azerite HEX", files = {
+      msqSkin = "MCF Feral Claws", files = {
         ["hp_low_case.tga"] = true, ["hp_low_case_miror_s.tga"] = true,
         ["hp_low_case_mirror.tga"] = true, ["hp_low_case_mirror_b.tga"] = true,
         ["hp_party_cage.tga"] = true, ["hp_pet_cage.tga"] = true,
@@ -108,7 +108,11 @@ ns.TEX_SKINS = {
         ["actionbuttonhighlight.tga"] = true,
         ["hp_low_case_miror_s_highlight.tga"] = true, ["hp_party_highlight.tga"] = true,
         ["hp_pet_highlight.tga"] = true, ["hp_boss_highlight.tga"] = true,
-        ["point_diamond.tga"] = true,
+        ["point_crystal.tga"] = true, ["point_diamond.tga"] = true,
+        ["point_hearth.tga"] = true, ["point_rune1.tga"] = true,
+        ["point_rune2.tga"] = true, ["point_rune3.tga"] = true,
+        ["point_rune4.tga"] = true, ["point_dk_block.tga"] = true,
+        ["point_plate.tga"] = true,
         ["cast_back.tga"] = true, ["cast_back_outline.tga"] = true,
         ["info_bg.tga"] = true, ["border-tooltip.tga"] = true,
         ["minimap-border.tga"] = true, ["group-finder-eye-orange.tga"] = true,
@@ -212,7 +216,9 @@ for _, f in ipairs({
     "minimap-mask-transparent.tga", "minimap-mask-opaque.tga",
     "group-finder-eye-orange.tga", "icon_exit_flight.tga",
     -- Class power / raid target
-    "point_diamond.tga", "point_plate.tga",
+    "point_crystal.tga", "point_diamond.tga", "point_hearth.tga",
+    "point_rune1.tga", "point_rune2.tga", "point_rune3.tga", "point_rune4.tga",
+    "point_dk_block.tga", "point_plate.tga",
     -- Tooltip
     "border-tooltip.tga",
     "Background border.tga", "button wood large.tga", "button red2 large.tga",
@@ -351,7 +357,10 @@ ns.ApplySkin = function(skin)
     if ns.RefreshMinimapButtons then ns.RefreshMinimapButtons() end
     if ns.RefreshMainMenuSkin then ns.RefreshMainMenuSkin() end
     if ns.RefreshNameplateSkin then ns.RefreshNameplateSkin() end
+    if ns.RefreshNPAurasNextSkin then ns.RefreshNPAurasNextSkin() end
     if ns.RefreshTooltipSkin then ns.RefreshTooltipSkin() end
+    if ns.RefreshExtraButtonSkin then ns.RefreshExtraButtonSkin() end
+    if ns.RefreshPlayerAurasSkin then ns.RefreshPlayerAurasSkin() end
     if ns.ApplyMasqueSkinAll then ns.ApplyMasqueSkinAll(skin) end
     print("|cff00ff00[MCF]|r Skin applied: " .. skin.label)
 end

@@ -15,6 +15,10 @@ ns.MICROMENU_KEY = MICROMENU_KEY
 ns.IsMicroMenu = function(key) return key == MICROMENU_KEY end
 
 local MM_PATH = "Interface\\AddOns\\" .. ADDON .. "\\Assets\\"
+local function MM_FeralFrameTex()
+    return (ns.SkinResolve and ns.SkinResolve("actionbutton-border square.tga"))
+        or (MM_PATH .. "actionbutton-border square.tga")
+end
 local MM_BTN_W, MM_BTN_H, MM_SPACING, MM_ICON = 41, 46, 2, 32
 local MM_ART_KEYS = { "Background", "PushedBackground", "FlashBorder", "FlashContent", "Flash",
     "Emblem", "HighlightEmblem", "MainMenuBarPerformanceBar", "NotificationOverlay", "Shadow", "PushedShadow" }
@@ -92,6 +96,10 @@ end
 local function MM_RefreshArt(b)
     MM_HideOriginalArt(b)
     if b._mmIcon then b._mmIcon:Show() end
+    if b._mmFeralFrame then
+        b._mmFeralFrame:SetTexture(MM_FeralFrameTex())
+        b._mmFeralFrame:SetShown(ns.ActiveSkinId == "feral")
+    end
 end
 
 local function MM_SkinButton(b, iconFile)
@@ -105,6 +113,15 @@ local function MM_SkinButton(b, iconFile)
     end
     icon:ClearAllPoints(); icon:SetPoint("CENTER"); icon:SetSize(MM_ICON, MM_ICON)
     icon:SetTexture(MM_PATH .. iconFile); icon:Show()
+    local frame = b._mmFeralFrame
+    if not frame then
+        frame = b:CreateTexture(nil, "OVERLAY", nil, 5)
+        frame:SetPoint("CENTER")
+        frame:SetSize(MM_ICON + 8, MM_ICON + 8)
+        b._mmFeralFrame = frame
+    end
+    frame:SetTexture(MM_FeralFrameTex())
+    frame:SetShown(ns.ActiveSkinId == "feral")
     local hover = b._mmHover
     if not hover then
         hover = b:CreateTexture(nil, "HIGHLIGHT", nil, 3)

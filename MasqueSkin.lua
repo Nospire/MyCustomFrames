@@ -10,8 +10,11 @@ local ADDON, ns = ...
 
 local A = "Interface\\AddOns\\MyCustomFrames\\Assets\\MasqueSkin\\"
 local function path(name) return A .. name .. ".tga" end
+local FERAL_A = "Interface\\AddOns\\MyCustomFrames\\Assets\\Feral\\MasqueSkin\\"
+local function feralPath(name) return FERAL_A .. name .. ".tga" end
 
 local SKIN_NAME = "Azerite HEX"
+local FERAL_SKIN_NAME = "MCF Feral Claws"
 
 -- Masque espera botones de 36x36 puntos; el mismo helper de escala que traia el addon original.
 local mod = 1.5
@@ -34,8 +37,8 @@ local function RegisterSkin()
     -- abajo dos veces. Con que uno de los dos lo registre alcanza.
     local oldLoaded = (C_AddOns and C_AddOns.IsAddOnLoaded and C_AddOns.IsAddOnLoaded("Masque_Azerite_Hex"))
         or (IsAddOnLoaded and IsAddOnLoaded("Masque_Azerite_Hex"))
-    if oldLoaded then registered = true; return true end
 
+    if not oldLoaded then
     -- Apaga la animacion "bling" de los cooldowns (igual que el addon original): pcall por si
     -- algun otro addon ya lo desactivo o el metodo no existe en este objeto.
     for _, v in pairs(_G) do
@@ -106,7 +109,7 @@ local function RegisterSkin()
         },
         Icon = {
             Width = scale(64, 42), Height = scale(64, 42),
-            Mask = path("actionbutton_circular_mask"), TexCoords = { 0, 1, 0, 1 },
+            Mask = feralPath("actionbutton_circular_mask"), TexCoords = { 0, 1, 0, 1 },
         },
         Flash = {
             Width = scale(64, 42), Height = scale(64, 42),
@@ -132,6 +135,66 @@ local function RegisterSkin()
         },
         Disabled = { Hide = true },
         Name = { Hide = true },
+        Count = { Width = 36, Height = 12, OffsetX = -22, OffsetY = 0 },
+        HotKey = { Width = 25, Height = 12, OffsetX = -22, OffsetY = 0 },
+        Duration = { Width = 36, Height = 12, OffsetX = 0, OffsetY = 0 },
+    }, true)
+    end
+
+    MSQ:AddSkin(FERAL_SKIN_NAME, {
+        API_VERSION = 110210,
+        Shape = "Circle",
+        Description = "Black fur, burgundy leather and ivory claws for the MyCustomFrames Feral theme.",
+        Version = "1.0",
+        Authors = { "Nospire" },
+        Normal = {
+            Width = scale(256, 256), Height = scale(256, 256),
+            Texture = feralPath("actionbutton-border"), EmptyTexture = feralPath("actionbutton-border"),
+            TexCoords = { 0, 1, 0, 1 }, Color = { 1, 1, 1, 1 }, EmptyColor = { 1, 1, 1, 1 },
+        },
+        Border = {
+            Width = scale(256, 256), Height = scale(256, 256),
+            TexCoords = { 0, 1, 0, 1 }, BlendMode = "BLEND", Color = { 1, 1, 1, 1 },
+            Texture = feralPath("actionbutton-border"),
+        },
+        Highlight = {
+            Width = scale(256, 256), Height = scale(256, 256),
+            TexCoords = { 0, 1, 0, 1 }, BlendMode = "ADD", Color = { 1, 0.72, 0.34, 0.45 },
+            Texture = feralPath("actionbutton-glow-white"),
+        },
+        Backdrop = {
+            Width = scale(256, 256), Height = scale(256, 256),
+            TexCoords = { 0, 1, 0, 1 }, Color = { 1, 1, 1, 1 },
+            Texture = feralPath("actionbutton-backdrop"),
+        },
+        Checked = {
+            Width = scale(256, 256), Height = scale(256, 256),
+            TexCoords = { 0, 1, 0, 1 }, BlendMode = "BLEND", Color = { 1, 1, 1, 1 },
+            Texture = feralPath("actionbutton-border"),
+        },
+        Icon = {
+            Width = scale(64, 42), Height = scale(64, 42),
+            Mask = path("actionbutton_circular_mask"), TexCoords = { 0, 1, 0, 1 },
+        },
+        Flash = {
+            Width = scale(64, 42), Height = scale(64, 42),
+            Color = { 0.54, 0.04, 0.12, 0.45 }, Texture = feralPath("actionbutton-pushed"),
+        },
+        Pushed = {
+            Width = scale(32, 32), Height = scale(32, 32),
+            Color = { 1, 1, 1, 0.3 }, Texture = feralPath("actionbutton-pushed"),
+        },
+        Gloss = {
+            Width = scale(256, 256), Height = scale(256, 256),
+            TexCoords = { 0, 1, 0, 1 }, BlendMode = "BLEND", Color = { 1, 1, 1, 0.65 },
+            Texture = feralPath("actionbutton-glow-white"),
+        },
+        Cooldown = { Width = 54, Height = 54, Color = { 0, 0, 0, 0.7 }, Texture = feralPath("actionbutton-pushed") },
+        ChargeCooldown = { Width = 34, Height = 34 },
+        AutoCast = { Width = 32, Height = 32, OffsetX = 1, OffsetY = -1 },
+        AutoCastable = { Width = 62, Height = 62, OffsetX = 1, OffsetY = 0,
+            Texture = [[Interface\Buttons\UI-AutoCastableOverlay]] },
+        Disabled = { Hide = true }, Name = { Hide = true },
         Count = { Width = 36, Height = 12, OffsetX = -22, OffsetY = 0 },
         HotKey = { Width = 25, Height = 12, OffsetX = -22, OffsetY = 0 },
         Duration = { Width = 36, Height = 12, OffsetX = 0, OffsetY = 0 },

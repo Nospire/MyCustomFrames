@@ -4,7 +4,7 @@
 
 Статусы: `[x]` готово и подключено; `[ ]` не сделано; `[~]` проверено частично или намеренно оставлено без темы.
 
-## Feral: 29 слотов темы
+## Feral: 37 слотов темы
 
 ### Рамки, здоровье, ресурс
 
@@ -30,6 +30,14 @@
 - [x] `Assets/Feral/actionbutton-border.tga` — круглая рамка кнопки.
 - [x] `Assets/Feral/actionbuttonhighlight.tga` — подсветка кнопки.
 - [x] `Assets/Feral/point_diamond.tga` — очко ресурса.
+- [x] `Assets/Feral/point_crystal.tga` — альтернатива очка ресурса 32×32.
+- [x] `Assets/Feral/point_hearth.tga` — альтернатива очка ресурса 64×64.
+- [x] `Assets/Feral/point_rune1.tga` — вариант руны ресурса.
+- [x] `Assets/Feral/point_rune2.tga` — вариант руны ресурса.
+- [x] `Assets/Feral/point_rune3.tga` — вариант руны ресурса.
+- [x] `Assets/Feral/point_rune4.tga` — вариант руны ресурса.
+- [x] `Assets/Feral/point_dk_block.tga` — альтернативный значок ресурса 128×128.
+- [x] `Assets/Feral/point_plate.tga` — подложка значков роли и кнопок мини-карты.
 - [x] `Assets/Feral/group-finder-eye-orange.tga` — значок поиска группы.
 
 ### Неймплейты, панели, мини-карта и меню
@@ -44,23 +52,24 @@
 - [x] `Assets/Feral/button wood large.tga` — обычная кнопка игрового меню.
 - [x] `Assets/Feral/button red2 large.tga` — бордовая кнопка игрового меню.
 
-Все 29 файлов присутствуют, подключены в `core.lua` и совпадают по пиксельным размерам с соответствующими базовыми слотами. 14 ключевых поверхностей получили отдельные новые иллюстрации; вспомогательные варианты собраны из того же набора мотивов и подогнаны под размеры слотов. Превью игровых TGA: [Feral-theme-assets-preview.png](../Images/Feral-theme-assets-preview.png).
+Все 37 файлов присутствуют, подключены в `core.lua` и совпадают по пиксельным размерам с соответствующими базовыми слотами. 14 ключевых поверхностей получили отдельные новые иллюстрации; вспомогательные варианты собраны из того же набора мотивов и подогнаны под размеры слотов. Превью игровых TGA: [Feral-theme-assets-preview.png](../Images/Feral-theme-assets-preview.png).
 
 ## Остальные текстуры, которые использует аддон
 
 ### Кнопки способностей и Masque
 
-- [ ] Добавить отдельный Feral-вариант Masque. Сейчас MyCustomFrames регистрирует `Azerite HEX`; для Feral в `core.lua` всё ещё выбран он. Файлы исходного набора: `Assets/MasqueSkin/actionbutton-backdrop.tga`, `actionbutton-border.tga`, `actionbutton-glow-white.tga`, `actionbutton-pushed.tga`, `actionbutton_circular_mask.tga`.
-- [ ] Проверить дополнительные корневые рамки кнопок: `actionbutton-border square2.tga`, `actionbutton-border square highlight.tga`, `actionbutton-highlight.tga`, `button-background.tga`, `button-background-hover.tga`, `actionbutton-mask-circular.tga`.
-- [ ] Перевести прямые ссылки на рамки аур/кнопок на `SkinResolve`, чтобы Feral применялся в Extra Button, предпросмотре аур игрока, аурах неймплейтов и подсветке аур.
+- [x] Зарегистрировать отдельный Masque-вариант `MCF Feral Claws`; Feral теперь ссылается на него. Текстуры находятся в `Assets/Feral/MasqueSkin/` (рамка, подложка, подсветка, нажатие и круглая маска).
+- [~] Выбрать `MCF Feral Claws` в настройках Masque для групп кнопок. Аддон регистрирует скин и сообщает точное имя, но Masque не даёт надёжно переключить уже созданные сторонними аддонами группы программно.
+- [~] Проверить дополнительные корневые рамки кнопок: `actionbutton-border square2.tga`, `actionbutton-border square highlight.tga`, `actionbutton-highlight.tga`, `button-background.tga`, `button-background-hover.tga`. Поиск по Lua не нашёл прямых применений; геометрическая маска `actionbutton-mask-circular.tga` остаётся неизменной и используется Extra Button.
+- [x] Перевести прямые ссылки на рамки аур/кнопок на `SkinResolve` и добавить обновление уже созданных элементов: Extra Button, ауры игрока, предпросмотр аур и ауры неймплейтов.
 
 ### Чатовые пузырьки
 
-- [~] `Assets/ChatBubble.blp` и `Assets/ChatBubbleVertical.blp`: текущий `ChatBubble.lua` не ссылается на эти файлы; он очищает фон нативных пузырьков, если включён `hideBackground`. Перед тем как делать новые варианты, решить в рамках темы, должны ли пузырьки оставаться без фона или получить Feral-подложку.
+- [~] `Assets/ChatBubble.blp` и `Assets/ChatBubbleVertical.blp`: проверено, что текущий `ChatBubble.lua` их не использует и по умолчанию скрывает фоны нативных пузырьков. Отдельные Feral-файлы сейчас не нужны; изменение режима пузырьков потребует отдельного решения, потому что настройка по умолчанию намеренно убирает подложку.
 
 ### Иконки мини-меню
 
-- [ ] Сохранить значение каждого значка и добавить к нему общий Feral-ободок/когтистую рамку. Сейчас `MicroMenu.lua` напрямую использует эти файлы, без `SkinResolve`:
+- [x] Сохранить значение каждого значка и добавить общий Feral-ободок/когтистую рамку через `SkinResolve`; исходные пиктограммы остаются без изменений. `MicroMenu.lua` использует эти файлы для изображения значков:
   - `Assets/02_crossed_hammers.tga`
   - `Assets/03_target_dart.tga`
   - `Assets/04_shield.tga`
@@ -72,15 +81,15 @@
   - `Assets/10_skull_banner.tga`
   - `Assets/11_w_emblem.tga`
   - `Assets/12_question_mark.tga`
-- [~] `Assets/11_w_emblem_padded.tga` — не найдено в текущем списке значков MicroMenu; проверить, используется ли где-либо ещё.
+- [~] `Assets/11_w_emblem_padded.tga` — не найдено в текущем списке значков MicroMenu; оставить без темы, пока не появится подтверждённое место использования.
 
 ### Значки ролей, фракций, боя и классификации
 
-- [ ] Решить стиль общей рамки, сохраняя сами пиктограммы читаемыми: `grouprole-icons-heal.tga`, `grouprole-icons-tank.tga`, `icon_badges_dps.tga`, `icon_badges_heal.tga`, `icon_badges_tank.tga`, `icon_badges_lider.tga`.
-- [ ] При необходимости добавить Feral-ободок к фракционным значкам, не менять их смысл: `icon_badges_alliance.tga`, `icon_badges_alliance_war_on.tga`, `icon_badges_horde.tga`, `icon_badges_horde_war_on.tga`.
-- [ ] Проверить варианты, видимые на неймплейтах и юнитах: `icon_classification_boss.tga`, `icon_classification_elite.tga`, `icon_classification_generic.tga`, `icon_classification_rare.tga`, `icon-combat.tga`, `icon_skull_dead.tga`.
+- [x] Сохранить смысл значков ролей и добавить Feral-подложку `point_plate.tga` в Raid frames: `grouprole-icons-heal.tga`, `grouprole-icons-tank.tga`.
+- [~] Фракционные и портретные значки остаются исходными, чтобы не менять семантику: `icon_badges_alliance.tga`, `icon_badges_alliance_war_on.tga`, `icon_badges_horde.tga`, `icon_badges_horde_war_on.tga`, `icon_badges_dps.tga`, `icon_badges_heal.tga`, `icon_badges_tank.tga`, `icon_badges_lider.tga`.
+- [~] Значки классификации и состояния сохраняют стандартные пиктограммы: `icon_classification_boss.tga`, `icon_classification_elite.tga`, `icon_classification_generic.tga`, `icon_classification_rare.tga`, `icon-combat.tga`, `icon_skull_dead.tga`.
 - [~] `raid_target_icons.tga`, `raid_target_icons_small.tga` — атласы игровых маркеров; смысл и цвет маркеров лучше сохранить. Проверить, должен ли Feral влиять на них вообще.
-- [ ] Подключить Feral-версию `icon_exit_flight.tga` либо явно оставить стандартную.
+- [x] Значок полёта остаётся стандартным функциональным символом; рамка/кнопка мини-карты оформляется Feral-слотом `point_plate.tga`.
 
 ### Панели настройки и онбординг
 
@@ -92,7 +101,7 @@
 - [x] Здоровье остаётся зелёным; энергия кошки и ярость медведя получают цвета из `Units.lua`, а не из запечённых полос.
 - [x] Заголовки Feral используют встроенный кириллический шрифт WoW; мелкие подписи и числа сохраняют читаемый основной шрифт.
 - [~] `hp_lowmid_bar_miror_s.tga`, `hp_lowmid_bar_miror_b.tga`, `hp_cap_bar.tga`, `hp_cap_bar mirror.tga`, `power_cap_s.tga`, `hp_party_bar.tga`, `hp_pet_bar.tga`, `cast_bar.tga`, `bar-progress.tga` — заполнения/полосы; проверить места применения перед возможной заменой.
-- [~] Остальные варианты очков ресурса и маркеров (`point_crystal.tga`, `point_hearth.tga`, `point_plate.tga`, `point_rune1.tga`–`point_rune4.tga`, `point_dk_block.tga`) — тема Feral сейчас меняет только `point_diamond.tga`; проверить, какие варианты доступны в настройках и нужны ли им отдельные мотивы.
+- [x] Все варианты очков ресурса (`point_crystal.tga`, `point_diamond.tga`, `point_hearth.tga`, `point_rune1.tga`–`point_rune4.tga`, `point_dk_block.tga`) получают Feral-значок из активной темы; `point_plate.tga` оформляет подложки.
 - [~] `Assets/Lato-Bold.ttf` и системный шрифт: проверить все вызовы шрифтов, прежде чем объявлять шрифтовую тему полностью покрытой.
 
 ## Правило обновления карты

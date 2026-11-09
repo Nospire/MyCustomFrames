@@ -91,7 +91,10 @@ local function P() return ns.GetDB() and ns.GetDB().nameplates end
 -- usuario "que tengan mis bordes", asi las auras de nameplate se ven
 -- consistentes con el resto del addon en vez del borde generico de Blizzard.
 local A = "Interface\\AddOns\\MyCustomFrames\\Assets\\"
-local AURA_BORDER = A .. "actionbutton-border square.tga"
+local function AuraBorderTex()
+    return (ns.SkinResolve and ns.SkinResolve("actionbutton-border square.tga")) or (A .. "actionbutton-border square.tga")
+end
+local auraBorderRegistry = setmetatable({}, { __mode = "k" })
 local BORDER_SCALE = 0.26
 
 -- Fabrica (2026-08-03): antes UN SOLO BuildAuraButton servia para los 3
@@ -136,7 +139,7 @@ local function MakeAuraButtonBuilder(color, sz)
         -- icono (inset negativo = BORDER_SCALE del tamaño) porque el arte
         -- del marco incluye el borde alrededor, no encima.
         local border = button:CreateTexture(nil, "OVERLAY")
-        border:SetTexture(AURA_BORDER)
+        border:SetTexture(AuraBorderTex())
         local inset = sz * BORDER_SCALE
         border:SetPoint("TOPLEFT", -inset, inset)
         border:SetPoint("BOTTOMRIGHT", inset, -inset)
@@ -161,6 +164,14 @@ local function MakeAuraButtonBuilder(color, sz)
         pcall(cd.SetCountdownFont, cd, "MCFAuraTimeFontObj")
         count:SetFontObject("MCFAuraTimeFontObj")
         button.mcfIcon, button.mcfCd, button.mcfCount, button.mcfBorder = icon, cd, count, border
+        auraBorderRegistry[border] = true
+    end
+end
+
+function ns.RefreshNPAurasNextSkin()
+    local tex = AuraBorderTex()
+    for border in pairs(auraBorderRegistry) do
+        if border then border:SetTexture(tex) end
     end
 end
 

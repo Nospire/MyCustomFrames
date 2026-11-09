@@ -14,7 +14,9 @@ local ADDON, ns = ...
 
 local A = ns.ASSETS
 local MASK_TEX = A .. "actionbutton-mask-circular.tga"
-local BORDER_TEX = A .. "actionbutton-border.tga"
+local function BorderTex()
+    return (ns.SkinResolve and ns.SkinResolve("actionbutton-border.tga")) or (A .. "actionbutton-border.tga")
+end
 
 local function ExtraButtonDefaults()
     return {
@@ -94,7 +96,7 @@ local function StyleButton(button)
     border:SetPoint("CENTER", 0, 0)
     local bs = p.borderScale or 1.25
     border:SetSize(p.size * bs, p.size * bs)
-    border:SetTexture(BORDER_TEX)
+    border:SetTexture(BorderTex())
     local bc = p.borderColor
     border:SetVertexColor(bc.r, bc.g, bc.b, bc.a)
     button.mcfBorder = border
@@ -185,13 +187,15 @@ end
 -- estilizados, sin esperar a que vuelvan a aparecer.
 ns.RefreshExtraButtonSkin = function()
     local p = P()
-    if not p then return end
     for button in pairs(styledButtons) do
         if button.mcfBorder then
-            local bs = p.borderScale or 1.25
-            button.mcfBorder:SetSize(p.size * bs, p.size * bs)
-            local bc = p.borderColor
-            button.mcfBorder:SetVertexColor(bc.r, bc.g, bc.b, bc.a)
+            button.mcfBorder:SetTexture(BorderTex())
+            if p then
+                local bs = p.borderScale or 1.25
+                button.mcfBorder:SetSize(p.size * bs, p.size * bs)
+                local bc = p.borderColor
+                button.mcfBorder:SetVertexColor(bc.r, bc.g, bc.b, bc.a)
+            end
         end
     end
 end

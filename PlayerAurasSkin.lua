@@ -33,7 +33,9 @@ local ADDON, ns = ...
 -- ==========================================================================
 
 local A = "Interface\\AddOns\\MyCustomFrames\\Assets\\"
-local BORDER_TEX = A .. "actionbutton-border square.tga"
+local function BorderTex()
+    return (ns.SkinResolve and ns.SkinResolve("actionbutton-border square.tga")) or (A .. "actionbutton-border square.tga")
+end
 local BORDER_SCALE = 0.26
 -- Constante nativa (2026-08-05, NUNCA leida del frame real -- ver regla #2
 -- arriba): boton de aura nativo mide 32px, icono visible 30px.
@@ -73,7 +75,7 @@ local function SkinAuraButton(btn)
         border = CreateFrame("Frame", nil, btn)
         border:EnableMouse(false)
         local tex = border:CreateTexture(nil, "OVERLAY")
-        tex:SetTexture(BORDER_TEX)
+        tex:SetTexture(BorderTex())
         tex:SetAllPoints(border)
         border.tex = tex
         btn._mcfBorder = border
@@ -106,6 +108,7 @@ local function RequestRefresh()
         SkinAllButtons(DebuffFrame)
     end)
 end
+ns.RefreshPlayerAurasSkin = RequestRefresh
 
 local function BartenderLoaded()
     return C_AddOns and C_AddOns.IsAddOnLoaded and C_AddOns.IsAddOnLoaded("Bartender4")
