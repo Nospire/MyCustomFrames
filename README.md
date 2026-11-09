@@ -108,7 +108,7 @@ as a roadmap.
   dispel type; unit frames only colour the aura icon's own border.
 - **No aura whitelist/blacklist on unit frames.** You choose how many icons and how they
   sort, not which specific spells appear. Nameplates *do* have real filtering.
-- **No localisation.** English only, hardcoded.
+- **English is the source language.** This branch also includes Russian (`ruRU`) translations.
 - **No profile-per-character or per-spec.** One config per account, plus the preset
   save/load system.
 - **Tuned for 16:9 at 100% UI scale.** Other aspect ratios or a custom UI scale will need
