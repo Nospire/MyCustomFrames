@@ -105,15 +105,26 @@ ns.TEX_SKINS = {
         ["power_low_case_s.tga"] = true, ["orb_case_low.tga"] = true,
         ["portrait_frame_lo.tga"] = true,
         ["actionbutton-border square.tga"] = true, ["actionbutton-border.tga"] = true,
+        ["actionbuttonhighlight.tga"] = true,
+        ["hp_low_case_miror_s_highlight.tga"] = true, ["hp_party_highlight.tga"] = true,
+        ["hp_pet_highlight.tga"] = true, ["hp_boss_highlight.tga"] = true,
+        ["point_diamond.tga"] = true,
+        ["cast_back.tga"] = true, ["cast_back_outline.tga"] = true,
+        ["info_bg.tga"] = true, ["border-tooltip.tga"] = true,
+        ["minimap-border.tga"] = true, ["group-finder-eye-orange.tga"] = true,
+        ["nameplate_backdrop.tga"] = true, ["nameplate_outline.tga"] = true,
+        ["nameplate_glow.tga"] = true,
+        ["Background border.tga"] = true, ["button wood large.tga"] = true,
+        ["button red2 large.tga"] = true,
       } },
 
-    -- { folder = "Neon\\",  label = "Neon", msqSkin = "Nombre del skin de Masque" },
+  label = "Neon", msqSkin = "Nombre del skin de Masque" },
     -- Las skins como addons separados (ej. MyCustomFrames_Murloc) se agregan
     -- SOLAS via _G.MCF_RegisterSkin, no hace falta declararlas aca.
 }
 ns.TEX_LIB = {
     bar          = { "hp_lowmid_bar_miror_s.tga", "hp_lowmid_bar_miror_b.tga", "power_cap_s.tga", "hp_cap_bar.tga", "hp_cap_bar mirror.tga", "hp_pet_bar.tga", "hp_party_bar.tga", },
-    cage         = { "hp_low_case.tga", "hp_low_case_mirror.tga", "hp_low_case_miror_s.tga", "hp_pet_cage.tga",
+    cage         = { "hp_low_case.tga", "hp_low_case_mirror.tga", "hp_low_case_miror_s.tga", "hp_pet_cage.tga", "cast_back.tga",
                      "hp_low_case_mirror_b.tga", "power_low_case_s.tga", "hp_party_cage.tga", },
     portraitbg   = { "Circle_Smooth_Border.tga" },
     portraitcage = { "orb_case_low.tga", "portrait_frame_lo.tga" },
@@ -123,7 +134,7 @@ ns.TEX_LIB = {
                      "actionbutton-border square highlight.tga", "cursor-highlight.tga" },
     raidtarget   = { "raid_target_icons.tga", "raid_target_icons_small.tga" },
     infobg       = { "info_bg.tga" },
-    highlight    = { "hp_low_case_miror_s_highlight.tga", "actionbuttonhighlight.tga", "hp_pet_highlight.tga", "hp_party_highlight.tga", "hp_boss_highlight.tga", },
+    highlight    = { "hp_low_case_miror_s_highlight.tga", "actionbuttonhighlight.tga", "cast_back_outline.tga", "hp_pet_highlight.tga", "hp_party_highlight.tga", "hp_boss_highlight.tga", },
     minimapborder   = { "minimap-border.tga" },
     minimapbackdrop = { "minimap-mask-opaque.tga" },
     -- minimap-mask-transparent.tga: define la FORMA/mascara del minimapa
@@ -175,17 +186,18 @@ ns.TEX_LIB = {
 -- seccion "Assets locales" de STRUCTURE.md). Contrapartida asumida: si una skin
 -- trae un archivo que NO esta en esta lista, se ignora en silencio.
 -- ==========================================================================
-local SKINNABLE = {}
 for _, f in ipairs({
     -- Unitframes: cages / capsulas (las BARRAS de relleno no se reskinean a
-    -- proposito -- pedido del usuario, ver la lista de 23 en STRUCTURE.md).
+    -- proposito -- pedido del usuario, ver la lista SKINNABLE en STRUCTURE.md).
     "hp_low_case.tga", "hp_low_case_miror_s.tga", "hp_low_case_mirror.tga",
     "hp_low_case_mirror_b.tga", "hp_party_cage.tga", "hp_pet_cage.tga",
-    "power_low_case_s.tga", "cast_back.tga",
+    "power_low_case_s.tga", "cast_back.tga", "cast_back_outline.tga",
     -- Portraits
     "orb_case_low.tga", "portrait_frame_lo.tga",
     -- Auras / action buttons
-    "actionbutton-border square.tga", "actionbutton-border.tga",
+    "actionbutton-border square.tga", "actionbutton-border.tga", "actionbuttonhighlight.tga",
+    "hp_low_case_miror_s_highlight.tga", "hp_party_highlight.tga",
+    "hp_pet_highlight.tga", "hp_boss_highlight.tga",
     -- Info bar
     "info_bg.tga",
     -- Minimapa: borde + backdrop del anillo + ojo LFG + boton de dismount, y
@@ -195,16 +207,15 @@ for _, f in ipairs({
     -- resuelven en Minimap.lua/ApplyMinimapSkin via ns.SkinResolve, solo les
     -- faltaba estar en esta lista).
     "minimap-border.tga", "minimap-onebar-backdrop.tga",
+    "nameplate_backdrop.tga", "nameplate_outline.tga", "nameplate_glow.tga",
     "minimap-mask-transparent.tga", "minimap-mask-opaque.tga",
     "group-finder-eye-orange.tga", "icon_exit_flight.tga",
     -- Class power / raid target
     "point_diamond.tga", "point_plate.tga",
     -- Tooltip
     "border-tooltip.tga",
-    -- Game Menu (MainMenu.lua)
     "Background border.tga", "button wood large.tga", "button red2 large.tga",
 }) do SKINNABLE[f] = true end
-ns.SKINNABLE = SKINNABLE
 
 local function SkinResolve(filename)
     -- No esta en la lista blanca -> SIEMPRE el asset del addon principal.
@@ -300,6 +311,9 @@ ns.ApplySkin = function(skin)
     ns.ActiveSkinBasePath = skin.basePath   -- nil para skins internas (folder) o Default
     ns.ActiveSkinFiles = skin.files
     ns.ActiveSkinId = skin.id
+    ns.ActiveSkinTitleFont = (skin.id == "feral")
+        and ((GetLocale and GetLocale() == "ruRU") and "Fonts\\MORPHEUS_CYR.TTF" or "Fonts\\MORPHEUS.TTF")
+        or nil
     local db = ns.GetDB and ns.GetDB()
     if not db then return end
     db.activeSkinLabel = skin.label
@@ -334,6 +348,7 @@ ns.ApplySkin = function(skin)
     if ns.RefreshMirrorTimers then ns.RefreshMirrorTimers() end
     if ns.RefreshMinimapButtons then ns.RefreshMinimapButtons() end
     if ns.RefreshMainMenuSkin then ns.RefreshMainMenuSkin() end
+    if ns.RefreshNameplateSkin then ns.RefreshNameplateSkin() end
     if ns.RefreshTooltipSkin then ns.RefreshTooltipSkin() end
     if ns.ApplyMasqueSkinAll then ns.ApplyMasqueSkinAll(skin) end
     print("|cff00ff00[MCF]|r Skin applied: " .. skin.label)

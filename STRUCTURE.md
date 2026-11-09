@@ -2315,7 +2315,7 @@ migran configs guardadas con rutas antiguas de AzeriteUI a las copias locales.
 `button wood large.tga`, `button red2 large.tga`.
 
 **LISTA DE TEXTURAS RESKINEABLES = LISTA BLANCA `SKINNABLE` (core.lua, arriba de
-`SkinResolve`).** Son las 25 que le interesan al usuario; **el resto de `Assets/` NUNCA se busca
+`SkinResolve`).** Son las 34 texturas reskineables; **el resto de `Assets/` NUNCA se busca
 en la carpeta de la skin**, va siempre al `Assets/` principal.
 
 > **FIX CRITICO 2026-07-25 — no volver a intentar "probar si el archivo existe".** La version
@@ -2327,7 +2327,7 @@ en la carpeta de la skin**, va siempre al `Assets/` principal.
 > exactamente los archivos que NO estaban en la carpeta de la skin. Lua en WoW **no puede leer el
 > disco**, no hay forma de detectar existencia: por eso la lista blanca explicita.
 
-**CONTRATO de una skin (confirmado con el usuario): DEBE traer las 25 texturas de la lista
+**CONTRATO de una skin (confirmado con el usuario): DEBE traer las 34 texturas de la lista
 COMPLETAS + su carpeta `Assets\MasqueSkin\` completa.** No hay skins parciales — un archivo
 faltante de la lista se renderiza invisible. Para hacer un archivo nuevo reskineable hay que
 agregarlo a `SKINNABLE` en core.lua Y a esta lista.
@@ -2335,6 +2335,41 @@ agregarlo a `SKINNABLE` en core.lua Y a esta lista.
 Nombres EXACTOS (2 estan mal escritos en el original: `hp_low_case_miror_s` con una sola `r`, y
 `portrait_frame_lo` truncado — hay que copiarlos tal cual o la textura sale invisible):
 
+```
+actionbutton-border square.tga
+actionbutton-border.tga
+actionbuttonhighlight.tga
+Background border.tga
+border-tooltip.tga
+button red2 large.tga
+button wood large.tga
+cast_back.tga
+cast_back_outline.tga
+group-finder-eye-orange.tga
+hp_boss_highlight.tga
+hp_low_case.tga
+hp_low_case_miror_s.tga
+hp_low_case_miror_s_highlight.tga
+hp_low_case_mirror.tga
+hp_low_case_mirror_b.tga
+hp_party_cage.tga
+hp_party_highlight.tga
+hp_pet_cage.tga
+hp_pet_highlight.tga
+icon_exit_flight.tga
+info_bg.tga
+minimap-border.tga
+minimap-mask-opaque.tga
+minimap-mask-transparent.tga
+minimap-onebar-backdrop.tga
+nameplate_backdrop.tga
+nameplate_glow.tga
+nameplate_outline.tga
+orb_case_low.tga
+point_diamond.tga
+point_plate.tga
+portrait_frame_lo.tga
+power_low_case_s.tga
 ```
 actionbutton-border square.tga   hp_low_case_mirror.tga      minimap-mask-opaque.tga
 actionbutton-border.tga          hp_low_case_mirror_b.tga    minimap-mask-transparent.tga

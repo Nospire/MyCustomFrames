@@ -26,10 +26,14 @@
 local ADDON, ns = ...
 
 local A = ns.ASSETS
-local BAR_TEX      = A .. "nameplate_bar.tga"
-local BACKDROP_TEX = A .. "nameplate_backdrop.tga"
+local function ThemeTex(filename)
+    return (ns.SkinResolve and ns.SkinResolve(filename)) or (A .. filename)
+end
+local function BAR_TEX() return A .. "nameplate_bar.tga" end
+local function BACKDROP_TEX() return ThemeTex("nameplate_backdrop.tga") end
 local BAR_TEXCOORD = { 14/256, 242/256, 14/64, 50/64 }
-local FONT = ns.DEFAULT_FONT or "Fonts\\FRIZQT__.TTF"
+local function ThemeFont() return ns.ActiveSkinTitleFont or ns.DEFAULT_FONT or "Fonts\\FRIZQT__.TTF" end
+local function BodyFont() return ns.DEFAULT_FONT or "Fonts\\FRIZQT__.TTF" end
 
 local function P() return ns.GetDB() and ns.GetDB().nameplates end
 
@@ -88,7 +92,7 @@ local function MakeDropdownButton(parent, w, h, text)
     for _, t in ipairs(hl) do t:SetVertexColor(0.3, 0.3, 0.3); t:SetBlendMode("ADD") end
 
     local fs = b:CreateFontString(nil, "OVERLAY")
-    fs:SetFont(FONT, 12, "")
+    fs:SetFont(BodyFont(), 12, "")
     fs:SetPoint("LEFT", 10, 0); fs:SetPoint("RIGHT", -22, 0)
     fs:SetJustifyH("LEFT"); fs:SetMaxLines(1)
     fs:SetTextColor(0.886, 0.847, 0.780)
@@ -96,7 +100,7 @@ local function MakeDropdownButton(parent, w, h, text)
     b.text = fs
 
     local arrow = b:CreateFontString(nil, "OVERLAY")
-    arrow:SetFont(FONT, 12, "")
+    arrow:SetFont(BodyFont(), 12, "")
     arrow:SetPoint("RIGHT", -8, 0)
     arrow:SetTextColor(0.58, 0.49, 0.4)
     arrow:SetText(ns.T("v"))
@@ -165,7 +169,7 @@ local function MakeMiniSlider(parent)
     thumb:SetSize(8, 14)
     s:SetThumbTexture(thumb)
     local lbl = s:CreateFontString(nil, "OVERLAY")
-    lbl:SetFont(FONT, 10, "")
+    lbl:SetFont(BodyFont(), 10, "")
     lbl:SetPoint("BOTTOM", s, "TOP", 0, 2)
     s.lbl = lbl
 
@@ -245,7 +249,7 @@ local function MakeMiniColorButton(parent)
     sw:SetAllPoints()
     b.sw = sw
     local lbl = b:CreateFontString(nil, "OVERLAY")
-    lbl:SetFont(FONT, 10, "")
+    lbl:SetFont(BodyFont(), 10, "")
     lbl:SetPoint("BOTTOM", b, "TOP", 0, 2)
     b.lbl = lbl
     b:Hide()
@@ -562,12 +566,12 @@ local function CreateDesigner()
     end
 
     local title = root:CreateFontString(nil, "OVERLAY")
-    title:SetFont(FONT, 12, "OUTLINE")
+    title:SetFont(ThemeFont(), 12, "OUTLINE")
     title:SetPoint("TOP", root, "TOP", 0, -6)
     title:SetText(ns.T("|cffffe19bNameplate Designer|r"))
 
     local hint = root:CreateFontString(nil, "OVERLAY")
-    hint:SetFont(FONT, 9, "")
+    hint:SetFont(BodyFont(), 9, "")
     hint:SetPoint("BOTTOM", root, "BOTTOM", 0, 6)
     hint:SetWidth(440)
     hint:SetJustifyH("CENTER")
@@ -638,7 +642,7 @@ local function CreateDesigner()
     -- flotando DENTRO del lienzo y moviendose con la pieza. Juntos y fuera del
     -- lienzo se leen de un vistazo y no tapan el preview.
     local showLbl = root:CreateFontString(nil, "OVERLAY")
-    showLbl:SetFont(FONT, 10, "")
+    showLbl:SetFont(BodyFont(), 10, "")
     showLbl:SetTextColor(0.75, 0.75, 0.75)
     showLbl:SetText(ns.T("Show:"))
     showLbl:SetPoint("TOPLEFT", root, "TOPLEFT", 10, ROW3 - 4)
@@ -648,7 +652,7 @@ local function CreateDesigner()
         cb:SetSize(16, 16)
         cb:SetPoint("LEFT", anchorTo, "RIGHT", gap, 0)
         local t = root:CreateFontString(nil, "OVERLAY")
-        t:SetFont(FONT, 10, "")
+        t:SetFont(BodyFont(), 10, "")
         t:SetTextColor(0.85, 0.85, 0.85)
         t:SetText(label)
         t:SetPoint("LEFT", cb, "RIGHT", 1, 0)
@@ -673,7 +677,7 @@ local function CreateDesigner()
     -- Texto FIJO: el lienzo ya no espeja la escala del target. Explica QUE hace
     -- el slider de abajo en vez de repetir su nombre y su valor.
     local scaleLabel = root:CreateFontString(nil, "OVERLAY")
-    scaleLabel:SetFont(FONT, 10, "")
+    scaleLabel:SetFont(BodyFont(), 10, "")
     scaleLabel:SetPoint("TOP", title, "BOTTOM", 0, -4)
     scaleLabel:SetTextColor(0.7, 0.85, 1)
     scaleLabel:SetText(ns.T("Drag a piece to move it - scroll to resize"))
@@ -860,7 +864,7 @@ local function CreateDesigner()
     -- (0-250, ver viewport:SetPoint mas arriba) con espaciado parejo de
     -- ~55-60px entre filas, en vez de quedar todo apretado contra el fondo.
     local ctrlTitle = root:CreateFontString(nil, "OVERLAY")
-    ctrlTitle:SetFont(FONT, 12, "OUTLINE")
+    ctrlTitle:SetFont(ThemeFont(), 12, "OUTLINE")
     ctrlTitle:SetPoint("BOTTOM", root, "BOTTOM", 0, 225)
     ctrlTitle:SetTextColor(1, 0.882, 0.608)
     ctrlTitle:SetText(ns.T("Click a piece above to edit it"))
@@ -1054,14 +1058,14 @@ local function CreateDesigner()
     local hp = CreateFrame("StatusBar", nil, stage)
     pieces.health = hp
     hp:SetPoint("CENTER", stage, "CENTER", 0, 0)
-    hp:SetStatusBarTexture(BAR_TEX)
+    hp:SetStatusBarTexture(BAR_TEX())
     hp:GetStatusBarTexture():SetTexCoord(unpack(BAR_TEXCOORD))
     hp:SetMinMaxValues(0, 100)
     hp:SetValue(71)
     hp:SetStatusBarColor(0.85, 0.15, 0.15)
     local hpBg = hp:CreateTexture(nil, "BACKGROUND", nil, -1)
     hpBg:SetPoint("CENTER")
-    hpBg:SetTexture(BACKDROP_TEX)
+    hpBg:SetTexture(BACKDROP_TEX())
     hp.bg = hpBg
     pieces.healthBg = hpBg
     TrackHighlight(ns.MakeEditHighlight(hp))
@@ -1084,7 +1088,7 @@ local function CreateDesigner()
     pieces.name = nameHolder
     nameHolder:SetSize(ns.NPBuild.NAME_HOLDER_W, ns.NPBuild.NAME_HOLDER_H)
     local nameFS = nameHolder:CreateFontString(nil, "OVERLAY")
-    nameFS:SetFont(FONT, 16, "OUTLINE")
+    nameFS:SetFont(ThemeFont(), 16, "OUTLINE")
     nameFS:SetPoint("CENTER")
     nameFS:SetText(ns.T("Cheesanator"))
     nameHolder.fs = nameFS
@@ -1115,7 +1119,7 @@ local function CreateDesigner()
     pieces.healthValue = hvHolder
     hvHolder:SetSize(60, 16)
     local hvFS = hvHolder:CreateFontString(nil, "OVERLAY")
-    hvFS:SetFont(FONT, 12, "OUTLINE")
+    hvFS:SetFont(BodyFont(), 12, "OUTLINE")
     hvFS:SetPoint("CENTER")
     hvFS:SetText(ns.T("71%"))
     hvHolder.fs = hvFS
@@ -1138,13 +1142,13 @@ local function CreateDesigner()
     -- dentro del stage, escala junto con la vida). ----
     local cb = CreateFrame("StatusBar", nil, stage)
     pieces.cast = cb
-    cb:SetStatusBarTexture(BAR_TEX)
+    cb:SetStatusBarTexture(BAR_TEX())
     cb:GetStatusBarTexture():SetTexCoord(unpack(BAR_TEXCOORD))
     cb:SetMinMaxValues(0, 100)
     cb:SetValue(60)
     local cbBg = cb:CreateTexture(nil, "BACKGROUND", nil, -1)
     cbBg:SetPoint("CENTER")
-    cbBg:SetTexture(BACKDROP_TEX)
+    cbBg:SetTexture(BACKDROP_TEX())
     cb.bg = cbBg
     pieces.castBg = cbBg
     TrackHighlight(ns.MakeEditHighlight(cb))
@@ -1177,7 +1181,7 @@ local function CreateDesigner()
     ctHolder:SetSize(90, 20)
     ctHolder:SetFrameLevel(cb:GetFrameLevel() + 5)
     local ctFS = ctHolder:CreateFontString(nil, "OVERLAY")
-    ctFS:SetFont(FONT, 10, "OUTLINE")
+    ctFS:SetFont(BodyFont(), 10, "OUTLINE")
     ctFS:SetPoint("CENTER")
     ctFS:SetText(ns.T("Arcane Flurry"))
     ctHolder.fs = ctFS
@@ -1537,19 +1541,19 @@ Reflow = function()
     --   * TEXTO DE CAST -> tambien FontString directo, pero anclado por CENTER,
     --     y un padding simetrico no mueve un CENTER. Se deja exacto igual, para
     --     que nadie reintroduzca el bug si algun dia pasa a anclarse por TOP.
-    designer.nameHolder.fs:SetFont(FONT, p.nameFontSize or 16, "OUTLINE")
+    designer.nameHolder.fs:SetFont(ThemeFont(), p.nameFontSize or 16, "OUTLINE")
     local nc = p.nameColor
     if nc then designer.nameHolder.fs:SetTextColor(nc.r, nc.g, nc.b, p.nameAlpha or 1) end
     designer.nameHolder:SetSize(ns.NPBuild.NAME_HOLDER_W, ns.NPBuild.NAME_HOLDER_H)
 
-    designer.hvHolder.fs:SetFont(FONT, p.healthValueFontSize or 12, "OUTLINE")
+    designer.hvHolder.fs:SetFont(BodyFont(), p.healthValueFontSize or 12, "OUTLINE")
     local hvc = p.healthValueColor
     if hvc then designer.hvHolder.fs:SetTextColor(hvc.r, hvc.g, hvc.b, p.healthValueAlpha or 1) end
     designer.hvHolder:SetSize(math.max(1, designer.hvHolder.fs:GetStringWidth()),
         math.max(1, designer.hvHolder.fs:GetStringHeight()))
 
 
-    designer.ctHolder.fs:SetFont(FONT, p.castTextFontSize or 10, "OUTLINE")
+    designer.ctHolder.fs:SetFont(BodyFont(), p.castTextFontSize or 10, "OUTLINE")
     local ctc = p.castTextColor
     if ctc then designer.ctHolder.fs:SetTextColor(ctc.r, ctc.g, ctc.b, p.castTextAlpha or 1) end
     designer.ctHolder:SetSize(math.max(1, designer.ctHolder.fs:GetStringWidth()),
@@ -1577,13 +1581,13 @@ Reflow = function()
         for _, holder in ipairs({ designer.bigHolder, designer.personalHolder, designer.enemyHolder }) do
             for _, b in ipairs(holder.icons) do
                 if b.count then
-                    b.count:SetFont(FONT, cSize, "OUTLINE")
+                    b.count:SetFont(BodyFont(), cSize, "OUTLINE")
                     b.count:ClearAllPoints()
                     b.count:SetPoint("TOPRIGHT", ccx, ccy)
                     b.count:SetTextColor(cc.r, cc.g, cc.b, 1)
                 end
                 if b.time then
-                    b.time:SetFont(FONT, tSize, "OUTLINE")
+                    b.time:SetFont(BodyFont(), tSize, "OUTLINE")
                     b.time:SetTextColor(tc.r, tc.g, tc.b, 1)
                 end
             end

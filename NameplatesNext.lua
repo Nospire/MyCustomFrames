@@ -33,9 +33,12 @@ local ADDON, ns = ...
 if not ns.IsMidnightNext then return end
 
 local A = "Interface\\AddOns\\MyCustomFrames\\Assets\\"
-local BAR_TEX = A .. "nameplate_bar.tga"
+local function SkinTex(filename)
+    return (ns.SkinResolve and ns.SkinResolve(filename)) or (A .. filename)
+end
+local BAR_TEX = A .. "nameplate_bar.tga" -- color de vida sigue viniendo del StatusBar
 local BAR_TEXCOORD = { 14/256, 242/256, 14/64, 50/64 }
-local BACKDROP_TEX = A .. "nameplate_backdrop.tga"
+local BACKDROP_TEX = function() return SkinTex("nameplate_backdrop.tga") end
 
 -- Clasificacion (2026-08-03): mismas texturas AzeriteUI ya usadas por el
 -- sistema viejo (Nameplates.lua) -- copiadas a Assets/, se reusan tal cual.
@@ -541,7 +544,7 @@ local function CreatePlateFrame()
     f.health:SetMinMaxValues(0, 100)
     f.healthBG = f.health:CreateTexture(nil, "BACKGROUND", nil, -1)
     f.healthBG:SetPoint("CENTER")
-    f.healthBG:SetTexture(BACKDROP_TEX)
+    f.healthBG:SetTexture(BACKDROP_TEX())
     f.healthValue = f.health:CreateFontString(nil, "OVERLAY")
 
     -- Highlight de seleccion: pedido explicito del usuario, usar la
@@ -549,9 +552,13 @@ local function CreatePlateFrame()
     -- EllesmereUI) -- blend ADD para que se vea como un brillo/aro, no un
     -- relleno solido opaco.
     f.highlight = f.health:CreateTexture(nil, "OVERLAY", nil, 5)
-    f.highlight:SetTexture(A .. "nameplate_outline.tga")
+    f.highlight:SetTexture(SkinTex("nameplate_outline.tga"))
     f.highlight:SetBlendMode("ADD")
     f.highlight:Hide()
+    f.glow = f.health:CreateTexture(nil, "OVERLAY", nil, 4)
+    f.glow:SetTexture(SkinTex("nameplate_glow.tga"))
+    f.glow:SetBlendMode("ADD")
+    f.glow:Hide()
 
     -- Clasificacion (elite/rare/boss) -- mismo criterio que el sistema
     -- viejo (Nameplates.lua): texturas PROPIAS (AzeriteUI) alimentadas por
@@ -578,7 +585,7 @@ local function CreatePlateFrame()
     f.cast:SetMinMaxValues(0, 1)
     f.cast.bg = f.cast:CreateTexture(nil, "BACKGROUND", nil, -1)
     f.cast.bg:SetPoint("CENTER")
-    f.cast.bg:SetTexture(BACKDROP_TEX)
+    f.cast.bg:SetTexture(BACKDROP_TEX())
     -- Icono del hechizo -- a la izquierda de la barra, mismo alto.
     f.cast.icon = f.cast:CreateTexture(nil, "ARTWORK")
     f.cast.icon:SetTexCoord(0.08, 0.92, 0.08, 0.92)
@@ -725,6 +732,8 @@ local function ReassertLayout(f, nameOnly)
     f.healthBG:SetSize(w, h)
     f.highlight:ClearAllPoints()
     f.highlight:SetAllPoints(f.health)
+    f.glow:ClearAllPoints()
+    f.glow:SetAllPoints(f.health)
 
     -- Nombre/cast/valor de vida/texto de cast: (2026-08-05, "traer de
     -- vuelta el diseñador con el nuevo sistema") -- ns.NPLayout.Name/Cast/
@@ -770,7 +779,7 @@ local function ReassertLayout(f, nameOnly)
     if ns.GOLD then f.healthValue:SetTextColor(ns.GOLD.r, ns.GOLD.g, ns.GOLD.b) end
 
     local nameSize = (p and p.nameFontSize) or 15
-    f.name:SetFont(ns.DEFAULT_FONT or "Fonts\\FRIZQT__.TTF", nameSize, "OUTLINE")
+    f.name:SetFont(ns.ActiveSkinTitleFont or ns.DEFAULT_FONT or "Fonts\\FRIZQT__.TTF", nameSize, "OUTLINE")
     f.name:ClearAllPoints()
     -- Modo "nameonly" (amistosos, ver FriendlySettings): sin barra visible,
     -- el nombre ancla directo al CENTRO del frame en vez de arriba de la
@@ -1056,6 +1065,10 @@ local function SetUnit(nameplate, unit)
     end
 
     local f = AcquirePlateFrame()
+    if f.healthBG then f.healthBG:SetTexture(BACKDROP_TEX()) end
+    if f.highlight then f.highlight:SetTexture(SkinTex("nameplate_outline.tga")) end
+    if f.glow then f.glow:SetTexture(SkinTex("nameplate_glow.tga")) end
+    if f.cast and f.cast.bg then f.cast.bg:SetTexture(BACKDROP_TEX()) end
     nameplate._mcfNext = f
     f.unit = unit
     f.isFriendly = friendly
@@ -1114,6 +1127,23 @@ local function ClearUnit(nameplate, unit)
     -- Sin plates propias activas: apaga el driver (0 costo de OnUpdate
     -- hasta que aparezca la proxima).
     if driverFrame and not next(ns.plates) then driverFrame:Hide() end
+end
+
+-- Refresh the Feral ornaments and display face on currently visible nameplates.
+function ns.RefreshNameplateSkin()
+    for _, f in pairs(ns.plates or {}) do
+        if f then
+            if f.healthBG then f.healthBG:SetTexture(BACKDROP_TEX()) end
+            if f.highlight then f.highlight:SetTexture(SkinTex("nameplate_outline.tga")) end
+            if f.glow then f.glow:SetTexture(SkinTex("nameplate_glow.tga")) end
+            if f.cast and f.cast.bg then f.cast.bg:SetTexture(BACKDROP_TEX()) end
+            if f.name then
+                local p = P()
+                f.name:SetFont(ns.ActiveSkinTitleFont or ns.DEFAULT_FONT or "Fonts\\FRIZQT__.TTF",
+                    (p and p.nameFontSize) or 15, "OUTLINE")
+            end
+        end
+    end
 end
 
 -- Asignacion real del forward-decl de mas arriba (ApplyDungeonNameOnlyCVars
@@ -1392,6 +1422,7 @@ driver:SetScript("OnUpdate", ns.Prof.Wrap("Nameplates: driver 0.2s", function(se
                 UpdateRaidMark(f, f.unit)
                 local isTarget = uf and uf.isTarget and true or false
                 f.highlight:SetShown(isTarget)
+                if f.glow then f.glow:SetShown(isTarget) end
                 -- FIX (2026-08-03, "las auras deben estar activas en mas
                 -- nameplates ademas del target -- son debuffs personales"):
                 -- EllesmereUI las muestra en TODOS los plates visibles (su

@@ -538,6 +538,12 @@ local function SkinFrame()
 
 	BuildFrameArt()
 	RefreshSkinTextures()
+	local title = GameMenuFrame.__gonkTitle
+	if title then
+		local fallback = GameFontNormalHuge and select(1, GameFontNormalHuge:GetFont())
+		title:SetFont(ns.ActiveSkinTitleFont or fallback or "Fonts\\FRIZQT__.TTF",
+			CFG.titleFontSize, "OUTLINE")
+	end
 	HideBlizzardChrome()
 	UpdatePortrait()
 	GameMenuFrame:SetScale(CFG.menuScale or 1.0)
