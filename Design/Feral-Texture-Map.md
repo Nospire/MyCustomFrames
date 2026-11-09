@@ -4,7 +4,7 @@
 
 Статусы: `[x]` готово и подключено; `[ ]` не сделано; `[~]` проверено частично или намеренно оставлено без темы.
 
-## Feral: 37 слотов темы
+## Feral: 37 основных слотов + 28 иконок
 
 ### Рамки, здоровье, ресурс
 
@@ -69,7 +69,7 @@
 
 ### Иконки мини-меню
 
-- [x] Сохранить значение каждого значка и добавить общий Feral-ободок/когтистую рамку через `SkinResolve`; исходные пиктограммы остаются без изменений. `MicroMenu.lua` использует эти файлы для изображения значков:
+- [x] Все 11 иконок мини-меню получили отдельные Feral-файлы с меховым кольцом и когтями; молоты, книга, щит и остальные пиктограммы сохранены в центре. `MicroMenu.lua` выбирает варианты темы через `SkinResolve`:
   - `Assets/02_crossed_hammers.tga`
   - `Assets/03_target_dart.tga`
   - `Assets/04_shield.tga`
@@ -85,11 +85,11 @@
 
 ### Значки ролей, фракций, боя и классификации
 
-- [x] Сохранить смысл значков ролей и добавить Feral-подложку `point_plate.tga` в Raid frames: `grouprole-icons-heal.tga`, `grouprole-icons-tank.tga`.
-- [~] Фракционные и портретные значки остаются исходными, чтобы не менять семантику: `icon_badges_alliance.tga`, `icon_badges_alliance_war_on.tga`, `icon_badges_horde.tga`, `icon_badges_horde_war_on.tga`, `icon_badges_dps.tga`, `icon_badges_heal.tga`, `icon_badges_tank.tga`, `icon_badges_lider.tga`.
-- [~] Значки классификации и состояния сохраняют стандартные пиктограммы: `icon_classification_boss.tga`, `icon_classification_elite.tga`, `icon_classification_generic.tga`, `icon_classification_rare.tga`, `icon-combat.tga`, `icon_skull_dead.tga`.
+- [x] Значки фракций и War Mode получили Feral-рамку, символы Альянса и Орды сохранены: `icon_badges_alliance.tga`, `icon_badges_alliance_war_on.tga`, `icon_badges_horde.tga`, `icon_badges_horde_war_on.tga`.
+- [x] Портретные значки ролей DPS/хил/танк/лидер и raid role heal/tank получили Feral-рамки; цвета и пиктограммы роли сохранены: `icon_badges_dps.tga`, `icon_badges_heal.tga`, `icon_badges_tank.tga`, `icon_badges_lider.tga`, `grouprole-icons-heal.tga`, `grouprole-icons-tank.tga`.
+- [x] Значки классификации, боя, смерти и выхода из полёта получили Feral-рамки, исходные символы сохранены; `Nameplates.lua`, `NameplatesNext.lua`, `Portraits.lua` и `Minimap.lua` разрешают их через активную тему: `icon_classification_boss.tga`, `icon_classification_elite.tga`, `icon_classification_generic.tga`, `icon_classification_rare.tga`, `icon-combat.tga`, `icon_skull_dead.tga`, `icon_exit_flight.tga`.
 - [~] `raid_target_icons.tga`, `raid_target_icons_small.tga` — атласы игровых маркеров; смысл и цвет маркеров лучше сохранить. Проверить, должен ли Feral влиять на них вообще.
-- [x] Значок полёта остаётся стандартным функциональным символом; рамка/кнопка мини-карты оформляется Feral-слотом `point_plate.tga`.
+- [x] Значок полёта сохраняет стандартный функциональный символ с Feral-рамкой; кнопки мини-карты используют подложку `point_plate.tga`.
 
 ### Панели настройки и онбординг
 
@@ -103,6 +103,8 @@
 - [~] `hp_lowmid_bar_miror_s.tga`, `hp_lowmid_bar_miror_b.tga`, `hp_cap_bar.tga`, `hp_cap_bar mirror.tga`, `power_cap_s.tga`, `hp_party_bar.tga`, `hp_pet_bar.tga`, `cast_bar.tga`, `bar-progress.tga` — заполнения/полосы; проверить места применения перед возможной заменой.
 - [x] Все варианты очков ресурса (`point_crystal.tga`, `point_diamond.tga`, `point_hearth.tga`, `point_rune1.tga`–`point_rune4.tga`, `point_dk_block.tga`) получают Feral-значок из активной темы; `point_plate.tga` оформляет подложки.
 - [~] `Assets/Lato-Bold.ttf` и системный шрифт: проверить все вызовы шрифтов, прежде чем объявлять шрифтовую тему полностью покрытой.
+
+Всего в `Assets/Feral/` лежат 37 основных текстурных слотов и 28 тематических версий иконок. Пиктограммы в центре остаются исходными; рамка сделана по Feral-мотиву из меха, тёмного металла, бордовой кожи и костяных когтей. Превью значков: [Feral-icon-preview.png](../Images/Feral-icon-preview.png); исходная рамка: [Feral-icon-ring-source.png](../Images/Feral-icon-ring-source.png).
 
 ## Правило обновления карты
 

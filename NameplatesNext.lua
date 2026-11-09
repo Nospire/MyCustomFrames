@@ -43,11 +43,11 @@ local BACKDROP_TEX = function() return SkinTex("nameplate_backdrop.tga") end
 -- Clasificacion (2026-08-03): mismas texturas AzeriteUI ya usadas por el
 -- sistema viejo (Nameplates.lua) -- copiadas a Assets/, se reusan tal cual.
 local CLASS_TEX = {
-    worldboss = A .. "icon_classification_boss.tga",
-    boss      = A .. "icon_classification_boss.tga",
-    elite     = A .. "icon_classification_elite.tga",
-    rareelite = A .. "icon_classification_rare.tga",
-    rare      = A .. "icon_classification_rare.tga",
+    worldboss = "icon_classification_boss.tga",
+    boss      = "icon_classification_boss.tga",
+    elite     = "icon_classification_elite.tga",
+    rareelite = "icon_classification_rare.tga",
+    rare      = "icon_classification_rare.tga",
 }
 
 local function P() return ns.GetDB() and ns.GetDB().nameplates end
@@ -965,7 +965,8 @@ local function UpdateClassification(f, unit)
         local okLvl, lvl = pcall(UnitLevel, unit)
         if okLvl and lvl and lvl < 1 then c = "worldboss" end
     end
-    local tex = ok and CLASS_TEX[c]
+    local file = ok and CLASS_TEX[c]
+    local tex = file and SkinTex(file)
     if tex then
         f.classIcon:SetTexture(tex)
         f.classIcon:Show()
@@ -1138,6 +1139,7 @@ function ns.RefreshNameplateSkin()
             if f.highlight then f.highlight:SetTexture(SkinTex("nameplate_outline.tga")) end
             if f.glow then f.glow:SetTexture(SkinTex("nameplate_glow.tga")) end
             if f.cast and f.cast.bg then f.cast.bg:SetTexture(BACKDROP_TEX()) end
+            if f.unit then UpdateClassification(f, f.unit) end
             if f.name then
                 local p = P()
                 f.name:SetFont(ns.ActiveSkinTitleFont or ns.DEFAULT_FONT or "Fonts\\FRIZQT__.TTF",

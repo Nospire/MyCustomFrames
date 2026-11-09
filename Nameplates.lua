@@ -1124,11 +1124,11 @@ end
 -- "copiados de AzeriteUI5_JuNNeZ_Edition/Assets"). Anclaje/tamaño default
 -- (RIGHT, 20, -1, 40x40) calcado de Layouts/Data/NamePlates.lua de AzeriteUI.
 local CLASS_TEX = {
-    worldboss = A .. "icon_classification_boss.tga",
-    boss      = A .. "icon_classification_boss.tga",
-    elite     = A .. "icon_classification_elite.tga",
-    rareelite = A .. "icon_classification_rare.tga",
-    rare      = A .. "icon_classification_rare.tga",
+    worldboss = "icon_classification_boss.tga",
+    boss      = "icon_classification_boss.tga",
+    elite     = "icon_classification_elite.tga",
+    rareelite = "icon_classification_rare.tga",
+    rare      = "icon_classification_rare.tga",
 }
 
 -- Pedido del usuario 2026-07-19: "deberian estar encima de todo" -- una
@@ -1180,7 +1180,8 @@ local function UpdateClassification(uf, unit)
     if not isDummy and okL and type(lvl) == "number" and not (issecretvalue and issecretvalue(lvl)) and lvl < 1 then
         c = "worldboss"
     end
-    local path = ok and c and CLASS_TEX[c]
+    local file = ok and c and CLASS_TEX[c]
+    local path = file and ((ns.SkinResolve and ns.SkinResolve(file)) or (A .. file))
     if path then
         holder.tex:SetTexture(path)
         holder:Show()

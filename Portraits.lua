@@ -568,6 +568,7 @@ local function PortraitApplyAppearance(u)
     u.rest:SetAlpha(p.restAlpha)
 
     -- Marca de muerte (color + opacidad).
+    u.death:SetTexture(ns.DEATH_TEX)
     u.death:SetSize(s * p.deathScale, s * p.deathScale)
     u.death:ClearAllPoints(); u.death:SetPoint("CENTER", u.root, "CENTER", p.deathOffsetX, p.deathOffsetY)
     u.death:SetVertexColor(p.deathColor.r, p.deathColor.g, p.deathColor.b)
@@ -580,6 +581,7 @@ local function PortraitApplyAppearance(u)
     u.faction:SetAlpha(p.factionAlpha)
 
     -- Badge de combate (color + opacidad).
+    u.combat:SetTexture(ns.BADGE_COMBAT)
     u.combat:SetSize(s * p.combatScale, s * p.combatScale)
     u.combat:ClearAllPoints(); u.combat:SetPoint("CENTER", u.root, "CENTER", p.combatOffsetX, p.combatOffsetY)
     u.combat:SetVertexColor(p.combatColor.r, p.combatColor.g, p.combatColor.b)
@@ -601,6 +603,7 @@ local function PortraitApplyAppearance(u)
         u.roleicon:SetAlpha(p.roleAlpha or 1)
     end
     if u.leader then
+        u.leader:SetTexture(ns.LEADER_TEX)
         u.leader:SetSize(s * (p.leaderScale or 0.42), s * (p.leaderScale or 0.42))
         u.leader:ClearAllPoints()
         u.leader:SetPoint("CENTER", u.root, "CENTER", p.leaderOffsetX or 0, p.leaderOffsetY or 0)

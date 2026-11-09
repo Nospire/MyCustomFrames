@@ -120,6 +120,21 @@ ns.TEX_SKINS = {
         ["nameplate_glow.tga"] = true,
         ["Background border.tga"] = true, ["button wood large.tga"] = true,
         ["button red2 large.tga"] = true,
+        ["02_crossed_hammers.tga"] = true, ["03_target_dart.tga"] = true,
+        ["04_shield.tga"] = true, ["05_exclamation.tga"] = true,
+        ["06_home.tga"] = true, ["07_bookmark.tga"] = true,
+        ["08_eye.tga"] = true, ["09_horseshoe.tga"] = true,
+        ["10_skull_banner.tga"] = true, ["11_w_emblem.tga"] = true,
+        ["12_question_mark.tga"] = true,
+        ["icon_badges_alliance.tga"] = true, ["icon_badges_horde.tga"] = true,
+        ["icon_badges_alliance_war_on.tga"] = true, ["icon_badges_horde_war_on.tga"] = true,
+        ["icon_badges_heal.tga"] = true, ["icon_badges_tank.tga"] = true,
+        ["icon_badges_dps.tga"] = true, ["icon_badges_lider.tga"] = true,
+        ["grouprole-icons-heal.tga"] = true, ["grouprole-icons-tank.tga"] = true,
+        ["icon_classification_boss.tga"] = true, ["icon_classification_elite.tga"] = true,
+        ["icon_classification_generic.tga"] = true, ["icon_classification_rare.tga"] = true,
+        ["icon-combat.tga"] = true, ["icon_skull_dead.tga"] = true,
+        ["icon_exit_flight.tga"] = true,
       } },
 
     -- { folder = "Neon\\",  label = "Neon", msqSkin = "Nombre del skin de Masque" },
@@ -222,6 +237,17 @@ for _, f in ipairs({
     -- Tooltip
     "border-tooltip.tga",
     "Background border.tga", "button wood large.tga", "button red2 large.tga",
+    -- Feral icon frames: micro menu, portraits, raid roles and nameplate status.
+    "02_crossed_hammers.tga", "03_target_dart.tga", "04_shield.tga", "05_exclamation.tga",
+    "06_home.tga", "07_bookmark.tga", "08_eye.tga", "09_horseshoe.tga",
+    "10_skull_banner.tga", "11_w_emblem.tga", "12_question_mark.tga",
+    "icon_badges_alliance.tga", "icon_badges_horde.tga",
+    "icon_badges_alliance_war_on.tga", "icon_badges_horde_war_on.tga",
+    "icon_badges_heal.tga", "icon_badges_tank.tga", "icon_badges_dps.tga", "icon_badges_lider.tga",
+    "grouprole-icons-heal.tga", "grouprole-icons-tank.tga",
+    "icon_classification_boss.tga", "icon_classification_elite.tga",
+    "icon_classification_generic.tga", "icon_classification_rare.tga",
+    "icon-combat.tga", "icon_skull_dead.tga", "icon_exit_flight.tga",
 }) do SKINNABLE[f] = true end
 ns.SKINNABLE = SKINNABLE
 
@@ -342,6 +368,16 @@ ns.ApplySkin = function(skin)
     ns.AURA_BORDER = SkinResolve("actionbutton-border square.tga")
     ns.RAIDTARGET_TEX = SkinResolve("raid_target_icons.tga")
     ns.INFOBAR_BG_TEX = SkinResolve("info_bg.tga")
+    ns.BADGE_ALLIANCE = SkinResolve("icon_badges_alliance.tga")
+    ns.BADGE_HORDE = SkinResolve("icon_badges_horde.tga")
+    ns.BADGE_ALLIANCE_WAR = SkinResolve("icon_badges_alliance_war_on.tga")
+    ns.BADGE_HORDE_WAR = SkinResolve("icon_badges_horde_war_on.tga")
+    ns.BADGE_COMBAT = SkinResolve("icon-combat.tga")
+    ns.ROLE_TANK = SkinResolve("icon_badges_tank.tga")
+    ns.ROLE_HEAL = SkinResolve("icon_badges_heal.tga")
+    ns.ROLE_DPS = SkinResolve("icon_badges_dps.tga")
+    ns.LEADER_TEX = SkinResolve("icon_badges_lider.tga")
+    ns.DEATH_TEX = SkinResolve("icon_skull_dead.tga")
     if ns.ApplyMinimapSkin then ns.ApplyMinimapSkin() end
     if ns.RefreshAll then ns.RefreshAll() end
     if ns.RefreshInfoBar then ns.RefreshInfoBar() end
