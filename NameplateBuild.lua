@@ -35,7 +35,7 @@ local L = ns.NPLayout
 -- Constante, no un literal dentro del bucle: `{ "big", "personal", "enemy" }`
 -- escrito en la llamada a ipairs construia una tabla en CADA LayoutPlate.
 local AURA_KEYS = { "big", "personal", "enemy" }
-local FONT = [[Fonts\FRIZQT__.TTF]]   -- la misma en real y preview
+local FONT = ns.DEFAULT_FONT or [[Fonts\FRIZQT__.TTF]]   -- la misma en real y preview
 local B = {}
 ns.NPBuild = B
 

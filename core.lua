@@ -345,7 +345,7 @@ ns.PL = {
     -- Lato-Bold.ttf, para que el titulo y TODO el panel de opciones (Options.lua
     -- usa esto via setFont) hagan juego con el wizard de Setup.lua, que ya usaba
     -- FRIZQT por separado.
-    FONT  = "Fonts\\FRIZQT__.TTF",
+    FONT  = ns.DEFAULT_FONT or "Fonts\\FRIZQT__.TTF",
 }
 
 local GOLD = { r = 1, g = 0.882, b = 0.608 }   -- FFE19B (color de texto por defecto)
@@ -917,7 +917,7 @@ local function MakeEditHighlight(parent, label)
     -- Nombre del elemento ENCIMA del recuadro (visible siempre que el outline lo este).
     if label then
         local lbl = f:CreateFontString(nil, "OVERLAY")
-        lbl:SetFont("Fonts\\FRIZQT__.TTF", 12, "OUTLINE")
+        lbl:SetFont(ns.DEFAULT_FONT or "Fonts\\FRIZQT__.TTF", 12, "OUTLINE")
         lbl:SetPoint("BOTTOM", f, "TOP", 0, 3)
         lbl:SetTextColor(EDIT_HL.r, EDIT_HL.g, EDIT_HL.b, 1)
         lbl:SetText(label)
@@ -963,7 +963,7 @@ local function MakeHitPreview(parent)
     edge("TOPLEFT", 0, 0, "BOTTOMLEFT", t, 0)
     edge("TOPRIGHT", -t, 0, "BOTTOMRIGHT", 0, 0)
     local lbl = f:CreateFontString(nil, "OVERLAY")
-    lbl:SetFont("Fonts\\FRIZQT__.TTF", 10, "OUTLINE")
+    lbl:SetFont(ns.DEFAULT_FONT or "Fonts\\FRIZQT__.TTF", 10, "OUTLINE")
     lbl:SetPoint("TOP", f, "BOTTOM", 0, -1)
     lbl:SetTextColor(HIT_HL.r, HIT_HL.g, HIT_HL.b, 1)
     lbl:SetText(ns.T("click"))

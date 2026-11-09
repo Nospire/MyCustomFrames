@@ -489,7 +489,7 @@ local function EnsureFrames()
     countText:SetSize(24, 16)
     countText:SetJustifyH("CENTER")
     countText:SetJustifyV("MIDDLE")
-    countText:SetFont(STANDARD_TEXT_FONT or "Fonts\\FRIZQT__.TTF", 12, "OUTLINE")
+    countText:SetFont(ns.DEFAULT_FONT or STANDARD_TEXT_FONT or "Fonts\\FRIZQT__.TTF", 12, "OUTLINE")
     countText:SetTextColor(1, 1, 1, 0.5)
     trigger.countText = countText
 

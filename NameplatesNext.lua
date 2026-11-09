@@ -755,7 +755,7 @@ local function ReassertLayout(f, nameOnly)
 
     local hvAl = ns.NPLayout and ns.NPLayout.HealthValue and ns.NPLayout.HealthValue(p)
     local valSize = (p and p.healthValueFontSize) or 12
-    f.healthValue:SetFont("Fonts\\FRIZQT__.TTF", valSize, "OUTLINE")
+    f.healthValue:SetFont(ns.DEFAULT_FONT or "Fonts\\FRIZQT__.TTF", valSize, "OUTLINE")
     f.healthValue:ClearAllPoints()
     if hvAl then
         f.healthValue:SetPoint(hvAl.point, f.health, hvAl.relPoint, hvAl.x, hvAl.y)
@@ -770,7 +770,7 @@ local function ReassertLayout(f, nameOnly)
     if ns.GOLD then f.healthValue:SetTextColor(ns.GOLD.r, ns.GOLD.g, ns.GOLD.b) end
 
     local nameSize = (p and p.nameFontSize) or 15
-    f.name:SetFont("Fonts\\FRIZQT__.TTF", nameSize, "OUTLINE")
+    f.name:SetFont(ns.DEFAULT_FONT or "Fonts\\FRIZQT__.TTF", nameSize, "OUTLINE")
     f.name:ClearAllPoints()
     -- Modo "nameonly" (amistosos, ver FriendlySettings): sin barra visible,
     -- el nombre ancla directo al CENTRO del frame en vez de arriba de la
@@ -795,7 +795,7 @@ local function ReassertLayout(f, nameOnly)
     end
 
     local castSize = (p and p.castTextFontSize) or 10
-    f.cast.text:SetFont("Fonts\\FRIZQT__.TTF", castSize, "OUTLINE")
+    f.cast.text:SetFont(ns.DEFAULT_FONT or "Fonts\\FRIZQT__.TTF", castSize, "OUTLINE")
     local castTextAl = ns.NPLayout and ns.NPLayout.CastText and ns.NPLayout.CastText(p)
     f.cast.text:ClearAllPoints()
     if castTextAl then

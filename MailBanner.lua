@@ -67,7 +67,7 @@ icon:SetPoint("RIGHT", banner, "RIGHT", 32, 2)
 -- "You have new mail, check your mailbox!". Ronda 4: ambos corridos un poco
 -- mas a la derecha.
 local text = banner:CreateFontString(nil, "OVERLAY")
-text:SetFont("Fonts\\FRIZQT__.TTF", 14, "OUTLINE")
+text:SetFont(ns.DEFAULT_FONT or "Fonts\\FRIZQT__.TTF", 14, "OUTLINE")
 text:SetPoint("CENTER", banner, "CENTER", 10, 2)
 text:SetTextColor(TEXT_COLOR[1], TEXT_COLOR[2], TEXT_COLOR[3])
 text:SetText(ns.T("You have new mail, check your mailbox!"))

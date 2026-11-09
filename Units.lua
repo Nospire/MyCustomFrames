@@ -792,7 +792,7 @@ local function UnitApplyAppearance(u)
     end
 
     -- Texto vida (fuente + color).
-    u.hpText:SetFont("Fonts\\FRIZQT__.TTF", p.fontSize, "OUTLINE")
+    u.hpText:SetFont(ns.DEFAULT_FONT or "Fonts\\FRIZQT__.TTF", p.fontSize, "OUTLINE")
     local hc = p.useHealthColor and p.healthColor or ns.GOLD
     u.hpText:SetTextColor(hc.r, hc.g, hc.b, 1)
     u._hpR, u._hpG, u._hpB = hc.r, hc.g, hc.b   -- sincronizar la cache del dedupe del ticker
@@ -800,13 +800,13 @@ local function UnitApplyAppearance(u)
     u.hpText:SetPoint("CENTER", u.bar, "CENTER", p.textOffsetX, p.textOffsetY)
 
     if u.nameText then
-        u.nameText:SetFont("Fonts\\FRIZQT__.TTF", p.nameFontSize, "OUTLINE")
+        u.nameText:SetFont(ns.DEFAULT_FONT or "Fonts\\FRIZQT__.TTF", p.nameFontSize, "OUTLINE")
         u.nameText:SetScale(p.nameScale)
         local nc = p.useNameColor and p.nameColor or ns.GOLD
         u.nameText:SetTextColor(nc.r, nc.g, nc.b, 1)
     end
     if u.spellText then
-        u.spellText:SetFont("Fonts\\FRIZQT__.TTF", p.spellFontSize, "OUTLINE")
+        u.spellText:SetFont(ns.DEFAULT_FONT or "Fonts\\FRIZQT__.TTF", p.spellFontSize, "OUTLINE")
         u.spellText:SetScale(p.spellScale)
         local sc = p.useSpellColor and p.spellColor or ns.GOLD
         u.spellText:SetTextColor(sc.r, sc.g, sc.b, 1)

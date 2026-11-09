@@ -175,7 +175,7 @@ local function SkinOne(wrapper, standalone)
     if wrapper.Text then
         local lc = p.labelColor or { r = 1, g = 1, b = 1 }
         pcall(wrapper.Text.SetTextColor, wrapper.Text, lc.r, lc.g, lc.b, 1)
-        pcall(wrapper.Text.SetFont, wrapper.Text, "Fonts\\FRIZQT__.TTF", p.labelFontSize or 11, "OUTLINE")
+        pcall(wrapper.Text.SetFont, wrapper.Text, ns.DEFAULT_FONT or "Fonts\\FRIZQT__.TTF", p.labelFontSize or 11, "OUTLINE")
         pcall(wrapper.Text.ClearAllPoints, wrapper.Text)
         pcall(wrapper.Text.SetPoint, wrapper.Text, "CENTER", p.labelOffsetX or 0, p.labelOffsetY or 0)
     end
@@ -315,7 +315,7 @@ local function GetPreviewFrame()
     wrapper.StatusBar:SetValue(0.6)
     wrapper.Text = wrapper:CreateFontString(nil, "OVERLAY")
     wrapper.Text:SetPoint("CENTER")
-    wrapper.Text:SetFont("Fonts\\FRIZQT__.TTF", 11, "OUTLINE")
+    wrapper.Text:SetFont(ns.DEFAULT_FONT or "Fonts\\FRIZQT__.TTF", 11, "OUTLINE")
     wrapper.Text:SetText(ns.T("Feign Death"))
     wrapper.editBG = ns.MakeEditHighlight and ns.MakeEditHighlight(wrapper, "Mirror Timer") or nil
     if wrapper.editBG then wrapper.editBG:ClearAllPoints(); wrapper.editBG:SetAllPoints(wrapper) end

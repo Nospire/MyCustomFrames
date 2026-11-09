@@ -37,7 +37,7 @@ local CUSTOM = {
 local CONTENT_W = 720
 
 -- Fuente pedida para el wizard (Blizzard FRIZQT, distinta de la Lato del panel de opciones).
-local FRIZQT = "Fonts\\FRIZQT__.TTF"
+local FRIZQT = ns.DEFAULT_FONT or "Fonts\\FRIZQT__.TTF"
 local function SF(fs, size, flags)
     if not fs:SetFont(FRIZQT, size, flags or "") then fs:SetFontObject("GameFontNormal") end
 end

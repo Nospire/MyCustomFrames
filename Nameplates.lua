@@ -37,7 +37,7 @@ local BAR_TEXCOORD = { 14/256, 242/256, 14/64, 50/64 }
 -- ReassertAuraTextStyle), y como es UN SOLO objeto compartido por todos los
 -- iconos, actualizarlo una vez alcanza para todos.
 local MCFAuraTimeFontObj = CreateFont("MCFAuraTimeFontObj")
-MCFAuraTimeFontObj:SetFont("Fonts\\FRIZQT__.TTF", 10, "OUTLINE")
+MCFAuraTimeFontObj:SetFont(ns.DEFAULT_FONT or "Fonts\\FRIZQT__.TTF", 10, "OUTLINE")
 MCFAuraTimeFontObj:SetTextColor(1, 1, 1, 1)
 -- Defaults en HEX (#FFE19B, el dorado/ambar del resto del addon) usados
 -- cuando el perfil todavia no tiene el campo -- ver NameplateDefaults.
@@ -834,7 +834,7 @@ local function CreateCustomCastBar(uf)
     cb.bg = bg
 
     local text = cb:CreateFontString(nil, "OVERLAY")
-    text:SetFont("Fonts\\FRIZQT__.TTF", 10, "OUTLINE")
+    text:SetFont(ns.DEFAULT_FONT or "Fonts\\FRIZQT__.TTF", 10, "OUTLINE")
     text:SetPoint("CENTER")
     text:SetWidth(cw - 6)
     text:SetJustifyH("CENTER")
@@ -860,7 +860,7 @@ local function ReassertCastGeometry(uf)
     local tc = (p and p.castTextColor) or { r = 1, g = 1, b = 1 }
     if cb.text._mcfLastSize ~= tsize then
         cb.text._mcfLastSize = tsize
-        cb.text:SetFont("Fonts\\FRIZQT__.TTF", tsize, "OUTLINE")
+        cb.text:SetFont(ns.DEFAULT_FONT or "Fonts\\FRIZQT__.TTF", tsize, "OUTLINE")
     end
     cb.text:SetTextColor(tc.r, tc.g, tc.b, (p and p.castTextAlpha) or 1)
     ns.NPBuild.Place(cb.text, cb, ns.NPLayout.CastText(p), cb:GetEffectiveScale())
@@ -997,7 +997,7 @@ local function ReassertNameGeometry(uf)
     -- rasterizado ahora es al mismo tamaño fisico real SIEMPRE).
     if fs._mcfLastSize ~= size then
         fs._mcfLastSize = size
-        fs:SetFont("Fonts\\FRIZQT__.TTF", size, "OUTLINE")
+        fs:SetFont(ns.DEFAULT_FONT or "Fonts\\FRIZQT__.TTF", size, "OUTLINE")
     end
     -- PERF (2026-07-19, pedido del usuario "que afecte lo minimo posible al
     -- rendimiento"): mismo criterio que el SetFont de arriba -- esto corre
@@ -1104,7 +1104,7 @@ local function SkinHealthValue(uf)
         -- Mismo guard que SkinName: solo re-rasterizar si el tamaño cambio.
         if fs._mcfLastSize ~= size then
             fs._mcfLastSize = size
-            fs:SetFont("Fonts\\FRIZQT__.TTF", size, "OUTLINE")
+            fs:SetFont(ns.DEFAULT_FONT or "Fonts\\FRIZQT__.TTF", size, "OUTLINE")
         end
         fs:SetTextColor(c.r, c.g, c.b, (p and p.healthValueAlpha) or 1)
         ns.NPBuild.Place(fs, parent, ns.NPLayout.HealthValue(p), parent:GetEffectiveScale())
@@ -1533,7 +1533,7 @@ local function ReassertAuraTextStyle(uf, groupKey)
     local tc = (p and p.auraTimeColor) or { r = 1, g = 1, b = 1 }
     if MCFAuraTimeFontObj._mcfLastSize ~= tSize then
         MCFAuraTimeFontObj._mcfLastSize = tSize
-        MCFAuraTimeFontObj:SetFont("Fonts\\FRIZQT__.TTF", tSize, "OUTLINE")
+        MCFAuraTimeFontObj:SetFont(ns.DEFAULT_FONT or "Fonts\\FRIZQT__.TTF", tSize, "OUTLINE")
     end
     MCFAuraTimeFontObj:SetTextColor(tc.r, tc.g, tc.b, 1)
     if holder._mcfLastCcx == ccx and holder._mcfLastCcy == ccy and holder._mcfLastCSize == cSize then
@@ -1544,7 +1544,7 @@ local function ReassertAuraTextStyle(uf, groupKey)
         if b.count then
             if b.count._mcfLastSize ~= cSize then
                 b.count._mcfLastSize = cSize
-                b.count:SetFont("Fonts\\FRIZQT__.TTF", cSize, "OUTLINE")
+                b.count:SetFont(ns.DEFAULT_FONT or "Fonts\\FRIZQT__.TTF", cSize, "OUTLINE")
             end
             b.count:ClearAllPoints()
             b.count:SetPoint("TOPRIGHT", ccx, ccy)

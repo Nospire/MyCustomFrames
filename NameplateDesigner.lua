@@ -29,7 +29,7 @@ local A = ns.ASSETS
 local BAR_TEX      = A .. "nameplate_bar.tga"
 local BACKDROP_TEX = A .. "nameplate_backdrop.tga"
 local BAR_TEXCOORD = { 14/256, 242/256, 14/64, 50/64 }
-local FONT = "Fonts\\FRIZQT__.TTF"
+local FONT = ns.DEFAULT_FONT or "Fonts\\FRIZQT__.TTF"
 
 local function P() return ns.GetDB() and ns.GetDB().nameplates end
 

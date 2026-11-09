@@ -1,5 +1,9 @@
 local ADDON, ns = ...
 
+-- FRIZQT__.TTF is the Latin face. The Russian client uses the Cyrillic face.
+ns.DEFAULT_FONT = (GetLocale and GetLocale() == "ruRU")
+    and "Fonts\\FRIZQT___CYR.TTF" or "Fonts\\FRIZQT__.TTF"
+
 ns.BUILTIN = {
   ["activeSkinLabel"]="Default",
   ["arenaAuraDirection"]="down",
@@ -23,7 +27,7 @@ ns.BUILTIN = {
       ["r"]=1,
     },
     ["enabled"]=true,
-    ["font"]="Fonts\\FRIZQT__.TTF",
+    ["font"]=ns.DEFAULT_FONT,
     ["fontSize"]=9,
     ["hideBackground"]=true,
     ["outline"]="OUTLINE",

@@ -81,7 +81,7 @@ local QUESTION_MARK_ICON = "Interface\\Icons\\INV_Misc_QuestionMark"
 -- /reload o al entrar al menu), asi que se vuelve a 1 sola fuente
 -- COMPARTIDA fija para los 5 grupos, un poco mas grande que antes (10->12).
 local MCFAuraHoverTimeFontObj = CreateFont("MCFAuraHoverTimeFontObj")
-MCFAuraHoverTimeFontObj:SetFont("Fonts\\FRIZQT__.TTF", 12, "OUTLINE")
+MCFAuraHoverTimeFontObj:SetFont(ns.DEFAULT_FONT or "Fonts\\FRIZQT__.TTF", 12, "OUTLINE")
 MCFAuraHoverTimeFontObj:SetTextColor(ns.GOLD.r, ns.GOLD.g, ns.GOLD.b, 1)
 
 local DIRECTIONS = { "left", "right", "up", "down" }
@@ -448,7 +448,7 @@ local function CreateIcon(parent)
     -- Numero de cargas (2026-07-27): 11->9 y blanco->ns.GOLD, mismo pedido
     -- que el swipe de arriba.
     local count = b:CreateFontString(nil, "OVERLAY")
-    count:SetFont("Fonts\\FRIZQT__.TTF", 9, "OUTLINE")
+    count:SetFont(ns.DEFAULT_FONT or "Fonts\\FRIZQT__.TTF", 9, "OUTLINE")
     count:SetPoint("BOTTOMRIGHT", 1, 0)
     count:SetTextColor(ns.GOLD.r, ns.GOLD.g, ns.GOLD.b)
     b.count = count

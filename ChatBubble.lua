@@ -18,7 +18,7 @@ ns.IsChatBubble = function(key) return key == CHATBUBBLE_KEY end
 local function ChatBubbleDefaults()
     return {
         enabled = true, hideBackground = true,
-        fontSize = 13, font = "Fonts\\FRIZQT__.TTF", outline = "OUTLINE",
+        fontSize = 13, font = ns.DEFAULT_FONT or "Fonts\\FRIZQT__.TTF", outline = "OUTLINE",
         useColor = false, color = { r = 1, g = 1, b = 1 },
     }
 end
@@ -28,6 +28,14 @@ local function CB_Flags(p)
     local f = p.outline or ""
     if f == "NONE" then f = "" end
     return f
+end
+
+-- Existing SavedVariables may still contain the old Latin-only default.
+local function CB_FontPath(path)
+    if not path or path == "Fonts\\FRIZQT__.TTF" then
+        return ns.DEFAULT_FONT or "Fonts\\FRIZQT__.TTF"
+    end
+    return path
 end
 
 -- FIX RONDA 5 (2026-07-16): el usuario identifico el asset real -- "Interface\Tooltips\..." es
@@ -82,7 +90,7 @@ local function CB_SkinBubble(outer, frame, fs, p)
     if p.hideBackground then
         CB_ClearBackgroundTextures(outer)
     end
-    pcall(fs.SetFont, fs, p.font or "Fonts\\FRIZQT__.TTF", p.fontSize or 13, CB_Flags(p))
+    pcall(fs.SetFont, fs, CB_FontPath(p.font), p.fontSize or 13, CB_Flags(p))
     if p.useColor and p.color then
         pcall(fs.SetTextColor, fs, p.color.r, p.color.g, p.color.b)
     end
@@ -116,7 +124,7 @@ local function RefreshChatBubble()
     configEpoch = configEpoch + 1   -- invalida la cache de CB_SkinBubble (cambio config)
     -- Fuente/color GLOBAL (afecta a todas las bubbles via su font object).
     if ChatBubbleFont then
-        pcall(ChatBubbleFont.SetFont, ChatBubbleFont, p.font or "Fonts\\FRIZQT__.TTF", p.fontSize or 13, CB_Flags(p))
+        pcall(ChatBubbleFont.SetFont, ChatBubbleFont, CB_FontPath(p.font), p.fontSize or 13, CB_Flags(p))
         if p.useColor and p.color then pcall(ChatBubbleFont.SetTextColor, ChatBubbleFont, p.color.r, p.color.g, p.color.b) end
     end
     CB_IterateBubbles(CB_SkinBubble, p)

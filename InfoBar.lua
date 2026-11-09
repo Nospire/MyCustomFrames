@@ -84,7 +84,7 @@ local function RefreshInfoBar()
         local size = p[prefix .. "Size"] or p.fontSize or 14
         local col  = p[prefix .. "Color"] or gtc
         local a    = p[prefix .. "Alpha"]; if a == nil then a = 1 end
-        el.fs:SetFont("Fonts\\FRIZQT__.TTF", size, "OUTLINE")
+        el.fs:SetFont(ns.DEFAULT_FONT or "Fonts\\FRIZQT__.TTF", size, "OUTLINE")
         el.fs:SetTextColor(col.r, col.g, col.b, a)
         el._xKey, el._yKey = prefix .. "X", prefix .. "Y"
         el:ClearAllPoints()
@@ -134,7 +134,7 @@ local function MakeInfoElement(root, isClock)
     el:EnableMouse(false)
     el._isClock = isClock
     local fs = el:CreateFontString(nil, "OVERLAY")
-    fs:SetFont("Fonts\\FRIZQT__.TTF", 14, "OUTLINE")
+    fs:SetFont(ns.DEFAULT_FONT or "Fonts\\FRIZQT__.TTF", 14, "OUTLINE")
     fs:SetPoint("CENTER")
     el.fs = fs
 

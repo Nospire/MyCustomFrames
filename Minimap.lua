@@ -336,7 +336,7 @@ local function CreateCompass()
     f:SetPoint("BOTTOMRIGHT", Minimap, "BOTTOMRIGHT", -14, 14)
 
     local north = f:CreateFontString(nil, "ARTWORK", nil, 1)
-    north:SetFont("Fonts\\FRIZQT__.TTF", 16, "OUTLINE")
+    north:SetFont(ns.DEFAULT_FONT or "Fonts\\FRIZQT__.TTF", 16, "OUTLINE")
     north:SetTextColor(0.9, 0.9, 0.9, 0.75)
     north:SetText(ns.T("N"))
     f.north = north
@@ -395,7 +395,7 @@ end
 -- ==========================================================================
 local function CreateCoordinates()
     local fs = mm.root:CreateFontString(nil, "OVERLAY", nil, 1)
-    fs:SetFont("Fonts\\FRIZQT__.TTF", 12, "OUTLINE")
+    fs:SetFont(ns.DEFAULT_FONT or "Fonts\\FRIZQT__.TTF", 12, "OUTLINE")
     fs:SetTextColor(0.77, 0.77, 0.77, 0.75)
     mm.coords = fs
     mm.LayoutCoords = function()
@@ -495,7 +495,7 @@ local function CreateMail()
     -- fs se ancla a btn (su propio padre), NUNCA al reves: btn:SetAllPoints(fs)
     -- crearia una dependencia circular ("Cannot anchor to a region dependent on it").
     local fs = btn:CreateFontString(nil, "OVERLAY", nil, 1)
-    fs:SetFont("Fonts\\FRIZQT__.TTF", 15, "OUTLINE")
+    fs:SetFont(ns.DEFAULT_FONT or "Fonts\\FRIZQT__.TTF", 15, "OUTLINE")
     fs:SetTextColor(0.77, 0.77, 0.77, 0.85)
     fs:SetJustifyH("LEFT")
     fs:SetJustifyV("BOTTOM")
@@ -1054,7 +1054,7 @@ local function CreateRing()
     mm.ringButtonTex = btex
 
     local percent = button:CreateFontString(nil, "OVERLAY")
-    percent:SetFont("Fonts\\FRIZQT__.TTF", 15, "OUTLINE")
+    percent:SetFont(ns.DEFAULT_FONT or "Fonts\\FRIZQT__.TTF", 15, "OUTLINE")
     percent:SetPoint("CENTER")
     button.percent = percent
 
@@ -1085,11 +1085,11 @@ local function CreateRing()
     bonus:SetStatusBarColor(RESTED_BONUS_COLOR[1], RESTED_BONUS_COLOR[2], RESTED_BONUS_COLOR[3])
 
     local value = frame:CreateFontString(nil, "OVERLAY")
-    value:SetFont("Fonts\\FRIZQT__.TTF", 24, "OUTLINE")
+    value:SetFont(ns.DEFAULT_FONT or "Fonts\\FRIZQT__.TTF", 24, "OUTLINE")
     value:SetPoint("CENTER", 0, 1)
 
     local desc = frame:CreateFontString(nil, "OVERLAY")
-    desc:SetFont("Fonts\\FRIZQT__.TTF", 12, "OUTLINE")
+    desc:SetFont(ns.DEFAULT_FONT or "Fonts\\FRIZQT__.TTF", 12, "OUTLINE")
     desc:SetWidth(100)
     desc:SetPoint("CENTER", 0, -16)
     desc:SetTextColor(GRAY_COLOR[1], GRAY_COLOR[2], GRAY_COLOR[3])

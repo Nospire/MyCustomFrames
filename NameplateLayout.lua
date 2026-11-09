@@ -88,7 +88,7 @@ local AURA_ANCHOR_POINT = { right = "BOTTOMLEFT", left = "BOTTOMRIGHT", center =
 -- NameplateAurasNext.lua) con el MISMO nombre para no tener que tocar esos
 -- 2 archivos donde ya se lo pide por nombre.
 local MCFAuraTimeFontObj = CreateFont("MCFAuraTimeFontObj")
-MCFAuraTimeFontObj:SetFont("Fonts\\FRIZQT__.TTF", 12, "OUTLINE")
+MCFAuraTimeFontObj:SetFont(ns.DEFAULT_FONT or "Fonts\\FRIZQT__.TTF", 12, "OUTLINE")
 if ns.GOLD then
     MCFAuraTimeFontObj:SetTextColor(ns.GOLD.r, ns.GOLD.g, ns.GOLD.b, 1)
 else
