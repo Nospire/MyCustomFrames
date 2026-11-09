@@ -205,11 +205,27 @@ Previews (`/mcfdiag test…`) are toggles — run them again to turn them off.
 
 ## Installation
 
-1. **Code → Download ZIP** above, extract it.
-2. Rename the extracted folder from `MyCustomFrames-main` to **`MyCustomFrames`** (must match the `.toc`).
-3. Move it into `World of Warcraft\_retail_\Interface\AddOns\`.
-4. Restart WoW (or reload the AddOns list at the character screen).
-5. Log in — the Setup Wizard opens automatically.
+### WoW Forever — установка для новичков
+
+1. Открой [ветку с русской локализацией](https://github.com/Nospire/MyCustomFrames/tree/ruRU-localization). На странице нажми зелёную кнопку **Code**, затем **Download ZIP**.
+2. Распакуй ZIP. Внутри будет папка с названием вроде `MyCustomFrames-ruRU-localization`.
+3. Переименуй эту папку ровно в **`MyCustomFrames`**. Проверь, что внутри неё сразу виден файл `MyCustomFrames.toc`. Не должно получиться двух вложенных папок `MyCustomFrames/MyCustomFrames`.
+4. Найди папку WoW Forever. В ней открой `Interface`, затем `AddOns`. Скопируй туда папку `MyCustomFrames`. Итоговый путь должен выглядеть так:
+   - **Windows:** `…\World of Warcraft\_forever_\Interface\AddOns\MyCustomFrames\MyCustomFrames.toc`
+   - **macOS:** `…/World of Warcraft/_forever_/Interface/AddOns/MyCustomFrames/MyCustomFrames.toc`
+5. Если игра открыта, полностью выйди из неё. Запусти именно WoW Forever снова.
+6. На экране выбора персонажа нажми **Модификации / AddOns**. Убедись, что `MyCustomFrames` включён. Если игра предлагает загрузить устаревшие модификации, включи эту опцию.
+7. Войди персонажем. Мастер настройки откроется сам. Чтобы запустить его позже, введи в чат игры `/mcfsetup`.
+
+**Частые ошибки:** не клади аддон в `_retail_`; для Forever нужна папка `_forever_`. Не оставляй архив ZIP внутри `AddOns` и не создавай лишний уровень вложенности. Для русских надписей выбери русский язык клиента игры.
+
+### English
+
+1. Click **Code → Download ZIP** above and extract the archive.
+2. Rename the extracted folder to **`MyCustomFrames`** (it must match the `.toc` filename).
+3. Move that folder into the AddOns directory for the WoW client you use. For WoW Forever, the path is `World of Warcraft/_forever_/Interface/AddOns/MyCustomFrames/`.
+4. Restart WoW, enable the addon in the AddOns list at the character screen, and log in.
+5. The Setup Wizard opens automatically. To reopen it later, type `/mcfsetup`.
 
 ## Credits
 
