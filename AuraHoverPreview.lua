@@ -672,7 +672,7 @@ local function MakeAuraHoverGroup(cfg)
                     ResizeIcon(b, sz)
                     b.tex:SetTexture(QUESTION_MARK_ICON)
                     if b.swipe.Clear then b.swipe:Clear() end
-                    b.count:SetText("")
+                    b.count:SetText(ns.T(""))
                     b.border:SetVertexColor(color[1], color[2], color[3])
                     local step = (sz + padding) * (i - 1) * growSign
                     b:ClearAllPoints()
@@ -1053,8 +1053,8 @@ local function MakeAuraHoverGroup(cfg)
                 if GameTooltip:IsForbidden() or not self:IsVisible() or not cfg.gateFn() then return end
                 if self._fake then
                     GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-                    GameTooltip:SetText("Test Aura " .. tostring(i), 1, 1, 1)
-                    GameTooltip:AddLine("Placeholder shown by the test toggle.", 0.8, 0.8, 0.8, true)
+                    GameTooltip:SetText(ns.T("Test Aura ") .. tostring(i), 1, 1, 1)
+                    GameTooltip:AddLine(ns.T("Placeholder shown by the test toggle."), 0.8, 0.8, 0.8, true)
                     GameTooltip:Show()
                     return
                 end

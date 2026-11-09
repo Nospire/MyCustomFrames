@@ -338,7 +338,7 @@ local function CreateCompass()
     local north = f:CreateFontString(nil, "ARTWORK", nil, 1)
     north:SetFont("Fonts\\FRIZQT__.TTF", 16, "OUTLINE")
     north:SetTextColor(0.9, 0.9, 0.9, 0.75)
-    north:SetText("N")
+    north:SetText(ns.T("N"))
     f.north = north
     mm.compass = f
 
@@ -413,7 +413,7 @@ local function CreateCoordinates()
         if acc < 0.2 then return end
         acc = 0
         local p = P()
-        if not (p and p.showCoordinates) then fs:SetText("") return end
+        if not (p and p.showCoordinates) then fs:SetText(ns.T("")) return end
         local ok, x, y = pcall(function()
             local mapID = C_Map.GetBestMapForUnit("player")
             if not mapID then return nil end
@@ -424,7 +424,7 @@ local function CreateCoordinates()
         if ok and x and y then
             fs:SetFormattedText("%.1f, %.1f", x * 100, y * 100)
         else
-            fs:SetText("")
+            fs:SetText(ns.T(""))
         end
     end)
 end

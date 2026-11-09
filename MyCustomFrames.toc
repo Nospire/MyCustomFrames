@@ -13,6 +13,8 @@ Libs\LibStub\LibStub.lua
 Libs\LibSpinBar-1.0\LibSpinBar-1.0.lua
 
 Defaults.lua
+Locale-ruRU.lua
+Locale-ruRU-extra.lua
 
 # Instrumentacion de los caminos calientes (tickers/OnUpdate permanentes).
 # Apagada por defecto: con `active` en false el wrapper solo hace una

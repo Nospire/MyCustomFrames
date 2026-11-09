@@ -215,7 +215,7 @@ local function CreateInfoBar()
         pcall(function() local h, m = GetGameTime(); GameTooltip:AddDoubleLine(TIMEMANAGER_TOOLTIP_REALMTIME or "Servidor", string.format("%d:%02d", h or 0, m or 0)) end)
         pcall(function() local r = GetRealmName(); if r and r ~= "" then GameTooltip:AddDoubleLine("Reino", r, 1, 1, 1, 1, 1, 1) end end)
         if ToggleCalendar then
-            GameTooltip:AddLine("<" .. (GAMETIME_TOOLTIP_TOGGLE_CALENDAR or "Toggle Calendar") .. ">", 0.1, 1, 0.1)
+            GameTooltip:AddLine(ns.T("<") .. (GAMETIME_TOOLTIP_TOGGLE_CALENDAR or "Toggle Calendar") .. ">", 0.1, 1, 0.1)
         end
         GameTooltip:Show()
     end)

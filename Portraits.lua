@@ -812,7 +812,7 @@ local function CreatePortrait(def)
         local p = PP(u)
         if p and p.clickOpenChar then
             GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-            GameTooltip:SetText("Character Info", 1, 1, 1)
+            GameTooltip:SetText(ns.T("Character Info"), 1, 1, 1)
             GameTooltip:Show()
         end
     end)

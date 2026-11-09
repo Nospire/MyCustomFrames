@@ -1587,7 +1587,7 @@ local function AuraShowOne(uf, unit, p0, data, isHarmful)
     local okCount = pcall(function()
         b.count:SetText((data.applications and data.applications > 1) and data.applications or "")
     end)
-    if not okCount then b.count:SetText("") end
+    if not okCount then b.count:SetText(ns.T("")) end
     local cc = (p0 and p0.auraCountColor) or { r = 1, g = 1, b = 1 }
     b.count:SetTextColor(cc.r, cc.g, cc.b, 1)
     pcall(b.cd.SetSwipeColor, b.cd, cc.r, cc.g, cc.b, 0.7)
@@ -2005,9 +2005,9 @@ healthValueDriver:SetScript("OnUpdate", ns.Prof.Wrap("Nameplates: valor de vida"
         if fs and unit then
             local pct = ns.GetHealthPercent(unit)
             if pct ~= nil then
-                if not pcall(fs.SetFormattedText, fs, "%d%%", pct) then fs:SetText("") end
+                if not pcall(fs.SetFormattedText, fs, "%d%%", pct) then fs:SetText(ns.T("")) end
             else
-                fs:SetText("")
+                fs:SetText(ns.T(""))
             end
             -- 12.1.0 (2026-08-03): la barra propia (SkinHealthBarNext) no la
             -- alimenta Blizzard -- mismo pct ya calculado arriba, mismo
@@ -2148,7 +2148,7 @@ local function ResetNameplateState(uf)
     -- solo porque coincide por casualidad con el ultimo modo de la unidad
     -- ANTERIOR que ocupaba este frame.
     uf.mcfNameOnlyMode = nil
-    if uf.healthBar and uf.healthBar.mcfValue then uf.healthBar.mcfValue:SetText("") end
+    if uf.healthBar and uf.healthBar.mcfValue then uf.healthBar.mcfValue:SetText(ns.T("")) end
 end
 
 ev:RegisterEvent("NAME_PLATE_UNIT_ADDED")

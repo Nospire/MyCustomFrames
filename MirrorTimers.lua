@@ -316,7 +316,7 @@ local function GetPreviewFrame()
     wrapper.Text = wrapper:CreateFontString(nil, "OVERLAY")
     wrapper.Text:SetPoint("CENTER")
     wrapper.Text:SetFont("Fonts\\FRIZQT__.TTF", 11, "OUTLINE")
-    wrapper.Text:SetText("Feign Death")
+    wrapper.Text:SetText(ns.T("Feign Death"))
     wrapper.editBG = ns.MakeEditHighlight and ns.MakeEditHighlight(wrapper, "Mirror Timer") or nil
     if wrapper.editBG then wrapper.editBG:ClearAllPoints(); wrapper.editBG:SetAllPoints(wrapper) end
     wrapper:SetScript("OnDragStart", function(self)

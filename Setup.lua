@@ -63,7 +63,7 @@ local function Paragraph(parent, x, y, size, text)
     fs:SetPoint("TOPLEFT", x, y)
     fs:SetWidth(CONTENT_W); fs:SetJustifyH("LEFT"); fs:SetWordWrap(true)
     fs:SetTextColor(COLOR_DESC[1], COLOR_DESC[2], COLOR_DESC[3])
-    fs:SetText(text)
+    fs:SetText(T(text))
     return fs
 end
 
@@ -131,7 +131,7 @@ local function DropdownButton(parent, w, h, text, fontSize)
     SF(arrow, fontSize or 12)
     arrow:SetPoint("RIGHT", -8, 0)
     arrow:SetTextColor(COLOR_LINE[1], COLOR_LINE[2], COLOR_LINE[3])
-    arrow:SetText("v")
+    arrow:SetText(ns.T("v"))
     return b
 end
 
@@ -206,8 +206,8 @@ local function TooltipToggle(parent, label, x, y, getf, setf, tip)
         cb:HookScript("OnEnter", function(self)
             if GameTooltip:IsForbidden() then return end
             GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-            GameTooltip:SetText(label, COLOR_TITLE[1], COLOR_TITLE[2], COLOR_TITLE[3])
-            GameTooltip:AddLine(tip, 1, 1, 1, true)
+            GameTooltip:SetText(T(label), COLOR_TITLE[1], COLOR_TITLE[2], COLOR_TITLE[3])
+            GameTooltip:AddLine(T(tip), 1, 1, 1, true)
             GameTooltip:Show()
         end)
         cb:HookScript("OnLeave", function() if not GameTooltip:IsForbidden() then GameTooltip:Hide() end end)
@@ -283,7 +283,7 @@ local function BuildFrame()
     SF(title, 20)
     title:SetPoint("TOP", 0, -80)
     title:SetTextColor(COLOR_TITLE[1], COLOR_TITLE[2], COLOR_TITLE[3])
-    title:SetText("Welcome to Gonkast Preset")
+    title:SetText(T("Welcome to Gonkast Preset"))
 
     local tdiv = f:CreateTexture(nil, "ARTWORK")
     tdiv:SetTexture(ART.DIVIDER)
@@ -319,15 +319,15 @@ local function BuildFrame()
         pageDots[i] = d
     end
 
-    skipBtn = TexButton(f, CUSTOM.NAVBTN, 160, 40, "Skip setup", 13)
+    skipBtn = TexButton(f, CUSTOM.NAVBTN, 160, 40, T("Skip setup"), 13)
     skipBtn:SetPoint("BOTTOMLEFT", 64, 64)
     skipBtn:SetScript("OnClick", function() ns.CloseSetupWizard(true) end)
 
-    backBtn = TexButton(f, CUSTOM.NAVBTN, 130, 40, "< Back", 13)
+    backBtn = TexButton(f, CUSTOM.NAVBTN, 130, 40, T("< Back"), 13)
     backBtn:SetPoint("BOTTOMRIGHT", -214, 64)
     backBtn:SetScript("OnClick", function() ns.SetupGoTo(curPage - 1) end)
 
-    nextBtn = TexButton(f, CUSTOM.NAVBTN, 130, 40, "Next >", 13)
+    nextBtn = TexButton(f, CUSTOM.NAVBTN, 130, 40, T("Next >"), 13)
     nextBtn:SetPoint("BOTTOMRIGHT", -64, 64)
     nextBtn:SetScript("OnClick", function()
         if curPage < PAGE_COUNT then ns.SetupGoTo(curPage + 1) else ns.SetupFinish() end
@@ -366,14 +366,14 @@ local function FeatureCard(parent, x, y, w, title, desc)
     SF(ttl, 13)
     ttl:SetPoint("TOPLEFT", x + 20, y + 1)
     ttl:SetTextColor(COLOR_TITLE[1], COLOR_TITLE[2], COLOR_TITLE[3])
-    ttl:SetText(title)
+    ttl:SetText(T(title))
 
     local fs = parent:CreateFontString(nil, "ARTWORK")
     SF(fs, 11)
     fs:SetPoint("TOPLEFT", x + 20, y - 18)
     fs:SetWidth(w - 20); fs:SetJustifyH("LEFT"); fs:SetWordWrap(true)
     fs:SetTextColor(COLOR_DESC[1], COLOR_DESC[2], COLOR_DESC[3])
-    fs:SetText(desc)
+    fs:SetText(T(desc))
 end
 
 local function BuildPage1(content)
@@ -592,7 +592,7 @@ local function BuildPage4(content)
     SF(qpLabel, 12)
     qpLabel:SetPoint("TOPLEFT", 4, -146)
     qpLabel:SetTextColor(COLOR_OPTION[1], COLOR_OPTION[2], COLOR_OPTION[3])
-    qpLabel:SetText("Or jump straight to a preset:")
+    qpLabel:SetText(ns.T("Or jump straight to a preset:"))
 
     local QP = ns.EXPLORER_QUICK_PROFILES
     local qpOrder = { "exploration", "combat", "minimal" }
@@ -617,7 +617,7 @@ local function BuildPage4(content)
                 desc:SetPoint("RIGHT", p, "RIGHT", 0, 0)
                 desc:SetJustifyH("LEFT")
                 desc:SetTextColor(COLOR_DESC[1], COLOR_DESC[2], COLOR_DESC[3])
-                desc:SetText(prof.desc)
+                desc:SetText(T(prof.desc))
             end
         end
     end
@@ -809,7 +809,7 @@ local function BuildPage6(content)
         local charKey = (UnitName("player") or "?") .. " - " .. (GetRealmName() or "?")
         local bt = _G.Bartender4DB
         if type(bt) ~= "table" then
-            resultFs:SetText("|cffff5555Bartender4DB not found — is Bartender4 loaded?|r")
+            resultFs:SetText(ns.T("|cffff5555Bartender4DB not found — is Bartender4 loaded?|r"))
             return
         end
         bt.profileKeys = bt.profileKeys or {}
@@ -891,7 +891,7 @@ function ns.SetupGoTo(page)
     for i, d in ipairs(pageDots) do
         d:SetTexture(i == page and CUSTOM.PAGE_CUR or CUSTOM.PAGE)
     end
-    stepLabel:SetText("Step " .. page .. " of " .. PAGE_COUNT)
+    stepLabel:SetText(T("Step ") .. page .. " из " .. PAGE_COUNT)
     backBtn:SetShown(page > 1)
     nextBtn.text:SetText(page < PAGE_COUNT and "Next >" or "Finish")
     if page == 2 then RefreshPage2(contentPages[2]) end

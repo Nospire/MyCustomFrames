@@ -852,7 +852,7 @@ local function UpdateHealth(f, unit, isFriendly)
         pcall(f.health.SetValue, f.health, pct)
         pcall(function() f.healthValue:SetFormattedText("%d%%", pct) end)
     else
-        f.healthValue:SetText("")
+        f.healthValue:SetText(ns.T(""))
     end
     local r, g, b
     if isFriendly and FriendlySettings().classColor then

@@ -273,7 +273,7 @@ local function BuildLockPanel()
     local title = f:CreateFontString(nil, "OVERLAY")
     title:SetFont(ns.PL and ns.PL.FONT or "Fonts\\FRIZQT__.TTF", 13, "OUTLINE")
     title:SetPoint("TOP", f, "TOP", 0, -8)
-    title:SetText("Hide in Lock")
+    title:SetText(ns.T("Hide in Lock"))
     title:SetTextColor(LOCK_COLOR_TITLE[1], LOCK_COLOR_TITLE[2], LOCK_COLOR_TITLE[3])
 
     local div = f:CreateTexture(nil, "ARTWORK")

@@ -150,6 +150,7 @@ local function MakeButton(parent, text, w, h)
     local b = CreateFrame("Button", nil, parent)
     StyleButton(b, w or 100, h or 22)
     b.text:SetText(text)
+    text = T(text)
     b._label = text
     return b
 end
@@ -311,7 +312,7 @@ local function MakeHeader(parent, text, x, y, width)
     setFont(fs, 14)
     fs:SetPoint("TOPLEFT", x + 12, y)
     fs:SetTextColor(COLOR_TITLE[1], COLOR_TITLE[2], COLOR_TITLE[3])
-    fs:SetText(text)
+    fs:SetText(T(text))
 
     -- 2026-07-17 (ronda 2): quedaba unos px mas abajo que el centro visual del
     -- texto. Anclado al CENTRO VERTICAL de `fs` (que ya sabe su propio alto real
@@ -349,7 +350,7 @@ local function MakeBulletList(parent, lines, x, y, width)
         fs:SetWidth(width - 14)
         fs:SetJustifyH("LEFT"); fs:SetWordWrap(true)
         fs:SetTextColor(COLOR_DESC[1], COLOR_DESC[2], COLOR_DESC[3])
-        fs:SetText(line)
+        fs:SetText(T(line))
         cy = cy - (fs:GetStringHeight() or 14) - 10
     end
     return cy
@@ -381,7 +382,7 @@ local function MakeToggle(parent, label, x, y, getf, setf)
     setFont(lbl, 12)
     lbl:SetPoint("LEFT", box, "RIGHT", 3, 0)
     lbl:SetTextColor(COLOR_OPTION[1], COLOR_OPTION[2], COLOR_OPTION[3])
-    lbl:SetText(label)
+    lbl:SetText(T(label))
     cb.label = lbl   -- expuesto para que otros archivos (p.ej. Setup.lua) puedan re-fontear
     cb.box, cb.check = box, check   -- idem: permite reskinear el checkbox (p.ej. Setup.lua)
     local function refresh() check:SetShown(getf() and true or false) end
@@ -522,7 +523,7 @@ local function MakeSlider(parent, label, minV, maxV, step, dbKey, x, y, getTbl, 
     refreshers[#refreshers + 1] = function()
         local v = get()[dbKey]
         if v == nil then return end   -- clave ausente (p.ej. unidad vs portrait): no tocar
-        lbl:SetText(label)
+        lbl:SetText(T(label))
         syncing = true; s:SetValue(clamp(v, minV, maxV)); syncing = false
         box:SetText(fmtVal(v))
     end
@@ -532,7 +533,7 @@ end
 local function MakeCycle(parent, label, values, dbKey, x, y)
     local btn = MakeButton(parent, "", 200, 22)
     btn:SetPoint("TOPLEFT", x, y)
-    local function txt() btn.text:SetText(label .. ": " .. tostring(getP()[dbKey])) end
+    local function txt() btn.text:SetText(T(label) .. ": " .. T(tostring(getP()[dbKey]))) end
     btn:SetScript("OnClick", function()
         local cur, idx = getP()[dbKey], 1
         for i, v in ipairs(values) do if v == cur then idx = i break end end
@@ -548,7 +549,7 @@ local function MakeEditBox(parent, label, dbKey, x, y, width)
     setFont(lbl, 11)
     lbl:SetPoint("TOPLEFT", x, y)
     lbl:SetTextColor(COLOR_OPTION[1], COLOR_OPTION[2], COLOR_OPTION[3])
-    lbl:SetText(label)
+    lbl:SetText(T(label))
     local eb = CreateFrame("EditBox", nil, parent, "InputBoxTemplate")
     eb:SetSize(width or 200, 20)
     eb:SetPoint("TOPLEFT", x + 4, y - 15)
@@ -622,7 +623,7 @@ local function GetTexPopup()
     tinsert(UISpecialFrames, "MyCF_TexPopup")
     local bg = p:CreateTexture(nil, "BACKGROUND"); bg:SetAllPoints(); bg:SetColorTexture(0.04, 0.04, 0.05, 0.96)
     local ttl = p:CreateFontString(nil, "OVERLAY"); setFont(ttl, 13)
-    ttl:SetPoint("TOPLEFT", 10, -8); ttl:SetTextColor(COLOR_TITLE[1], COLOR_TITLE[2], COLOR_TITLE[3]); ttl:SetText("Choose texture")
+    ttl:SetPoint("TOPLEFT", 10, -8); ttl:SetTextColor(COLOR_TITLE[1], COLOR_TITLE[2], COLOR_TITLE[3]); ttl:SetText(ns.T("Choose texture"))
     local close = MakeButton(p, "X", 22, 20); close:SetPoint("TOPRIGHT", -6, -6)
     close:SetScript("OnClick", function() p:Hide() end)   -- cierra SIN aplicar (cancelar)
     -- Fila de botones fija abajo (Accept/Cancel): el click en una fila ya NO aplica
@@ -685,7 +686,7 @@ local function OpenTexPopup(category, dbKey, anchor, getTbl, onChange)
         if #files > 0 then
             i = i + 1; local h = AcquireTexRow(p, i)
             h.sw:Hide(); h.tx:ClearAllPoints(); h.tx:SetPoint("LEFT", 4, 0)
-            h.tx:SetText("|cffffcc00" .. (skin.label or "Skin") .. "|r")
+            h.tx:SetText(ns.T("|cffffcc00") .. (skin.label or "Skin") .. "|r")
             h.sel:Hide()
             h:SetPoint("TOPLEFT", 0, y); h:Disable(); h:Show(); y = y - 20
             for _, file in ipairs(files) do
@@ -718,7 +719,7 @@ local function MakeTexturePicker(parent, label, dbKey, category, x, y, getTbl, o
     local get = getTbl or getP
     local edit = onChange or OnEdit
     local lbl = parent:CreateFontString(nil, "ARTWORK"); setFont(lbl, 11)
-    lbl:SetPoint("TOPLEFT", x, y); lbl:SetTextColor(COLOR_OPTION[1], COLOR_OPTION[2], COLOR_OPTION[3]); lbl:SetText(label)
+    lbl:SetPoint("TOPLEFT", x, y); lbl:SetTextColor(COLOR_OPTION[1], COLOR_OPTION[2], COLOR_OPTION[3]); lbl:SetText(T(label))
     local eb = CreateFrame("EditBox", nil, parent, "InputBoxTemplate")
     eb:SetSize(138, 20); eb:SetPoint("TOPLEFT", x + 4, y - 15); eb:SetAutoFocus(false)
     eb:SetScript("OnEnterPressed", function(self) get()[dbKey] = self:GetText(); self:ClearFocus(); edit() end)
@@ -811,8 +812,8 @@ end
 
 local function ShowExport(name)
     local p = GetIOPopup()
-    p.ttl:SetText("Export profile")
-    p.hint:SetText("Ctrl+C to copy (already selected).")
+    p.ttl:SetText(ns.T("Export profile"))
+    p.hint:SetText(ns.T("Ctrl+C to copy (already selected)."))
     p.eb:SetText(ns.ExportPreset(name) or "")
     p.action:Hide()
     p:ClearAllPoints(); p:SetPoint("CENTER"); p:Show()
@@ -821,14 +822,14 @@ end
 
 local function ShowImport(onDone)
     local p = GetIOPopup()
-    p.ttl:SetText("Import profile")
-    p.hint:SetText("Paste the code and press Import.")
-    p.eb:SetText("")
+    p.ttl:SetText(ns.T("Import profile"))
+    p.hint:SetText(ns.T("Paste the code and press Import."))
+    p.eb:SetText(ns.T(""))
     p.action:Show()
     p.action:SetScript("OnClick", function()
         local ok, res = ns.ImportPreset(p.eb:GetText())
         if ok then p:Hide(); if onDone then onDone(res) end
-        else p.hint:SetText("|cffff5555Error: " .. tostring(res) .. "|r") end
+        else p.hint:SetText(ns.T("|cffff5555Error: ") .. tostring(res) .. "|r") end
     end)
     p:ClearAllPoints(); p:SetPoint("CENTER"); p:Show()
     p.eb:SetFocus()
@@ -1114,7 +1115,7 @@ local function ShowSection(key)
     for k, f in pairs(sections) do f:SetShown(k == key) end
     if GLOBAL_SECTION_TITLE[key] then
         for k, b in pairs(sectionTabs) do b:Hide() end
-        if unitTitle then unitTitle:SetText(GLOBAL_SECTION_TITLE[key]) end
+        if unitTitle then unitTitle:SetText(T(GLOBAL_SECTION_TITLE[key])) end
         if unitCopyBtn then unitCopyBtn:Hide() end
         if unitPasteBtn then unitPasteBtn:Hide() end
         -- Setup/Editing/Explorer/Profile no tienen sub-tabs (Gen/Bar/Cage/...),
@@ -1209,7 +1210,7 @@ local function SelectUnit(key)
         or isArenaAuraTitle and "Arena Auras" or isFocusAuraTitle and "Focus Auras"
         or isPlayerAuraTitle and "Player Auras" or isTargetAuraTitle and "Target Auras"
         or (u and u.label) or key
-    if unitTitle then unitTitle:SetText("Editing:  |cffffffff" .. title .. "|r") end
+    if unitTitle then unitTitle:SetText(ns.T("Editing:  ") .. "|cffffffff" .. ns.T(title) .. "|r") end
     if UpdatePreview then UpdatePreview() end
 
     if isInfo then
@@ -1417,7 +1418,7 @@ local function BuildPanel()
     setFont(title, 16)
     title:SetPoint("TOP", panel, "TOP", 0, -16)
     title:SetTextColor(COLOR_TITLE[1], COLOR_TITLE[2], COLOR_TITLE[3])
-    title:SetText("AzeriteUI |cffffcc00—|r Gonkast Preset")
+    title:SetText(ns.T("AzeriteUI |cffffcc00—|r Gonkast Preset"))
 
     -- Unico tab arriba a la derecha: Close. Setup/Editing/Explorer/Profile se
     -- movieron a la sidebar como categorias propias (2026-07-17, Fase B: antes
@@ -1465,7 +1466,7 @@ local function BuildPanel()
         local scaleLbl = panel:CreateFontString(nil, "ARTWORK"); setFont(scaleLbl, 11)
         scaleLbl:SetPoint("RIGHT", scaleMinus, "LEFT", -8, 0)
         scaleLbl:SetTextColor(COLOR_OPTION[1], COLOR_OPTION[2], COLOR_OPTION[3])
-        scaleLbl:SetText("Scale")
+        scaleLbl:SetText(ns.T("Scale"))
 
         -- FIX (2026-07-23, "cuando cambio la escala se reposiciona la
         -- ventana"): el panel es arrastrable (StartMoving/StopMovingOrSizing
@@ -1613,7 +1614,7 @@ local function BuildPanel()
     sbMag:SetVertexColor(0.85, 0.78, 0.62)
 
     local searchHint = searchBox:CreateFontString(nil, "ARTWORK"); setFont(searchHint, 11)
-    searchHint:SetPoint("LEFT", 22, 0); searchHint:SetTextColor(0.55, 0.5, 0.42); searchHint:SetText("Search...")
+    searchHint:SetPoint("LEFT", 22, 0); searchHint:SetTextColor(0.55, 0.5, 0.42); searchHint:SetText(ns.T("Search..."))
 
     local sortBtn = MakeButton(sidebar, "All", 40, 22)
     sortBtn:SetPoint("TOPRIGHT", -2, -40)
@@ -1625,7 +1626,7 @@ local function BuildPanel()
         if RelayoutGlobalNav then RelayoutGlobalNav() end
     end)
     searchBox:SetScript("OnEscapePressed", function(self)
-        self:SetText(""); self:ClearFocus()
+        self:SetText(ns.T("")); self:ClearFocus()
         if ns.CloseMainPanel then ns.CloseMainPanel() end
     end)
     searchBox:SetScript("OnEditFocusGained", function(self) sbMag:SetVertexColor(1, 0.9, 0.6) end)
@@ -1819,7 +1820,7 @@ local function BuildPanel()
     sortBtn:HookScript("OnEnter", function()
         if GameTooltip:IsForbidden() then return end
         GameTooltip:SetOwner(sortBtn, "ANCHOR_LEFT")
-        GameTooltip:SetText("Expand / collapse all groups", 1, 1, 1)
+        GameTooltip:SetText(ns.T("Expand / collapse all groups"), 1, 1, 1)
         GameTooltip:Show()
     end)
     sortBtn:HookScript("OnLeave", function() if not GameTooltip:IsForbidden() then GameTooltip:Hide() end end)
@@ -1833,7 +1834,7 @@ local function BuildPanel()
         arrow:SetPoint("LEFT", 0, 0); arrow:SetTextColor(COLOR_GROUP[1], COLOR_GROUP[2], COLOR_GROUP[3])
         h.arrow = arrow
         local fs = h:CreateFontString(nil, "ARTWORK"); setFont(fs, 10)
-        fs:SetPoint("LEFT", 11, 0); fs:SetTextColor(COLOR_GROUP[1], COLOR_GROUP[2], COLOR_GROUP[3]); fs:SetText(grp.title)
+        fs:SetPoint("LEFT", 11, 0); fs:SetTextColor(COLOR_GROUP[1], COLOR_GROUP[2], COLOR_GROUP[3]); fs:SetText(T(grp.title))
         h.fs = fs
         h:SetScript("OnEnter", function() fs:SetTextColor(1, 0.9, 0.45); arrow:SetTextColor(1, 0.9, 0.45) end)
         h:SetScript("OnLeave", function()
@@ -2063,7 +2064,7 @@ local function BuildPanel()
     end
     UpdatePreview = function()
         local t, d = GetFamilyDescription(currentSection)
-        pvTitle:SetText(t)
+        pvTitle:SetText(T(t))
         local anchor = pvTitle
         for i, line in ipairs(d) do
             local b = GetBullet(i)
@@ -2072,7 +2073,7 @@ local function BuildPanel()
             b.fs:ClearAllPoints()
             b.fs:SetPoint("TOPLEFT", b.dot, "TOPRIGHT", 6, 2)
             b.fs:SetPoint("RIGHT", preview, "RIGHT", -10, 0)
-            b.fs:SetText(line)
+            b.fs:SetText(T(line))
             b.dot:Show(); b.fs:Show()
             anchor = b.fs
         end
@@ -2534,7 +2535,7 @@ local function BuildPanel()
         local cnote = f:CreateFontString(nil, "ARTWORK"); setFont(cnote, 10)
         cnote:SetPoint("TOPLEFT", L, -388); cnote:SetWidth(210); cnote:SetJustifyH("LEFT")
         cnote:SetTextColor(COLOR_DESC[1], COLOR_DESC[2], COLOR_DESC[3])
-        cnote:SetText("Click = the secure button (right-click menu / targeting). 0 follows the bar size. Applies when preview is OFF.")
+        cnote:SetText(ns.T("Click = the secure button (right-click menu / targeting). 0 follows the bar size. Applies when preview is OFF."))
 
         MakeHeader(f, "Appearance", R, -6, 210)
         MakeSlider(f, "Bar opacity", 0, 1, 0.05, "barAlpha", R, -48)
@@ -2595,7 +2596,7 @@ local function BuildPanel()
         local note = f:CreateFontString(nil, "ARTWORK"); setFont(note, 10)
         note:SetPoint("TOPLEFT", L, -56); note:SetWidth(210); note:SetJustifyH("LEFT")
         note:SetTextColor(COLOR_DESC[1], COLOR_DESC[2], COLOR_DESC[3])
-        note:SetText("Detected via combat log only (public API) -- same as Blizzard's own arena frames.")
+        note:SetText(ns.T("Detected via combat log only (public API) -- same as Blizzard's own arena frames."))
         -- Solo prueba el DIBUJO (tamaño/posicion/que showTrinket este on), no la
         -- deteccion -- eso unicamente se confirma con un rival usandolo de verdad.
         MakePreviewButton(f, L, -96, function() return ns.ToggleArenaTrinketTest end)
@@ -2665,7 +2666,7 @@ local function BuildPanel()
         local note = f:CreateFontString(nil, "ARTWORK"); setFont(note, 10)
         note:SetPoint("TOPLEFT", R, -182); note:SetWidth(210); note:SetJustifyH("LEFT")
         note:SetTextColor(COLOR_DESC[1], COLOR_DESC[2], COLOR_DESC[3])
-        note:SetText("Long spell names wrap to 2 lines (within the cast bar width). Max characters truncates with '..' (readable names only).")
+        note:SetText(ns.T("Long spell names wrap to 2 lines (within the cast bar width). Max characters truncates with '..' (readable names only)."))
     end
     -- Cast bar (posicion fija: imita al hp bar).
     do
@@ -2687,7 +2688,7 @@ local function BuildPanel()
         MakeCheckbox(f, "Smooth progress", "castSmooth", R, -114)
         local note = f:CreateFontString(nil, "ARTWORK"); setFont(note, 10)
         note:SetPoint("TOPLEFT", R, -148); note:SetTextColor(COLOR_DESC[1], COLOR_DESC[2], COLOR_DESC[3])
-        note:SetText("Position: fixed (mimics the hp bar)")
+        note:SetText(ns.T("Position: fixed (mimics the hp bar)"))
     end
     -- Colores
     do
@@ -2708,7 +2709,7 @@ local function BuildPanel()
 
         local nlbl = f:CreateFontString(nil, "ARTWORK"); setFont(nlbl, 11)
         nlbl:SetPoint("TOPLEFT", L, -30); nlbl:SetTextColor(COLOR_OPTION[1], COLOR_OPTION[2], COLOR_OPTION[3])
-        nlbl:SetText("New preset name")
+        nlbl:SetText(ns.T("New preset name"))
         local nameBox = CreateFrame("EditBox", nil, f, "InputBoxTemplate")
         nameBox:SetSize(130, 20)
         nameBox:SetPoint("TOPLEFT", L + 4, -48)
@@ -2769,8 +2770,8 @@ local function BuildPanel()
         dcFixCB:HookScript("OnEnter", function(self)
             if GameTooltip:IsForbidden() then return end
             GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-            GameTooltip:SetText("DynamicCam camera fix", COLOR_TITLE[1], COLOR_TITLE[2], COLOR_TITLE[3])
-            GameTooltip:AddLine("Fixes DialogueUI's compatibility with DynamicCam: opening DialogueUI's " ..
+            GameTooltip:SetText(ns.T("DynamicCam camera fix"), COLOR_TITLE[1], COLOR_TITLE[2], COLOR_TITLE[3])
+            GameTooltip:AddLine(ns.T("Fixes DialogueUI's compatibility with DynamicCam: opening DialogueUI's " ..
                 "panel calls a method that freezes DynamicCam's camera and never releases it, breaking its " ..
                 "custom camera situations. This neutralizes that call. Only matters if you use BOTH " ..
                 "DialogueUI and DynamicCam — and DialogueUI's own \"Camera Movement\" option must be " ..
@@ -2796,7 +2797,7 @@ local function BuildPanel()
         local indNote = f:CreateFontString(nil, "ARTWORK"); setFont(indNote, 10)
         indNote:SetPoint("TOPLEFT", R, -246); indNote:SetWidth(210); indNote:SetJustifyH("LEFT")
         indNote:SetTextColor(COLOR_DESC[1], COLOR_DESC[2], COLOR_DESC[3])
-        indNote:SetText("Applies to player, target, focus, party and arena. /mcfindicatortest previews both.")
+        indNote:SetText(ns.T("Applies to player, target, focus, party and arena. /mcfindicatortest previews both."))
 
         -- Action bar nativas: reskin/panel ELIMINADOS (2026-08-05, "quitale
         -- toda la personalizacion o reskin a las barras nativas") -- ya no
@@ -2805,12 +2806,12 @@ local function BuildPanel()
         local tnote = f:CreateFontString(nil, "ARTWORK"); setFont(tnote, 10)
         tnote:SetPoint("TOPLEFT", R, -290); tnote:SetWidth(210); tnote:SetJustifyH("LEFT")
         tnote:SetTextColor(COLOR_DESC[1], COLOR_DESC[2], COLOR_DESC[3])
-        tnote:SetText("Grid, Snap and Preview moved to the EDITING tab (top). Quest tracker options are in the TRACKER tab.")
+        tnote:SetText(ns.T("Grid, Snap and Preview moved to the EDITING tab (top). Quest tracker options are in the TRACKER tab."))
 
         -- ===== Logica (handlers) =====
         local function refreshSel() selBtn.text:SetText(selected.name or "(no presets)") end
         local function updateLabels()
-            defLbl:SetText("Default (Reset ALL): |cff88ff88" .. (ns.GetDefaultPreset() or "none") .. "|r")
+            defLbl:SetText(ns.T("Default (Reset ALL): ") .. "|cff88ff88" .. (ns.GetDefaultPreset() or ns.T("none")) .. "|r")
         end
         local function cycleSelect(dir)
             local names = ns.GetPresetNames()
@@ -2827,7 +2828,7 @@ local function BuildPanel()
             local n = nameBox:GetText()
             if n and n ~= "" then
                 ns.SavePreset(n); selected.name = n
-                nameBox:SetText(""); nameBox:ClearFocus(); refreshSel(); updateLabels()
+                nameBox:SetText(ns.T("")); nameBox:ClearFocus(); refreshSel(); updateLabels()
             end
         end)
         loadBtn:SetScript("OnClick", function() if selected.name then ns.LoadPreset(selected.name); RefreshControls() end end)
@@ -2923,7 +2924,7 @@ local function BuildPanel()
         local ttNote = mainGroup:CreateFontString(nil, "ARTWORK"); setFont(ttNote, 10)
         ttNote:SetPoint("TOPLEFT", L, -128); ttNote:SetWidth(210); ttNote:SetJustifyH("LEFT")
         ttNote:SetTextColor(COLOR_DESC[1], COLOR_DESC[2], COLOR_DESC[3])
-        ttNote:SetText("Reskins GameTooltip and related tooltips (items, units, comparisons) to match this preset.")
+        ttNote:SetText(ns.T("Reskins GameTooltip and related tooltips (items, units, comparisons) to match this preset."))
 
         MakeHeader(mainGroup, "Mirror Timers (breath/rested/feign death)", R, -6, 210)
         local function MTDB() return ns.GetDB() and ns.GetDB().mirrortimer end
@@ -2946,7 +2947,7 @@ local function BuildPanel()
         local mtNote = mainGroup:CreateFontString(nil, "ARTWORK"); setFont(mtNote, 10)
         mtNote:SetPoint("TOPLEFT", R, -386); mtNote:SetWidth(210); mtNote:SetJustifyH("LEFT")
         mtNote:SetTextColor(COLOR_DESC[1], COLOR_DESC[2], COLOR_DESC[3])
-        mtNote:SetText("Fixed texture (same as AzeriteUI). To move it: enter Lock (top bar) — it shows with a draggable outline.")
+        mtNote:SetText(ns.T("Fixed texture (same as AzeriteUI). To move it: enter Lock (top bar) — it shows with a draggable outline."))
 
         -- Texto (pedido del usuario 2026-07-19: "quiero controlar el texto,
         -- x y size y color tambien") -- columna izquierda, debajo de Tooltip.
@@ -2994,7 +2995,7 @@ local function BuildPanel()
         strataBtn:SetPoint("TOPLEFT", R, -72)
         local function StrataText()
             local d = TWDB()
-            strataBtn.text:SetText("Strata: " .. tostring(d and d.strata or "MEDIUM"))
+            strataBtn.text:SetText(ns.T("Strata: ") .. tostring(d and d.strata or "MEDIUM"))
         end
         strataBtn:SetScript("OnClick", function()
             local d = TWDB(); if not d then return end
@@ -3032,7 +3033,7 @@ local function BuildPanel()
         local twNote = topWidgetGroup:CreateFontString(nil, "ARTWORK"); setFont(twNote, 10)
         twNote:SetPoint("TOPLEFT", L, -284); twNote:SetWidth(400); twNote:SetJustifyH("LEFT")
         twNote:SetTextColor(COLOR_DESC[1], COLOR_DESC[2], COLOR_DESC[3])
-        twNote:SetText("The native top-center widget (zone events, delve progress). You can also drag it (and scroll wheel to resize) while in Lock (top bar).")
+        twNote:SetText(ns.T("The native top-center widget (zone events, delve progress). You can also drag it (and scroll wheel to resize) while in Lock (top bar)."))
 
         ShowExtrasTab("main")
     end
@@ -3082,7 +3083,7 @@ local function BuildPanel()
         local note = dual:CreateFontString(nil, "ARTWORK"); setFont(note, 10)
         note:SetPoint("TOPLEFT", R, -174); note:SetWidth(210); note:SetJustifyH("LEFT")
         note:SetTextColor(COLOR_DESC[1], COLOR_DESC[2], COLOR_DESC[3])
-        note:SetText("If no condition is met, the alternate position is used. Disabling the toggle above always keeps the primary position, regardless of the conditions.")
+        note:SetText(ns.T("If no condition is met, the alternate position is used. Disabling the toggle above always keeps the primary position, regardless of the conditions."))
     end
     -- Portrait / Posicion
     do
@@ -3126,7 +3127,7 @@ local function BuildPanel()
         local note = f:CreateFontString(nil, "ARTWORK"); setFont(note, 10)
         note:SetPoint("TOPLEFT", R, -100); note:SetWidth(200); note:SetJustifyH("LEFT")
         note:SetTextColor(COLOR_DESC[1], COLOR_DESC[2], COLOR_DESC[3])
-        note:SetText("ToT and Party use a class icon (no 3D model or zoom).")
+        note:SetText(ns.T("ToT and Party use a class icon (no 3D model or zoom)."))
     end
     -- Portrait / Borde (orbe)
     do
@@ -3193,7 +3194,7 @@ local function BuildPanel()
         local note = f:CreateFontString(nil, "ARTWORK"); setFont(note, 10)
         note:SetPoint("TOPLEFT", R, -66); note:SetWidth(210); note:SetJustifyH("LEFT")
         note:SetTextColor(COLOR_DESC[1], COLOR_DESC[2], COLOR_DESC[3])
-        note:SetText("Shows the raid target icon (skull, cross, star...) as a badge over the party portrait, only when the member is marked. In preview it shows a sample skull.")
+        note:SetText(ns.T("Shows the raid target icon (skull, cross, star...) as a badge over the party portrait, only when the member is marked. In preview it shows a sample skull."))
     end
     -- Portrait / Role + Leader icons. Rol = solo party (sub-grupo portraitRoleOnly);
     -- Lider = cualquier portrait con feature 'leader' (siempre visible en la seccion).
@@ -3246,7 +3247,7 @@ local function BuildPanel()
         local note = f:CreateFontString(nil, "ARTWORK"); setFont(note, 10)
         note:SetPoint("TOPLEFT", R, -10); note:SetWidth(210); note:SetJustifyH("LEFT")
         note:SetTextColor(COLOR_DESC[1], COLOR_DESC[2], COLOR_DESC[3])
-        note:SetText("Global font size/color here are the base. Per-text Size/Color/Alpha are in the TEXT tab; the calendar button is in the CAL tab. In preview, drag each element to move it.")
+        note:SetText(ns.T("Global font size/color here are the base. Per-text Size/Color/Alpha are in the TEXT tab; the calendar button is in the CAL tab. In preview, drag each element to move it."))
         local resetBtn = MakeButton(f, "Reset info bar", 200, 22)
         resetBtn:SetPoint("TOPLEFT", R, -110)
         resetBtn:SetScript("OnClick", function() ns.ResetUnit(ns.currentEdit) end)
@@ -3313,7 +3314,7 @@ local function BuildPanel()
         local note = f:CreateFontString(nil, "ARTWORK"); setFont(note, 10)
         note:SetPoint("TOPLEFT", R, -146); note:SetWidth(210); note:SetJustifyH("LEFT")
         note:SetTextColor(COLOR_DESC[1], COLOR_DESC[2], COLOR_DESC[3])
-        note:SetText("Custom texture (default info_bg). A path ending in .tga/.blp is loaded as a texture; anything else is treated as an atlas name.")
+        note:SetText(ns.T("Custom texture (default info_bg). A path ending in .tga/.blp is loaded as a texture; anything else is treated as an atlas name."))
     end
 
     -- =========================== SECCION MICRO MENU ===========================
@@ -3329,7 +3330,7 @@ local function BuildPanel()
         local note = f:CreateFontString(nil, "ARTWORK"); setFont(note, 10)
         note:SetPoint("TOPLEFT", R, -104); note:SetWidth(210); note:SetJustifyH("LEFT")
         note:SetTextColor(COLOR_DESC[1], COLOR_DESC[2], COLOR_DESC[3])
-        note:SetText("In preview (/mcf): drag the row to move it. Reskins the Blizzard micro buttons (no background). Repositioning applies out of combat.")
+        note:SetText(ns.T("In preview (/mcf): drag the row to move it. Reskins the Blizzard micro buttons (no background). Repositioning applies out of combat."))
         local resetBtn = MakeButton(f, "Reset micro menu", 200, 22)
         resetBtn:SetPoint("TOPLEFT", R, -150)
         resetBtn:SetScript("OnClick", function() ns.ResetUnit(ns.currentEdit) end)
@@ -3349,7 +3350,7 @@ local function BuildPanel()
         local note = f:CreateFontString(nil, "ARTWORK"); setFont(note, 10)
         note:SetPoint("TOPLEFT", R, -74); note:SetWidth(210); note:SetJustifyH("LEFT")
         note:SetTextColor(COLOR_DESC[1], COLOR_DESC[2], COLOR_DESC[3])
-        note:SetText("Controls the world chat bubbles: hides their background and sets the text font/size/outline/color. Applies live as bubbles appear.")
+        note:SetText(ns.T("Controls the world chat bubbles: hides their background and sets the text font/size/outline/color. Applies live as bubbles appear."))
         local resetBtn = MakeButton(f, "Reset chat bubble", 200, 22)
         resetBtn:SetPoint("TOPLEFT", R, -130)
         resetBtn:SetScript("OnClick", function() ns.ResetUnit(ns.currentEdit) end)
@@ -3397,7 +3398,7 @@ local function BuildPanel()
         local note = f:CreateFontString(nil, "ARTWORK"); setFont(note, 10)
         note:SetPoint("TOPLEFT", R, -10); note:SetWidth(210); note:SetJustifyH("LEFT")
         note:SetTextColor(COLOR_DESC[1], COLOR_DESC[2], COLOR_DESC[3])
-        note:SetText("Colorize titles: recolors the objective-tracker headers/quests (cosmetic, no taint). Title/Dungeon center offset: fine-tune horizontal centering of quest titles vs. scenario/dungeon titles (e.g. \"Windrunner Spire\") independently — live, no reload needed. Text align: LEFT/CENTER/RIGHT justification for every line the tracker touches (headers, quest titles, objectives). Auto-hide toggles fold the tracker (alpha 0) via a secure driver — any combination can be active at once; the tracker reappears as soon as none of the checked conditions apply.")
+        note:SetText(ns.T("Colorize titles: recolors the objective-tracker headers/quests (cosmetic, no taint). Title/Dungeon center offset: fine-tune horizontal centering of quest titles vs. scenario/dungeon titles (e.g. \"Windrunner Spire\") independently — live, no reload needed. Text align: LEFT/CENTER/RIGHT justification for every line the tracker touches (headers, quest titles, objectives). Auto-hide toggles fold the tracker (alpha 0) via a secure driver — any combination can be active at once; the tracker reappears as soon as none of the checked conditions apply."))
     end
 
     -- =========================== SECCION ASSISTED GLOW ===========================
@@ -3447,7 +3448,7 @@ local function BuildPanel()
         local note = f:CreateFontString(nil, "ARTWORK"); setFont(note, 10)
         note:SetPoint("TOPLEFT", L, -180); note:SetWidth(430); note:SetJustifyH("LEFT")
         note:SetTextColor(COLOR_DESC[1], COLOR_DESC[2], COLOR_DESC[3])
-        note:SetText("The map itself keeps whatever size Blizzard's Edit Mode gives it — this only moves/scales the round frame (border, icons, ring) built around it. Drag in Lock mode to reposition; mouse wheel over it in Lock adjusts scale.")
+        note:SetText(ns.T("The map itself keeps whatever size Blizzard's Edit Mode gives it — this only moves/scales the round frame (border, icons, ring) built around it. Drag in Lock mode to reposition; mouse wheel over it in Lock adjusts scale."))
         local resetBtn = MakeButton(f, "Reset minimap", 200, 22)
         resetBtn:SetPoint("TOPLEFT", L, -230)
         resetBtn:SetScript("OnClick", function() ns.ResetUnit(ns.currentEdit) end)
@@ -3501,7 +3502,7 @@ local function BuildPanel()
         local note = f:CreateFontString(nil, "ARTWORK"); setFont(note, 10)
         note:SetPoint("TOPLEFT", L, -326); note:SetWidth(430); note:SetJustifyH("LEFT")
         note:SetTextColor(COLOR_DESC[1], COLOR_DESC[2], COLOR_DESC[3])
-        note:SetText("Offsets are relative to the minimap's own center (LFG eye), top edge (dismount button), bottom edge (coordinates), or bottom edge again (below-minimap widget).")
+        note:SetText(ns.T("Offsets are relative to the minimap's own center (LFG eye), top edge (dismount button), bottom edge (coordinates), or bottom edge again (below-minimap widget)."))
     end
     -- Minimap / Icons 2 (Tracking button + Mail indicator, pedido del usuario 2026-07-21:
     -- no entraban en "Icons" sin pisar el footer del panel -- panel sin scroll, mismo
@@ -3519,7 +3520,7 @@ local function BuildPanel()
         local note = f:CreateFontString(nil, "ARTWORK"); setFont(note, 10)
         note:SetPoint("TOPLEFT", L, -166); note:SetWidth(430); note:SetJustifyH("LEFT")
         note:SetTextColor(COLOR_DESC[1], COLOR_DESC[2], COLOR_DESC[3])
-        note:SetText("Offsets are relative to the minimap's own center (tracking button) or bottom edge (mail indicator). Both can also be dragged freely while in Lock mode.")
+        note:SetText(ns.T("Offsets are relative to the minimap's own center (tracking button) or bottom edge (mail indicator). Both can also be dragged freely while in Lock mode."))
     end
     -- Minimap / Textures (borde, fondo, eye — la barra de XP/Reputacion NO se
     -- personaliza, a pedido del usuario, para no romper el layout del anillo).
@@ -3536,7 +3537,7 @@ local function BuildPanel()
         local note = f:CreateFontString(nil, "ARTWORK"); setFont(note, 10)
         note:SetPoint("TOPLEFT", R, -100); note:SetWidth(210); note:SetJustifyH("LEFT")
         note:SetTextColor(COLOR_DESC[1], COLOR_DESC[2], COLOR_DESC[3])
-        note:SetText("Leave the path empty to use the addon's default texture. Only the ring's actual fill/progress arc isn't customizable, to keep the XP/Reputation reading intact.")
+        note:SetText(ns.T("Leave the path empty to use the addon's default texture. Only the ring's actual fill/progress arc isn't customizable, to keep the XP/Reputation reading intact."))
     end
     -- Minimap / Buttons (2026-07-24, pedido del usuario): controles del sistema de
     -- hover de botones de addons (MinimapButtons.lua). SINGLETON con settings
@@ -3552,8 +3553,8 @@ local function BuildPanel()
         local note = f:CreateFontString(nil, "ARTWORK"); setFont(note, 10)
         note:SetPoint("TOPLEFT", L, -32); note:SetWidth(430); note:SetJustifyH("LEFT")
         note:SetTextColor(0.8, 0.8, 0.8)
-        note:SetText("Collects other addons' minimap icons and reveals them on hover. The trigger " ..
-            "icon itself is moved/scaled by dragging + mouse wheel in Lock mode, next to the minimap.")
+        note:SetText(T("Collects other addons' minimap icons and reveals them on hover. The trigger " ..
+            "icon itself is moved/scaled by dragging + mouse wheel in Lock mode, next to the minimap."))
 
         MakeToggle(f, "Enabled", L, -76,
             function() local d = MMBDB(); return d and d.enabled end,
@@ -3566,7 +3567,7 @@ local function BuildPanel()
         local DIRS = { "down", "up", "left", "right" }
         local function DirText()
             local d = MMBDB()
-            dirBtn.text:SetText("Direction: " .. (d and d.direction or "down"))
+            dirBtn.text:SetText(ns.T("Direction: ") .. (d and d.direction or "down"))
         end
         dirBtn:SetScript("OnClick", function()
             local d = MMBDB(); if not d then return end
@@ -3590,7 +3591,7 @@ local function BuildPanel()
         strataBtn:SetPoint("TOPLEFT", L, -252)
         local function StrataText()
             local d = MMBDB()
-            strataBtn.text:SetText("Strata: " .. tostring(d and d.strata or "MEDIUM"))
+            strataBtn.text:SetText(ns.T("Strata: ") .. tostring(d and d.strata or "MEDIUM"))
         end
         strataBtn:SetScript("OnClick", function()
             local d = MMBDB(); if not d then return end
@@ -3641,7 +3642,7 @@ local function BuildPanel()
         local note = f:CreateFontString(nil, "ARTWORK"); setFont(note, 10)
         note:SetPoint("TOPLEFT", L, -80); note:SetWidth(430); note:SetJustifyH("LEFT")
         note:SetTextColor(COLOR_DESC[1], COLOR_DESC[2], COLOR_DESC[3])
-        note:SetText("Shows automatically in any raid group and in battlegrounds only. Growth direction, per-row/column limits and spacing live in the Layout tab; the container's own screen position lives in Pos; icon positions live in Icons.")
+        note:SetText(ns.T("Shows automatically in any raid group and in battlegrounds only. Growth direction, per-row/column limits and spacing live in the Layout tab; the container's own screen position lives in Pos; icon positions live in Icons."))
         local resetBtn = MakeButton(f, "Reset raid frames", 200, 22)
         resetBtn:SetPoint("TOPLEFT", L, -130)
         resetBtn:SetScript("OnClick", function() ns.ResetUnit(ns.currentEdit) end)
@@ -3674,7 +3675,7 @@ local function BuildPanel()
         local note = f:CreateFontString(nil, "ARTWORK"); setFont(note, 10)
         note:SetPoint("TOPLEFT", L, -262); note:SetWidth(210); note:SetJustifyH("LEFT")
         note:SetTextColor(COLOR_DESC[1], COLOR_DESC[2], COLOR_DESC[3])
-        note:SetText("These position/size the icons and bar on member #1 in the Lock preview — every other member (real or preview) copies the same values, since all 40 share one style profile. The power bar's width follows the health bar's automatically.")
+        note:SetText(ns.T("These position/size the icons and bar on member #1 in the Lock preview — every other member (real or preview) copies the same values, since all 40 share one style profile. The power bar's width follows the health bar's automatically."))
     end
     -- Raid / Layout — SIMPLIFICADO (pedido del usuario 2026-07-20): solo
     -- izquierda/derecha + arriba/abajo, sin spacing vertical suelto ni
@@ -3696,7 +3697,7 @@ local function BuildPanel()
         local note = f:CreateFontString(nil, "ARTWORK"); setFont(note, 10)
         note:SetPoint("TOPLEFT", L, -222); note:SetWidth(430); note:SetJustifyH("LEFT")
         note:SetTextColor(COLOR_DESC[1], COLOR_DESC[2], COLOR_DESC[3])
-        note:SetText("The grid always grows in rows: each row fills horizontally (left or right), and new rows stack either upward or downward. Member size is fixed to match AzeriteUI exactly.")
+        note:SetText(ns.T("The grid always grows in rows: each row fills horizontally (left or right), and new rows stack either upward or downward. Member size is fixed to match AzeriteUI exactly."))
     end
     -- Raid / Pos (posicion del CONTENEDOR completo; se arrastra en Lock).
     do
@@ -3715,7 +3716,7 @@ local function BuildPanel()
         local note = f:CreateFontString(nil, "ARTWORK"); setFont(note, 10)
         note:SetPoint("TOPLEFT", L, -140); note:SetWidth(430); note:SetJustifyH("LEFT")
         note:SetTextColor(COLOR_DESC[1], COLOR_DESC[2], COLOR_DESC[3])
-        note:SetText("Only the whole grid moves as one in Lock mode — individual members are positioned by the grid itself, not draggable one by one.")
+        note:SetText(ns.T("Only the whole grid moves as one in Lock mode — individual members are positioned by the grid itself, not draggable one by one."))
     end
     -- Nameplates / General. LIMPIADO (2026-08-03, "quita las opciones del
     -- menu en nameplates que no funcionen con lo nuevo"): "Enabled" no
@@ -3745,7 +3746,7 @@ local function BuildPanel()
         local distNote = f:CreateFontString(nil, "ARTWORK"); setFont(distNote, 10)
         distNote:SetPoint("TOPLEFT", L, -100); distNote:SetWidth(430); distNote:SetJustifyH("LEFT")
         distNote:SetTextColor(COLOR_DESC[1], COLOR_DESC[2], COLOR_DESC[3])
-        distNote:SetText("How far away nameplates render.")
+        distNote:SetText(ns.T("How far away nameplates render."))
 
         -- ESCALA -- fusionada aca (2026-08-04, "reorganiza el menu de
         -- nameplates") -- antes tenia su PROPIA pestaña ("Scale", pedido
@@ -3760,7 +3761,7 @@ local function BuildPanel()
         local scaleNote = f:CreateFontString(nil, "ARTWORK"); setFont(scaleNote, 10)
         scaleNote:SetPoint("TOPLEFT", L, -234); scaleNote:SetWidth(430); scaleNote:SetJustifyH("LEFT")
         scaleNote:SetTextColor(COLOR_DESC[1], COLOR_DESC[2], COLOR_DESC[3])
-        scaleNote:SetText("Global size of every nameplate, and how much bigger your current target is than the rest (1.20 = 20% larger).")
+        scaleNote:SetText(ns.T("Global size of every nameplate, and how much bigger your current target is than the rest (1.20 = 20% larger)."))
 
         -- Cast overlay (2026-08-05, "casts en frente de las nameplates" --
         -- puerto de EllesmereUINameplates_CastOverlay.lua): las plates
@@ -3775,7 +3776,7 @@ local function BuildPanel()
         local castOvNote = f:CreateFontString(nil, "ARTWORK"); setFont(castOvNote, 10)
         castOvNote:SetPoint("TOPLEFT", L, -326); castOvNote:SetWidth(430); castOvNote:SetJustifyH("LEFT")
         castOvNote:SetTextColor(COLOR_DESC[1], COLOR_DESC[2], COLOR_DESC[3])
-        castOvNote:SetText("Off by default. Only changes stacking order -- position/size/color still come from the Nameplate Designer.")
+        castOvNote:SetText(ns.T("Off by default. Only changes stacking order -- position/size/color still come from the Nameplate Designer."))
     end
 
     -- Pestaña "Names" ELIMINADA (2026-08-03, "quita las opciones del menu en
@@ -3798,27 +3799,27 @@ local function BuildPanel()
         local intro = f:CreateFontString(nil, "ARTWORK"); setFont(intro, 10)
         intro:SetPoint("TOPLEFT", L, -30); intro:SetWidth(430); intro:SetJustifyH("LEFT")
         intro:SetTextColor(COLOR_DESC[1], COLOR_DESC[2], COLOR_DESC[3])
-        intro:SetText("Native Blizzard nameplate opacity CVars, per state.")
+        intro:SetText(ns.T("Native Blizzard nameplate opacity CVars, per state."))
 
         MakeSlider(f, "Min alpha", 0, 1, 0.05, "fadeMinAlpha", L, -80)
         MakeSlider(f, "Max alpha", 0, 1, 0.05, "alphaMax", R, -80)
         local minMaxNote = f:CreateFontString(nil, "ARTWORK"); setFont(minMaxNote, 10)
         minMaxNote:SetPoint("TOPLEFT", L, -124); minMaxNote:SetWidth(430); minMaxNote:SetJustifyH("LEFT")
         minMaxNote:SetTextColor(COLOR_DESC[1], COLOR_DESC[2], COLOR_DESC[3])
-        minMaxNote:SetText("Opacity range across the max distance (see General tab).")
+        minMaxNote:SetText(ns.T("Opacity range across the max distance (see General tab)."))
 
         MakeSlider(f, "Non-selected alpha", 0, 1, 0.05, "alphaNotSelected", L, -174)
         MakeSlider(f, "Target alpha", 0, 1, 0.05, "alphaTarget", R, -174)
         local selNote = f:CreateFontString(nil, "ARTWORK"); setFont(selNote, 10)
         selNote:SetPoint("TOPLEFT", L, -218); selNote:SetWidth(430); selNote:SetJustifyH("LEFT")
         selNote:SetTextColor(COLOR_DESC[1], COLOR_DESC[2], COLOR_DESC[3])
-        selNote:SetText("Opacity override for your current target vs everything else.")
+        selNote:SetText(ns.T("Opacity override for your current target vs everything else."))
 
         MakeSlider(f, "Occluded alpha", 0, 1, 0.05, "alphaOccluded", L, -268)
         local occNote = f:CreateFontString(nil, "ARTWORK"); setFont(occNote, 10)
         occNote:SetPoint("TOPLEFT", L, -312); occNote:SetWidth(430); occNote:SetJustifyH("LEFT")
         occNote:SetTextColor(COLOR_DESC[1], COLOR_DESC[2], COLOR_DESC[3])
-        occNote:SetText("Opacity when the plate is behind walls/objects.")
+        occNote:SetText(ns.T("Opacity when the plate is behind walls/objects."))
 
         -- Pedido del usuario 2026-08-03: "que no se muestren los occluded
         -- nameplates cuando tengo un target -- esto pasa tambien sin addon,
@@ -3829,7 +3830,7 @@ local function BuildPanel()
         local hideNote = f:CreateFontString(nil, "ARTWORK"); setFont(hideNote, 10)
         hideNote:SetPoint("TOPLEFT", L, -368); hideNote:SetWidth(430); hideNote:SetJustifyH("LEFT")
         hideNote:SetTextColor(COLOR_DESC[1], COLOR_DESC[2], COLOR_DESC[3])
-        hideNote:SetText("Only while you have a target selected: plates behind walls/objects vanish instead of using the Occluded alpha above. No target = normal behavior.")
+        hideNote:SetText(ns.T("Only while you have a target selected: plates behind walls/objects vanish instead of using the Occluded alpha above. No target = normal behavior."))
     end
 
 
@@ -3846,7 +3847,7 @@ local function BuildPanel()
         local note = f:CreateFontString(nil, "ARTWORK"); setFont(note, 10)
         note:SetPoint("TOPLEFT", L, -30); note:SetWidth(430); note:SetJustifyH("LEFT")
         note:SetTextColor(COLOR_DESC[1], COLOR_DESC[2], COLOR_DESC[3])
-        note:SetText("Off: that category keeps Blizzard's native plate untouched. Name only: just the floating name, no bar/cast. Health bar: full custom plate, same as hostiles.")
+        note:SetText(ns.T("Off: that category keeps Blizzard's native plate untouched. Name only: just the floating name, no bar/cast. Health bar: full custom plate, same as hostiles."))
 
         MakeCycle(f, "Players", { "nameonly", "healthbar", "off" }, "friendlyPlayerMode", L, -66)
         MakeCycle(f, "NPCs (vendors, guards, etc)", { "nameonly", "healthbar", "off" }, "friendlyNPCMode", L, -100)
@@ -3856,7 +3857,7 @@ local function BuildPanel()
         local ccNote = f:CreateFontString(nil, "ARTWORK"); setFont(ccNote, 10)
         ccNote:SetPoint("TOPLEFT", L, -202); ccNote:SetWidth(430); ccNote:SetJustifyH("LEFT")
         ccNote:SetTextColor(COLOR_DESC[1], COLOR_DESC[2], COLOR_DESC[3])
-        ccNote:SetText("Friendly players colored by class instead of plain white/green. NPCs and pets unaffected.")
+        ccNote:SetText(ns.T("Friendly players colored by class instead of plain white/green. NPCs and pets unaffected."))
 
         -- Pedido del usuario 2026-08-03: "ya se que en dungeon o raid se
         -- desactive automaticamente friendly npc nameplates y cuando salga
@@ -3876,7 +3877,7 @@ local function BuildPanel()
         local autoNote = f:CreateFontString(nil, "ARTWORK"); setFont(autoNote, 10)
         autoNote:SetPoint("TOPLEFT", L, -250); autoNote:SetWidth(430); autoNote:SetJustifyH("LEFT")
         autoNote:SetTextColor(COLOR_DESC[1], COLOR_DESC[2], COLOR_DESC[3])
-        autoNote:SetText("Switches NPCs/Pets modes above to \"off\" while in a dungeon/raid (native Blizzard plate, unstyled) and restores them on exit. Can't hide/fade the native bar itself -- Blizzard blocks addons from touching it at all. Doesn't apply to friendly players.")
+        autoNote:SetText(ns.T("Switches NPCs/Pets modes above to \"off\" while in a dungeon/raid (native Blizzard plate, unstyled) and restores them on exit. Can't hide/fade the native bar itself -- Blizzard blocks addons from touching it at all. Doesn't apply to friendly players."))
 
         -- Pedido del usuario 2026-08-03: "en dungeon o raid, los nameplates
         -- de los npc aliados y del pet sean solo nombre". ABANDONADO
@@ -3893,7 +3894,7 @@ local function BuildPanel()
         local instNote = f:CreateFontString(nil, "ARTWORK"); setFont(instNote, 10)
         instNote:SetPoint("TOPLEFT", L, -318); instNote:SetWidth(430); instNote:SetJustifyH("LEFT")
         instNote:SetTextColor(COLOR_DESC[1], COLOR_DESC[2], COLOR_DESC[3])
-        instNote:SetText("CVar-only, crash-safe. Doesn't apply to NPCs/pets -- Blizzard blocks addons from hiding parts of their protected instance plates, no workaround exists. Those keep the Players/NPCs/Pets modes above.")
+        instNote:SetText(ns.T("CVar-only, crash-safe. Doesn't apply to NPCs/pets -- Blizzard blocks addons from hiding parts of their protected instance plates, no workaround exists. Those keep the Players/NPCs/Pets modes above."))
 
         MakeSlider(f, "Name size", 8, 24, 1, "friendlyInstanceNameOnlySize", L, -362)
     end
@@ -3911,7 +3912,7 @@ local function BuildPanel()
         local intro = f:CreateFontString(nil, "ARTWORK"); setFont(intro, 10)
         intro:SetPoint("TOPLEFT", L, -30); intro:SetWidth(430); intro:SetJustifyH("LEFT")
         intro:SetTextColor(COLOR_DESC[1], COLOR_DESC[2], COLOR_DESC[3])
-        intro:SetText("Direction sets the side that stays fixed while the row grows; offsets nudge it from there.")
+        intro:SetText(ns.T("Direction sets the side that stays fixed while the row grows; offsets nudge it from there."))
 
         MakeHeader(f, "Crowd control", L, -66, 430)
         MakeCycle(f, "Direction", { "right", "left", "center" }, "bigDebuffDirection", L, -90)
@@ -3975,7 +3976,7 @@ local function BuildPanel()
         MakeHeader(f, "Copy settings from another group", L, y, 430)
         local srcBtn = MakeButton(f, "", 200, 24)
         srcBtn:SetPoint("TOPLEFT", L, y - 24)
-        local function SrcText() srcBtn.text:SetText("From: " .. (AURA_GROUP_LABELS[src] or src)) end
+        local function SrcText() srcBtn.text:SetText(ns.T("From: ") .. (AURA_GROUP_LABELS[src] or src)) end
         srcBtn:SetScript("OnClick", function()
             local idx = 1
             for i, v in ipairs(others) do if v == src then idx = i break end end
@@ -4025,7 +4026,7 @@ local function BuildPanel()
         -- bloquea en combate) -- ya no hay "sort" que elegir, el motor
         -- ordena solo. Debuffs y buffs son 2 grupos separados ahora
         -- (posicionables independiente).
-        note:SetText("Applies to ALL 5 party frames at once. Debuffs and buffs are separate groups " ..
+        note:SetText(T("Applies to ALL 5 party frames at once. Debuffs and buffs are separate groups " ..
             "(Blizzard draws the icons -- never blocked in combat). Try /mcfpartytest to preview " ..
             "without a real group.")
 
@@ -4036,7 +4037,7 @@ local function BuildPanel()
         dirBtn:SetPoint("TOPLEFT", L, -94)
         local function DirText()
             local d = ns.GetDB() and ns.GetDB().partyAuraDirection or "left"
-            dirBtn.text:SetText("Direction: " .. d)
+            dirBtn.text:SetText(ns.T("Direction: ") .. d)
         end
         dirBtn:SetScript("OnClick", function()
             local list = ns.PARTY_AURA_DIRECTIONS or { "left", "right", "up", "down" }
@@ -4070,7 +4071,7 @@ local function BuildPanel()
         growBtn:SetPoint("TOPLEFT", R, -206)
         local function GrowText()
             local d = ns.GetDB() and ns.GetDB().partyAuraGrowth or "h-left"
-            growBtn.text:SetText("Growth: " .. d)
+            growBtn.text:SetText(ns.T("Growth: ") .. d)
         end
         growBtn:SetScript("OnClick", function()
             local list = ns.AURA_GROWTH_MODES or { "h-left", "h-right", "h-center", "v-up", "v-down", "v-center" }
@@ -4126,7 +4127,7 @@ local function BuildPanel()
         note:SetTextColor(0.8, 0.8, 0.8)
         -- ACTUALIZADO (2026-08-03): migrado a AuraContainer nativo -- ya no
         -- hay "sort", debuffs/buffs son 2 grupos separados posicionables.
-        note:SetText("Applies to ALL 6 arena frames at once (allies + enemies). Debuffs and buffs " ..
+        note:SetText(T("Applies to ALL 6 arena frames at once (allies + enemies). Debuffs and buffs " ..
             "are separate groups (Blizzard draws the icons -- never blocked in combat). Arena-only. " ..
             "Try /mcfarenaauratest to preview without a real match.")
 
@@ -4135,7 +4136,7 @@ local function BuildPanel()
         dirBtn:SetPoint("TOPLEFT", L, -94)
         local function DirText()
             local d = ns.GetDB() and ns.GetDB().arenaAuraDirection or "down"
-            dirBtn.text:SetText("Direction: " .. d)
+            dirBtn.text:SetText(ns.T("Direction: ") .. d)
         end
         dirBtn:SetScript("OnClick", function()
             local list = ns.ARENA_AURA_DIRECTIONS or { "left", "right", "up", "down" }
@@ -4165,7 +4166,7 @@ local function BuildPanel()
         growBtn:SetPoint("TOPLEFT", R, -206)
         local function GrowText()
             local d = ns.GetDB() and ns.GetDB().arenaAuraGrowth or "v-down"
-            growBtn.text:SetText("Growth: " .. d)
+            growBtn.text:SetText(ns.T("Growth: ") .. d)
         end
         growBtn:SetScript("OnClick", function()
             local list = ns.AURA_GROWTH_MODES or { "h-left", "h-right", "h-center", "v-up", "v-down", "v-center" }
@@ -4218,7 +4219,7 @@ local function BuildPanel()
         -- ACTUALIZADO (2026-08-04, "agrega tambien al focus en esto"):
         -- migrado a AuraContainer nativo igual que party/arena/player/target
         -- -- ya no hay "sort", debuffs/buffs son 2 grupos separados.
-        note:SetText("Shows auras on your focus target on mouseover, or fixed while you're in " ..
+        note:SetText(T("Shows auras on your focus target on mouseover, or fixed while you're in " ..
             "combat. Debuffs and buffs are separate groups (Blizzard draws the icons -- never " ..
             "blocked in combat). Needs a focus target set. Try /mcffocusauratest to preview without one.")
 
@@ -4227,7 +4228,7 @@ local function BuildPanel()
         dirBtn:SetPoint("TOPLEFT", L, -94)
         local function DirText()
             local d = ns.GetDB() and ns.GetDB().focusAuraDirection or "down"
-            dirBtn.text:SetText("Direction: " .. d)
+            dirBtn.text:SetText(ns.T("Direction: ") .. d)
         end
         dirBtn:SetScript("OnClick", function()
             local list = ns.FOCUS_AURA_DIRECTIONS or { "left", "right", "up", "down" }
@@ -4257,7 +4258,7 @@ local function BuildPanel()
         growBtn:SetPoint("TOPLEFT", R, -206)
         local function GrowText()
             local d = ns.GetDB() and ns.GetDB().focusAuraGrowth or "v-down"
-            growBtn.text:SetText("Growth: " .. d)
+            growBtn.text:SetText(ns.T("Growth: ") .. d)
         end
         growBtn:SetScript("OnClick", function()
             local list = ns.AURA_GROWTH_MODES or { "h-left", "h-right", "h-center", "v-up", "v-down", "v-center" }
@@ -4310,15 +4311,15 @@ local function BuildPanel()
         note:SetTextColor(0.8, 0.8, 0.8)
         -- ACTUALIZADO (2026-08-03): migrado a AuraContainer nativo -- ya no
         -- hay "sort", debuffs/buffs son 2 grupos separados posicionables.
-        note:SetText("Shows your own auras -- always visible. Debuffs and buffs are separate " ..
-            "groups (Blizzard draws the icons -- never blocked in combat).")
+        note:SetText(T("Shows your own auras -- always visible. Debuffs and buffs are separate " ..
+            "groups (Blizzard draws the icons -- never blocked in combat)."))
 
         MakeHeader(f, "Anchor", L, -70, 430)
         local dirBtn = MakeButton(f, "", 200, 24)
         dirBtn:SetPoint("TOPLEFT", L, -94)
         local function DirText()
             local d = ns.GetDB() and ns.GetDB().playerAuraDirection or "up"
-            dirBtn.text:SetText("Direction: " .. d)
+            dirBtn.text:SetText(ns.T("Direction: ") .. d)
         end
         dirBtn:SetScript("OnClick", function()
             local list = ns.PLAYER_AURA_DIRECTIONS or { "left", "right", "up", "down" }
@@ -4348,7 +4349,7 @@ local function BuildPanel()
         growBtn:SetPoint("TOPLEFT", R, -206)
         local function GrowText()
             local d = ns.GetDB() and ns.GetDB().playerAuraGrowth or "v-down"
-            growBtn.text:SetText("Growth: " .. d)
+            growBtn.text:SetText(ns.T("Growth: ") .. d)
         end
         growBtn:SetScript("OnClick", function()
             local list = ns.AURA_GROWTH_MODES or { "h-left", "h-right", "h-center", "v-up", "v-down", "v-center" }
@@ -4399,7 +4400,7 @@ local function BuildPanel()
         note:SetTextColor(0.8, 0.8, 0.8)
         -- ACTUALIZADO (2026-08-03): migrado a AuraContainer nativo -- ya no
         -- hay "sort", debuffs/buffs son 2 grupos separados posicionables.
-        note:SetText("Shows auras on your target -- always visible while targeting. Debuffs and " ..
+        note:SetText(T("Shows auras on your target -- always visible while targeting. Debuffs and " ..
             "buffs are separate groups (Blizzard draws the icons -- never blocked in combat). Try " ..
             "/mcftargetauratest to preview without one.")
 
@@ -4408,7 +4409,7 @@ local function BuildPanel()
         dirBtn:SetPoint("TOPLEFT", L, -94)
         local function DirText()
             local d = ns.GetDB() and ns.GetDB().targetAuraDirection or "down"
-            dirBtn.text:SetText("Direction: " .. d)
+            dirBtn.text:SetText(ns.T("Direction: ") .. d)
         end
         dirBtn:SetScript("OnClick", function()
             local list = ns.TARGET_AURA_DIRECTIONS or { "left", "right", "up", "down" }
@@ -4438,7 +4439,7 @@ local function BuildPanel()
         growBtn:SetPoint("TOPLEFT", R, -206)
         local function GrowText()
             local d = ns.GetDB() and ns.GetDB().targetAuraGrowth or "v-down"
-            growBtn.text:SetText("Growth: " .. d)
+            growBtn.text:SetText(ns.T("Growth: ") .. d)
         end
         growBtn:SetScript("OnClick", function()
             local list = ns.AURA_GROWTH_MODES or { "h-left", "h-right", "h-center", "v-up", "v-down", "v-center" }
@@ -4489,7 +4490,7 @@ local function BuildPanel()
         local note = f:CreateFontString(nil, "ARTWORK"); setFont(note, 10)
         note:SetPoint("TOPLEFT", L, -32); note:SetWidth(430); note:SetJustifyH("LEFT")
         note:SetTextColor(COLOR_DESC[1], COLOR_DESC[2], COLOR_DESC[3])
-        note:SetText("Combo points, Holy Power, Chi, Soul Shards, Arcane Charges, Essence — auto-detects your class/spec's resource. Same layout and textures as AzeriteUI. Runes (Death Knight), Stagger (Brewmaster) and Soul Fragments (Demon Hunter) aren't supported yet. Try /mcfclasspowerdiag to check detection live.")
+        note:SetText(ns.T("Combo points, Holy Power, Chi, Soul Shards, Arcane Charges, Essence — auto-detects your class/spec's resource. Same layout and textures as AzeriteUI. Runes (Death Knight), Stagger (Brewmaster) and Soul Fragments (Demon Hunter) aren't supported yet. Try /mcfclasspowerdiag to check detection live."))
 
         local function Refresh() if ns.RefreshClassPower then ns.RefreshClassPower() end end
         local function RefreshRelayout()
@@ -4507,7 +4508,7 @@ local function BuildPanel()
 
         local ebLbl = f:CreateFontString(nil, "ARTWORK"); setFont(ebLbl, 11)
         ebLbl:SetPoint("TOPLEFT", R, -176); ebLbl:SetTextColor(COLOR_OPTION[1], COLOR_OPTION[2], COLOR_OPTION[3])
-        ebLbl:SetText("Anchor to (frame; empty = screen)")
+        ebLbl:SetText(ns.T("Anchor to (frame; empty = screen)"))
         local eb = CreateFrame("EditBox", nil, f, "InputBoxTemplate")
         eb:SetSize(180, 20); eb:SetPoint("TOPLEFT", ebLbl, "BOTTOMLEFT", 4, -4)
         eb:SetAutoFocus(false)
@@ -4555,8 +4556,8 @@ local function BuildPanel()
         statusFS:SetTextColor(0.55, 0.85, 0.55)
         local function refreshStatus()
             local list = (ns.ProfilesStatus and ns.ProfilesStatus()) or {}
-            if #list == 0 then statusFS:SetText("Detected: (none of the supported addons are loaded)")
-            else statusFS:SetText("Detected: " .. table.concat(list, ", ")) end
+            if #list == 0 then statusFS:SetText(ns.T("Detected: (none of the supported addons are loaded)"))
+            else statusFS:SetText(ns.T("Detected: ") .. table.concat(list, ", ")) end
         end
         refreshers[#refreshers + 1] = refreshStatus
     end
@@ -4590,7 +4591,7 @@ local function BuildPanel()
         snapBtn:HookScript("OnEnter", function(self)
             if GameTooltip:IsForbidden() then return end
             GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-            GameTooltip:SetText("Snap to other elements' edges and centers while dragging.", 1, 1, 1, 1, true)
+            GameTooltip:SetText(ns.T("Snap to other elements' edges and centers while dragging."), 1, 1, 1, 1, true)
             GameTooltip:Show()
         end)
         snapBtn:HookScript("OnLeave", function() if not GameTooltip:IsForbidden() then GameTooltip:Hide() end end)
@@ -4604,11 +4605,11 @@ local function BuildPanel()
         local note = f:CreateFontString(nil, "ARTWORK"); setFont(note, 10)
         note:SetPoint("TOPLEFT", L, -198); note:SetWidth(210); note:SetJustifyH("LEFT")
         note:SetTextColor(COLOR_DESC[1], COLOR_DESC[2], COLOR_DESC[3])
-        note:SetText("Per-unit outline width/height live in each unit's Bar tab. Move/Lock and Copy/Paste stay in the footer. 'Apply addon profiles' sets Bartender4/DynamicCam/Masque/Chattynator profiles.")
+        note:SetText(ns.T("Per-unit outline width/height live in each unit's Bar tab. Move/Lock and Copy/Paste stay in the footer. 'Apply addon profiles' sets Bartender4/DynamicCam/Masque/Chattynator profiles."))
         -- B4: ocultar SAMPLE de elementos SOLO en preview (no afecta el juego real).
         local lhdr = f:CreateFontString(nil, "ARTWORK"); setFont(lhdr, 12)
         lhdr:SetPoint("TOPLEFT", R, -142); lhdr:SetTextColor(COLOR_TITLE[1], COLOR_TITLE[2], COLOR_TITLE[3])
-        lhdr:SetText("Hide in preview (Lock only):")
+        lhdr:SetText(ns.T("Hide in preview (Lock only):"))
         local LH = { { "Hide text", "text" }, { "Outline names", "names" }, { "Badges", "badges" },
                      { "Raid marks", "raid" }, { "Death marks", "death" }, { "Quest tracker", "tracker" } }
         for i, e in ipairs(LH) do
@@ -4628,7 +4629,7 @@ local function BuildPanel()
         -- opciones de esta seccion.
         local lhdr2 = f:CreateFontString(nil, "ARTWORK"); setFont(lhdr2, 12)
         lhdr2:SetPoint("TOPLEFT", L, -300); lhdr2:SetTextColor(COLOR_TITLE[1], COLOR_TITLE[2], COLOR_TITLE[3])
-        lhdr2:SetText("Hide in preview (cont.):")
+        lhdr2:SetText(ns.T("Hide in preview (cont.):"))
         -- 2 mini-columnas (3 + 2) en vez de apilar las 5 en una sola columna:
         -- una sola columna se salia del panel (altura fija, sin scroll).
         local LH2 = { { "Minimap", "minimap" }, { "Portraits", "portraits" }, { "Info bar", "infobar" },
@@ -4842,7 +4843,7 @@ local function BuildPanel()
         local elNote = elementsGroup:CreateFontString(nil, "ARTWORK"); setFont(elNote, 10)
         elNote:SetPoint("TOPLEFT", L, TOP - 34 - ROWS * 21 - 14); elNote:SetWidth(430); elNote:SetJustifyH("LEFT")
         elNote:SetTextColor(COLOR_DESC[1], COLOR_DESC[2], COLOR_DESC[3])
-        elNote:SetText("Enabled elements fade out and reappear when you hover where they are (works even while hidden). See 'Conditions' for always-show rules, opacity, and content-type filters.")
+        elNote:SetText(ns.T("Enabled elements fade out and reappear when you hover where they are (works even while hidden). See 'Conditions' for always-show rules, opacity, and content-type filters."))
 
         MakeToggle(conditionsGroup, "Always show in combat", L, TOP,
             function() return ns.GetDB().explorerCombat end,
@@ -4891,22 +4892,22 @@ local function BuildPanel()
         bonusBtn:HookScript("OnEnter", function(self)
             if GameTooltip:IsForbidden() then return end
             GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-            GameTooltip:SetText("Also treat bonus bars as a replacement.", 1, 1, 1, 1, true)
-            GameTooltip:AddLine(" ")
-            GameTooltip:AddLine("|cffff5555Careful:|r druid forms use bonus bars, so with this on a druid in cat or bear form would have every other bar hidden the whole time. Same for any class with a form or stance that swaps the bar.", 1, 0.82, 0, true)
-            GameTooltip:AddLine(" ")
-            GameTooltip:AddLine("Useful if you fly or use a bar-swapping mount and want the rest out of the way.", 0.7, 0.7, 0.7, true)
+            GameTooltip:SetText(ns.T("Also treat bonus bars as a replacement."), 1, 1, 1, 1, true)
+            GameTooltip:AddLine(ns.T(" "))
+            GameTooltip:AddLine(ns.T("|cffff5555Careful:|r druid forms use bonus bars, so with this on a druid in cat or bear form would have every other bar hidden the whole time. Same for any class with a form or stance that swaps the bar."), 1, 0.82, 0, true)
+            GameTooltip:AddLine(ns.T(" "))
+            GameTooltip:AddLine(ns.T("Useful if you fly or use a bar-swapping mount and want the rest out of the way."), 0.7, 0.7, 0.7, true)
             GameTooltip:Show()
         end)
         bonusBtn:HookScript("OnLeave", function() if not GameTooltip:IsForbidden() then GameTooltip:Hide() end end)
         local autoNote = conditionsGroup:CreateFontString(nil, "ARTWORK"); setFont(autoNote, 10)
         autoNote:SetPoint("TOPLEFT", L, TOP - 228); autoNote:SetWidth(210); autoNote:SetJustifyH("LEFT")
         autoNote:SetTextColor(COLOR_DESC[1], COLOR_DESC[2], COLOR_DESC[3])
-        autoNote:SetText("Housing restores your previous setup on the way out. Bar hiding works whether Explorer is on or off, and mouseover still reveals.")
+        autoNote:SetText(ns.T("Housing restores your previous setup on the way out. Bar hiding works whether Explorer is on or off, and mouseover still reveals."))
         -- Filtro por TIPO DE CONTENIDO: donde el Explorer esta activo (B1b).
         local zhdr = conditionsGroup:CreateFontString(nil, "ARTWORK"); setFont(zhdr, 12)
         zhdr:SetPoint("TOPLEFT", R, TOP); zhdr:SetTextColor(COLOR_TITLE[1], COLOR_TITLE[2], COLOR_TITLE[3])
-        zhdr:SetText("Active in:")
+        zhdr:SetText(ns.T("Active in:"))
         local ZONES = {
             { "Open world", "world" }, { "Dungeons", "dungeon" }, { "Raids", "raid" },
             { "Arenas", "arena" }, { "Battlegrounds", "battleground" }, { "Scenarios / Delves", "scenario" },
@@ -4942,7 +4943,7 @@ local function BuildPanel()
         local condNote = conditionsGroup:CreateFontString(nil, "ARTWORK"); setFont(condNote, 10)
         condNote:SetPoint("TOPLEFT", L, zonesBottom - 10); condNote:SetWidth(430); condNote:SetJustifyH("LEFT")
         condNote:SetTextColor(COLOR_DESC[1], COLOR_DESC[2], COLOR_DESC[3])
-        condNote:SetText("Combat/target/casting force enabled elements fully visible. 'Active in' limits the whole Explorer to the chosen content types.")
+        condNote:SetText(ns.T("Combat/target/casting force enabled elements fully visible. 'Active in' limits the whole Explorer to the chosen content types."))
 
         -- Pestaña "Quick profiles": 3 botones, cada uno pisa el mapa ENTERO de
         -- Elements (ns.ApplyExplorerQuickProfile, definido en Explorer.lua) --
@@ -4961,13 +4962,13 @@ local function BuildPanel()
                 local desc = quickGroup:CreateFontString(nil, "ARTWORK"); setFont(desc, 10)
                 desc:SetPoint("TOPLEFT", L, yy - 26); desc:SetWidth(430); desc:SetJustifyH("LEFT")
                 desc:SetTextColor(COLOR_DESC[1], COLOR_DESC[2], COLOR_DESC[3])
-                desc:SetText(prof.desc)
+                desc:SetText(T(prof.desc))
             end
         end
         local qpNote = quickGroup:CreateFontString(nil, "ARTWORK"); setFont(qpNote, 10)
         qpNote:SetPoint("TOPLEFT", L, TOP - #qpOrder * 60 - 4); qpNote:SetWidth(430); qpNote:SetJustifyH("LEFT")
         qpNote:SetTextColor(COLOR_DESC[1], COLOR_DESC[2], COLOR_DESC[3])
-        qpNote:SetText("Applying a profile replaces your current Elements toggles. It never touches Conditions, except Combat also enables 'Always show in combat'.")
+        qpNote:SetText(ns.T("Applying a profile replaces your current Elements toggles. It never touches Conditions, except Combat also enables 'Always show in combat'."))
 
         ShowExplorerTab("elements")
     end
@@ -4985,8 +4986,8 @@ local function BuildPanel()
         btn:HookScript("OnEnter", function()
             if GameTooltip:IsForbidden() then return end
             GameTooltip:SetOwner(btn, "ANCHOR_TOP")
-            GameTooltip:SetText(title, COLOR_TITLE[1], COLOR_TITLE[2], COLOR_TITLE[3])
-            if desc then GameTooltip:AddLine(desc, 1, 1, 1, true) end
+            GameTooltip:SetText(T(title), COLOR_TITLE[1], COLOR_TITLE[2], COLOR_TITLE[3])
+            if desc then GameTooltip:AddLine(T(desc), 1, 1, 1, true) end
             GameTooltip:Show()
         end)
         btn:HookScript("OnLeave", function() if not GameTooltip:IsForbidden() then GameTooltip:Hide() end end)
@@ -5115,7 +5116,7 @@ local function BuildPanel()
         local title = p:CreateFontString(nil, "OVERLAY"); setFont(title, 12)
         title:SetPoint("TOPLEFT", 8, -7)
         title:SetTextColor(COLOR_TITLE[1], COLOR_TITLE[2], COLOR_TITLE[3])
-        title:SetText("Skins")
+        title:SetText(ns.T("Skins"))
         local div = p:CreateTexture(nil, "ARTWORK")
         div:SetTexture(PL.DIV_H)
         div:SetPoint("TOPLEFT", 4, -22); div:SetPoint("TOPRIGHT", -4, -22)
@@ -5231,7 +5232,7 @@ end
 -- primero (`SetText("")`) y recien despues poniendo el label — eso garantiza que WoW detecte una
 -- diferencia y re-renderice el glyph, sin importar si el string visible ya "parecia" correcto.
 local function ReassertText(fs, label)
-    fs:SetText("")
+    fs:SetText(ns.T(""))
     fs:SetText(label)
 end
 local function ReassertLabels()
@@ -5333,14 +5334,14 @@ builder:SetScript("OnEvent", function(self)
         local openBtn = CreateFrame("Button", nil, miniPanel, "UIPanelButtonTemplate")
         openBtn:SetSize(200, 26)
         openBtn:SetPoint("TOPLEFT", 16, -16)
-        openBtn:SetText("Open Options Panel")
+        openBtn:SetText(ns.T("Open Options Panel"))
         openBtn:SetScript("OnClick", function()
             if not built and ns.GetDB() then BuildPanel(); built = true end
             if built then ns.ToggleControlCenter() end
         end)
         local hint = miniPanel:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
         hint:SetPoint("TOPLEFT", openBtn, "BOTTOMLEFT", 0, -10)
-        hint:SetText("Or type /mcfmenu, or click the AddOn Compartment icon (puzzle piece near the minimap).")
+        hint:SetText(ns.T("Or type /mcfmenu, or click the AddOn Compartment icon (puzzle piece near the minimap)."))
         local miniCategory = Settings.RegisterCanvasLayoutCategory(miniPanel, miniPanel.name)
         miniCategory.ID = miniPanel.name
         Settings.RegisterAddOnCategory(miniCategory)
@@ -5402,10 +5403,10 @@ builder:SetScript("OnEvent", function(self)
     mmBtn:SetScript("OnEnter", function(self)
         if GameTooltip:IsForbidden() then return end
         GameTooltip:SetOwner(self, "ANCHOR_LEFT")
-        GameTooltip:SetText("AzeriteUI - Gonkast Preset", COLOR_TITLE[1], COLOR_TITLE[2], COLOR_TITLE[3])
-        GameTooltip:AddLine("Click to open the options panel.", 1, 1, 1)
-        GameTooltip:AddLine("Shift+click to open the Nameplate Designer.", 1, 1, 1)
-        GameTooltip:AddLine("Drag to move this button.", 0.7, 0.7, 0.7)
+        GameTooltip:SetText(ns.T("AzeriteUI - Gonkast Preset"), COLOR_TITLE[1], COLOR_TITLE[2], COLOR_TITLE[3])
+        GameTooltip:AddLine(ns.T("Click to open the options panel."), 1, 1, 1)
+        GameTooltip:AddLine(ns.T("Shift+click to open the Nameplate Designer."), 1, 1, 1)
+        GameTooltip:AddLine(ns.T("Drag to move this button."), 0.7, 0.7, 0.7)
         GameTooltip:Show()
     end)
     mmBtn:SetScript("OnLeave", function() if not GameTooltip:IsForbidden() then GameTooltip:Hide() end end)

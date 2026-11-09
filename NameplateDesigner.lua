@@ -99,7 +99,7 @@ local function MakeDropdownButton(parent, w, h, text)
     arrow:SetFont(FONT, 12, "")
     arrow:SetPoint("RIGHT", -8, 0)
     arrow:SetTextColor(0.58, 0.49, 0.4)
-    arrow:SetText("v")
+    arrow:SetText(ns.T("v"))
     return b
 end
 
@@ -126,12 +126,12 @@ local Reflow
 local function MakeStyledButton(parent, text, w, h)
     if ns.MakeButton then
         local b = ns.MakeButton(parent, text, w, h)
-        b.SetLabel = function(self, t) self.text:SetText(t) end
+        b.SetLabel = function(self, t) self.text:SetText(T(t)) end
         return b
     end
     local b = CreateFrame("Button", nil, parent, "UIPanelButtonTemplate")
     b:SetSize(w, h)
-    b:SetText(text)
+    b:SetText(T(text))
     b.SetLabel = function(self, t) self:SetText(t) end
     return b
 end
@@ -195,7 +195,7 @@ local function BindSlider(slider, label, minV, maxV, step, getV, setV)
     slider:SetScript("OnValueChanged", nil)   -- evita que el SetValue de abajo dispare el handler VIEJO
     slider:SetMinMaxValues(minV, maxV)
     slider:SetValueStep(step)
-    slider.lbl:SetText(label)
+    slider.lbl:SetText(T(label))
 
     local decimals = (step < 1) and 2 or 0
     local fmt = "%." .. decimals .. "f"
@@ -254,7 +254,7 @@ end
 
 -- Mismo patron que MakeColorButton en Options.lua (ColorPickerFrame API).
 local function BindColorButton(btn, label, c)
-    btn.lbl:SetText(label)
+    btn.lbl:SetText(T(label))
     btn.sw:SetColorTexture(c.r, c.g, c.b)
     local r0, g0, b0 = c.r, c.g, c.b
     btn:SetScript("OnClick", function()
@@ -564,7 +564,7 @@ local function CreateDesigner()
     local title = root:CreateFontString(nil, "OVERLAY")
     title:SetFont(FONT, 12, "OUTLINE")
     title:SetPoint("TOP", root, "TOP", 0, -6)
-    title:SetText("|cffffe19bNameplate Designer|r")
+    title:SetText(ns.T("|cffffe19bNameplate Designer|r"))
 
     local hint = root:CreateFontString(nil, "OVERLAY")
     hint:SetFont(FONT, 9, "")
@@ -572,7 +572,7 @@ local function CreateDesigner()
     hint:SetWidth(440)
     hint:SetJustifyH("CENTER")
     hint:SetTextColor(0.8, 0.8, 0.8)
-    hint:SetText("Click a piece to select it (options appear below) — drag to move, scroll to resize. Drag the dark background to reposition this window. /mcfnpdesigner to close.")
+    hint:SetText(ns.T("Click a piece to select it (options appear below) — drag to move, scroll to resize. Drag the dark background to reposition this window. /mcfnpdesigner to close."))
 
     -- Forward-declares (pedido del usuario: click en un elemento -> aparecen
     -- sus opciones abajo, las que tenia el menu de texto: width/height/color).
@@ -629,7 +629,7 @@ local function CreateDesigner()
     outlineBtn:SetPoint("LEFT", resetBtn, "RIGHT", 6, 0)
     outlineBtn:SetScript("OnClick", function(self)
         outlinesVisible = not outlinesVisible
-        self:SetLabel(outlinesVisible and "Outlines: On" or "Outlines: Off")
+        self:SetLabel(outlinesVisible and T("Outlines: On") or T("Outlines: Off"))
         for _, hl in ipairs(highlights) do hl:SetShown(outlinesVisible) end
     end)
 
@@ -640,7 +640,7 @@ local function CreateDesigner()
     local showLbl = root:CreateFontString(nil, "OVERLAY")
     showLbl:SetFont(FONT, 10, "")
     showLbl:SetTextColor(0.75, 0.75, 0.75)
-    showLbl:SetText("Show:")
+    showLbl:SetText(ns.T("Show:"))
     showLbl:SetPoint("TOPLEFT", root, "TOPLEFT", 10, ROW3 - 4)
 
     local function MakeShowToggle(label, showKey, anchorTo, gap)
@@ -676,7 +676,7 @@ local function CreateDesigner()
     scaleLabel:SetFont(FONT, 10, "")
     scaleLabel:SetPoint("TOP", title, "BOTTOM", 0, -4)
     scaleLabel:SetTextColor(0.7, 0.85, 1)
-    scaleLabel:SetText("Drag a piece to move it - scroll to resize")
+    scaleLabel:SetText(ns.T("Drag a piece to move it - scroll to resize"))
 
     -- ---- Fila 4: los dos sliders, LADO A LADO --------------------------
     -- Apilados se comian 84px de alto (cada MiniSlider ocupa ~42 entre etiqueta
@@ -713,7 +713,7 @@ local function CreateDesigner()
     profileBox:SetSize(100, 20)
     profileBox:SetPoint("TOPRIGHT", root, "TOPRIGHT", -8, ROW1)
     profileBox:SetAutoFocus(false)
-    profileBox:SetText("My Profile")
+    profileBox:SetText(ns.T("My Profile"))
 
     local saveProfileBtn = MakeStyledButton(root, "Save As", 70, 20)
     saveProfileBtn:SetPoint("RIGHT", profileBox, "LEFT", -4, 0)
@@ -841,7 +841,7 @@ local function CreateDesigner()
                 local rb = MakeDropdownButton(elementList, 200, 22, spec.title)
                 rb:SetPoint("TOPLEFT", 0, -i * 24)
                 rb:SetScript("OnClick", function()
-                    elementDropdown.text:SetText(spec.title)
+                    elementDropdown.text:SetText(T(spec.title))
                     elementList:Hide()
                     if SelectElement then SelectElement(key) end
                 end)
@@ -863,7 +863,7 @@ local function CreateDesigner()
     ctrlTitle:SetFont(FONT, 12, "OUTLINE")
     ctrlTitle:SetPoint("BOTTOM", root, "BOTTOM", 0, 225)
     ctrlTitle:SetTextColor(1, 0.882, 0.608)
-    ctrlTitle:SetText("Click a piece above to edit it")
+    ctrlTitle:SetText(ns.T("Click a piece above to edit it"))
 
     -- Fila 1: posicion (X/Y) -- mismos campos que ya mueve el drag, para
     -- ajustar fino con numeros en vez de a ojo.
@@ -898,7 +898,7 @@ local function CreateDesigner()
         for i, v in ipairs(AURA_DIRECTIONS) do if v == cur then idx = i break end end
         local nxt = AURA_DIRECTIONS[(idx % #AURA_DIRECTIONS) + 1]
         p[key] = nxt
-        self:SetLabel("Direction: " .. nxt:sub(1, 1):upper() .. nxt:sub(2))
+        self:SetLabel(ns.T("Direction: ") .. nxt:sub(1, 1):upper() .. nxt:sub(2))
         Reflow()
     end)
 
@@ -1086,7 +1086,7 @@ local function CreateDesigner()
     local nameFS = nameHolder:CreateFontString(nil, "OVERLAY")
     nameFS:SetFont(FONT, 16, "OUTLINE")
     nameFS:SetPoint("CENTER")
-    nameFS:SetText("Cheesanator")
+    nameFS:SetText(ns.T("Cheesanator"))
     nameHolder.fs = nameFS
     TrackHighlight(ns.MakeEditHighlight(nameHolder))
     MakeDraggable(nameHolder, "nameOffsetX", "nameOffsetY", StageDivisor)
@@ -1117,7 +1117,7 @@ local function CreateDesigner()
     local hvFS = hvHolder:CreateFontString(nil, "OVERLAY")
     hvFS:SetFont(FONT, 12, "OUTLINE")
     hvFS:SetPoint("CENTER")
-    hvFS:SetText("71%")
+    hvFS:SetText(ns.T("71%"))
     hvHolder.fs = hvFS
     TrackHighlight(ns.MakeEditHighlight(hvHolder))
     MakeDraggable(hvHolder, "healthValueOffsetX", "healthValueOffsetY", StageDivisor)
@@ -1179,7 +1179,7 @@ local function CreateDesigner()
     local ctFS = ctHolder:CreateFontString(nil, "OVERLAY")
     ctFS:SetFont(FONT, 10, "OUTLINE")
     ctFS:SetPoint("CENTER")
-    ctFS:SetText("Arcane Flurry")
+    ctFS:SetText(ns.T("Arcane Flurry"))
     ctHolder.fs = ctFS
     TrackHighlight(ns.MakeEditHighlight(ctHolder))
     MakeDraggable(ctHolder, "castTextOffsetX", "castTextOffsetY", StageDivisor)
@@ -1320,8 +1320,8 @@ local function CreateDesigner()
         selectedKey = nil
         root.selectedKey = nil
         selRing:Hide()
-        ctrlTitle:SetText("(none selected)")
-        elementDropdown.text:SetText("Select element...")
+        ctrlTitle:SetText(ns.T("(none selected)"))
+        elementDropdown.text:SetText(ns.T("Select element..."))
         sliderX:Hide(); sliderY:Hide(); sliderW:Hide(); sliderH:Hide(); colorBtn:Hide()
         paddingSlider:Hide(); directionBtn:Hide(); textModeBtn:Hide()
     end
@@ -1334,8 +1334,8 @@ local function CreateDesigner()
         if not spec then return end
         selectedKey = key
         root.selectedKey = key
-        ctrlTitle:SetText(spec.title)
-        elementDropdown.text:SetText(spec.title)
+        ctrlTitle:SetText(T(spec.title))
+        elementDropdown.text:SetText(T(spec.title))
         selRing:ClearAllPoints()
         selRing:SetPoint("TOPLEFT", spec.handle, "TOPLEFT", -3, 3)
         selRing:SetPoint("BOTTOMRIGHT", spec.handle, "BOTTOMRIGHT", 3, -3)
@@ -1426,7 +1426,7 @@ local function CreateDesigner()
             directionBtn:Show()
             directionBtn._dirKey = spec.directionKey
             local cur = p[spec.directionKey] or "right"
-            directionBtn:SetLabel("Direction: " .. cur:sub(1, 1):upper() .. cur:sub(2))
+            directionBtn:SetLabel(ns.T("Direction: ") .. cur:sub(1, 1):upper() .. cur:sub(2))
         else
             directionBtn:Hide()
             directionBtn._dirKey = nil

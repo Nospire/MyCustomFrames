@@ -128,12 +128,12 @@ function B.AuraIcon(holder, slot, p, preview)
         -- El tiempo restante del real lo dibuja el widget Cooldown CENTRADO y
         -- sin offset propio, asi que el preview lo imita fijo en CENTER -- no
         -- hay ningun *OffsetX/Y de tiempo que leer.
-        count:SetText("2")
+        count:SetText(ns.T("2"))
         local time = b:CreateFontString(nil, "OVERLAY")
         time:SetFont(FONT, 10, "OUTLINE")
         time:SetPoint("CENTER", 0, 0)
         time:SetTextColor(1, 1, 1, 1)
-        time:SetText("5")
+        time:SetText(ns.T("5"))
         b.time = time
     else
         local cd = CreateFrame("Cooldown", nil, b, "CooldownFrameTemplate")

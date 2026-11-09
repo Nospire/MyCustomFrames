@@ -343,7 +343,7 @@ local function GetMenuTitle()
 			end
 		end
 	end
-	return "Game Menu"
+	return ns.T("Game Menu")
 end
 
 local function BuildFrameArt()
