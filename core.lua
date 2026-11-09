@@ -81,8 +81,8 @@ ns.AURA_BORDER = AURA_BORDER
 ns.AURA_PREVIEW_ICON = AURA_PREVIEW_ICON
 
 -- ---- Libreria de texturas para el SELECTOR (WoW no puede listar archivos del disco,
--- ---- asi que se declaran aca). SKINS = subcarpetas de Assets\ con los MISMOS nombres
--- ---- de archivo; para agregar una skin: crea la carpeta, copia las texturas y agregala.
+-- ---- asi que se declaran aca). Las skins internas son subcarpetas de Assets\
+-- ---- y declaran solo sus overrides en `files`; los demas recursos usan el base.
 ns.ASSETS = A
 ns.TEX_SKINS = {
     -- msqSkin (opcional): nombre EXACTO del skin de Masque que corresponde a
@@ -118,7 +118,7 @@ ns.TEX_SKINS = {
         ["button red2 large.tga"] = true,
       } },
 
-  label = "Neon", msqSkin = "Nombre del skin de Masque" },
+    -- { folder = "Neon\\",  label = "Neon", msqSkin = "Nombre del skin de Masque" },
     -- Las skins como addons separados (ej. MyCustomFrames_Murloc) se agregan
     -- SOLAS via _G.MCF_RegisterSkin, no hace falta declararlas aca.
 }
@@ -186,6 +186,7 @@ ns.TEX_LIB = {
 -- seccion "Assets locales" de STRUCTURE.md). Contrapartida asumida: si una skin
 -- trae un archivo que NO esta en esta lista, se ignora en silencio.
 -- ==========================================================================
+local SKINNABLE = {}
 for _, f in ipairs({
     -- Unitframes: cages / capsulas (las BARRAS de relleno no se reskinean a
     -- proposito -- pedido del usuario, ver la lista SKINNABLE en STRUCTURE.md).
@@ -216,13 +217,14 @@ for _, f in ipairs({
     "border-tooltip.tga",
     "Background border.tga", "button wood large.tga", "button red2 large.tga",
 }) do SKINNABLE[f] = true end
+ns.SKINNABLE = SKINNABLE
 
 local function SkinResolve(filename)
     -- No esta en la lista blanca -> SIEMPRE el asset del addon principal.
     if not SKINNABLE[filename] then return A .. filename end
     -- ActiveSkinBasePath (addon-skin SEPARADO, ej. MyCustomFrames_Charcoal) tiene
-    -- prioridad sobre ActiveSkinFolder (subcarpeta interna de Assets\, ej. el
-    -- ejemplo "Neon"): son dos formas de declarar una skin, mutuamente excluyentes.
+-- prioridad sobre ActiveSkinFolder (subcarpeta interna de Assets\, ej. "Feral"):
+-- son dos formas de declarar una skin, mutuamente excluyentes.
     local base = ns.ActiveSkinBasePath
     if base then return base .. filename end
     local folder = ns.ActiveSkinFolder or ""

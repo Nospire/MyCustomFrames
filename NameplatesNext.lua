@@ -1129,7 +1129,8 @@ local function ClearUnit(nameplate, unit)
     if driverFrame and not next(ns.plates) then driverFrame:Hide() end
 end
 
--- Refresh the Feral ornaments and display face on currently visible nameplates.
+-- Actualiza al vuelo los adornos y el nombre de las nameplates visibles al
+-- cambiar de tema. El StatusBar de vida conserva su color dinámico de unidad.
 function ns.RefreshNameplateSkin()
     for _, f in pairs(ns.plates or {}) do
         if f then

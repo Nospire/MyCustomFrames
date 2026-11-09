@@ -29,7 +29,7 @@ local A = ns.ASSETS
 local function ThemeTex(filename)
     return (ns.SkinResolve and ns.SkinResolve(filename)) or (A .. filename)
 end
-local function BAR_TEX() return A .. "nameplate_bar.tga" end
+local function BAR_TEX() return A .. "nameplate_bar.tga" end -- relleno se tiñe con el color vivo
 local function BACKDROP_TEX() return ThemeTex("nameplate_backdrop.tga") end
 local BAR_TEXCOORD = { 14/256, 242/256, 14/64, 50/64 }
 local function ThemeFont() return ns.ActiveSkinTitleFont or ns.DEFAULT_FONT or "Fonts\\FRIZQT__.TTF" end
