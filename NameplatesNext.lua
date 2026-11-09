@@ -1133,13 +1133,13 @@ end
 -- Actualiza al vuelo los adornos y el nombre de las nameplates visibles al
 -- cambiar de tema. El StatusBar de vida conserva su color dinámico de unidad.
 function ns.RefreshNameplateSkin()
-    for _, f in pairs(ns.plates or {}) do
+    for unit, f in pairs(ns.plates or {}) do
         if f then
             if f.healthBG then f.healthBG:SetTexture(BACKDROP_TEX()) end
             if f.highlight then f.highlight:SetTexture(SkinTex("nameplate_outline.tga")) end
             if f.glow then f.glow:SetTexture(SkinTex("nameplate_glow.tga")) end
             if f.cast and f.cast.bg then f.cast.bg:SetTexture(BACKDROP_TEX()) end
-            if f.unit then UpdateClassification(f, f.unit) end
+            UpdateClassification(f, unit)
             if f.name then
                 local p = P()
                 f.name:SetFont(ns.ActiveSkinTitleFont or ns.DEFAULT_FONT or "Fonts\\FRIZQT__.TTF",
