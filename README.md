@@ -1,246 +1,200 @@
-# Gonkast Preset (MyCustomFrames)
+# Профиль Gonkast (MyCustomFrames)
 
-A full AzeriteUI-styled HUD replacement for **World of Warcraft Midnight (12.0.7)**: unit frames,
-40-player raid frames, class resource bars, portraits, auras, minimap/nameplate reskins, info bar,
-quest tracker recoloring, assisted-rotation glow, and a bundled Masque skin. Secret-number safe
-(handles this client's stricter Lua sandboxing on other players' unit data). Personal preset of
-**Gonkast** — originally built on top of AzeriteUI, now fully standalone (see Credits).
+Персональная версия интерфейса Gonkast на основе AzeriteUI. Аддон заменяет и оформляет рамки персонажей и целей, полосы ресурсов классов, портреты, ауры, мини-карту, вражеские индикаторы над головами, панель информации и другие элементы интерфейса. В комплекте есть стиль для Masque.
 
-![The HUD in the world](Images/01-ui-general.jpg)
+![Интерфейс в игре](Images/01-ui-general.jpg)
 
-## Screenshots
+## Скриншоты
 
-**Explorer mode, `minimal` preset** — the HUD fades out of the way when nothing is happening and
-comes back on combat, target, casting or mouseover. Same character and spot as the shot above.
+**Режим исследователя, профиль «Минимум»** — интерфейс скрывает выбранные элементы, когда ничего не происходит, и показывает их при вступлении в бой, выборе цели, применении заклинания или наведении курсора.
 
-![Explorer mode with the minimal preset](Images/03-explorer-minimal.jpg)
+![Режим исследователя](Images/03-explorer-minimal.jpg)
 
-**Edit mode** (`/mcf`) — every element is draggable and scrollable to resize, with sample data so
-frames that need a real unit (boss, arena, party, raid) can still be placed. The panel toggles
-individual pieces out of the way while arranging the rest.
+**Режим перемещения** — команда /mcf. Элементы можно перетаскивать и менять их размер колёсиком мыши. Для рамок, которых сейчас нет в группе, есть образцы.
 
-![Edit mode showing every frame with its outline](Images/02-edit-mode.jpg)
+![Режим перемещения](Images/02-edit-mode.jpg)
 
-**Nameplate Designer** (`/mcfnpdesigner`) — drag each piece of the nameplate to move it, scroll to
-resize. The mock-up is built by the same constructors as the real nameplates, so what you arrange
-is what you get in combat.
+**Редактор индикаторов противников** — команда /mcfnpdesigner. Перетаскивай части индикатора, чтобы изменить их расположение, или крути колёсико, чтобы изменить размер.
 
-![The Nameplate Designer panel](Images/05-nameplate-designer.jpg)
+![Редактор индикаторов противников](Images/05-nameplate-designer.jpg)
 
-**Game Menu** — reskinned to match, and it follows whichever Skin is active in the options.
+**Оформление меню выхода** — внешний вид меню меняется вместе с выбранной темой.
 
-![The reskinned Escape menu](Images/04-game-menu.jpg)
+![Оформление меню выхода](Images/04-game-menu.jpg)
 
-## Requirements
+## Перед установкой
 
-None to load — no other addon is a hard dependency. That said, this preset is designed and tuned to be used alongside **Gonkast's own [Bartender4](https://www.curseforge.com/wow/addons/bartender4) profile** (action bar layout/positions) and **[DynamicCam](https://www.curseforge.com/wow/addons/dynamiccam)** (camera) — the bundled Bartender4 profile (see Setup Wizard) is part of the intended setup, not just an optional pairing.
+Чтобы загрузить MyCustomFrames, другие аддоны не обязательны. Но этот профиль рассчитан на совместную работу с:
 
-> **Note:** designed and tested for **16:9 resolutions** with WoW's UI Scale set to **100%** (System > Video). Other aspect ratios (ultrawide 21:9, etc.) or a custom UI Scale may cause positions/sizes to look off.
+- **Bartender4** — панели способностей и предметов. В мастере настройки можно применить готовый профиль Gonkast.
+- **DynamicCam** — настройки камеры. Для него тоже есть профиль в мастере.
+- **Masque** — оформление кнопок способностей. В аддон включён стиль Masque.
+- **Chattynator** — оформление окна чата.
 
-## Recommended (Setup Wizard can auto-configure these)
+Мастер настройки может установить поддерживаемые профили, если соответствующие аддоны уже установлены.
 
-- **[Bartender4](https://www.curseforge.com/wow/addons/bartender4)** — action bars
-- **[DynamicCam](https://www.curseforge.com/wow/addons/dynamiccam)** — camera
-- **[Masque](https://www.curseforge.com/wow/addons/masque)** — action button skinning (skin bundled, `MasqueSkin.lua`)
-- **[Chattynator](https://www.curseforge.com/wow/addons/chattynator)** — chat
+> **Важно:** интерфейс настроен под формат экрана 16:9 и масштаб интерфейса 100% (Настройки → Система → Графика). На ультрашироком экране или с другим масштабом расположение некоторых элементов может потребовать ручной настройки.
 
-## Other addons that pair well (not auto-configured)
+### Другие совместимые аддоны
 
-- **[Plumber](https://github.com/Peterodox/Plumber)** — the menu styling is based on it
-- **[DialogueUI](https://www.curseforge.com/wow/addons/dialogueui)** — includes a DynamicCam compatibility fix (`db.dcFix`); turn off DialogueUI's own "Camera Movement" for it to work
-- **[WaypointUI](https://www.curseforge.com/wow/addons/waypointui)** — waypoint/map arrow
-- **[Bartender4 Animations](https://www.curseforge.com/wow/addons/bartender4-animations)** — button-press animations
-- **[DF Friendly Nameplates](https://www.curseforge.com/wow/addons/df-friendly-nameplates)** — friendly nameplate visibility
-- **[Masque Skinner: Blizz Buffs](https://www.curseforge.com/wow/addons/blizzbuffsfacade)** — skins native buff/debuff icons
-- **[ChatBubbleReplacements](https://github.com/Luckyone961/ChatBubbleReplacements)** — bubble textures (this preset only reskins the *text*)
+Они не настраиваются автоматически:
 
-## What's inside
+- [Plumber](https://github.com/Peterodox/Plumber) — от него взята идея оформления игрового меню.
+- [DialogueUI](https://www.curseforge.com/wow/addons/dialogueui) — чтобы камера работала с DynamicCam, отключи в DialogueUI настройку Camera Movement.
+- [WaypointUI](https://www.curseforge.com/wow/addons/waypointui) — стрелка направления к точке на карте.
+- [Bartender4 Animations](https://www.curseforge.com/wow/addons/bartender4-animations) — анимация нажатия кнопок.
+- [DF Friendly Nameplates](https://www.curseforge.com/wow/addons/df-friendly-nameplates) — отображение индикаторов дружественных персонажей.
+- [Masque Skinner: Blizz Buffs](https://www.curseforge.com/wow/addons/blizzbuffsfacade) — оформление стандартных значков эффектов.
+- [ChatBubbleReplacements](https://github.com/Luckyone961/ChatBubbleReplacements) — текстуры облачков чата. MyCustomFrames меняет только текст внутри них.
 
-- **Unit frames** — player/target/ToT/pet/focus/boss1-5/party1-5/arena1-6, hand-built secure frame reskins (no oUF)
-- **Raid frames** (`Raid.lua`) — up to 40 players, auto-shows in raids/battlegrounds, configurable grid layout
-- **Class Power** (`ClassPower.lua`) — combo points, holy power, chi, soul shards, arcane charges, essence, runes, soul fragments, maelstrom weapon
-- **Portraits** — 3D model or class icon, cage/background/role/leader/raid-mark badges
-- **Auras** — buffs/debuffs everywhere, all through one hover-triggered display (debuff
-  priority, colored border by dispel type): party (dungeon-only), arena (arena-only) and
-  focus reveal on mouseover or in combat; player and target are always visible, no
-  mouseover or target required
-- **Unit indicators** (`Indicators.lua`) — out-of-range dimming and an absorb/shield overlay
-  on player/target/focus/party/arena, drawn with each unit's own bar texture
-- **Loss of Control** (`LossOfControl.lua`) — icon + countdown on the player portrait while
-  you're stunned/silenced/rooted/feared
-- **Minimap reskin** (`Minimap.lua`) — custom ring/border, coordinates, mail/eye/dismount/tracking icons, mail notification banner
-- **Nameplate reskin** (`Nameplates.lua` + `NameplateDesigner.lua`) — custom bars, aura filtering, per-zone profiles, in-game designer, optional class-colored enemy player names
-- **Quest tracker** — recoloring, text alignment, context-aware auto-hide
-- **Info bar** — clock, calendar, zone, FPS/MS
-- **Game Menu (Esc) reskin** (`MainMenu.lua`) — custom frame/buttons, follows the active skin
-- **Explorer Mode** — fades elements out until you hover where they are; combat/target/casting can
-  force them fully visible. Three one-click **quick profiles** (Setup Wizard and the Explorer
-  options section) pick which elements it manages:
-  - **Exploration** — hides almost everything, keeps the minimap, your unit frame, portrait, info
-    bar and micro menu always visible.
-  - **Combat** — only the action bars fade out, revealing automatically when you enter combat;
-    everything else stays visible.
-  - **Minimal** — hides everything, no exceptions.
+## Что меняет аддон
 
-  Picking a profile only replaces *which elements* Explorer manages — it never touches opacity,
-  target/casting rules, or zone filters, so those stay exactly as you set them.
-- Micro menu, chat bubble text, mouselook, native frame hiding, assisted glow, mirror timer, tooltip, extra button — all reskinned
-- **Lock/Edit mode** (`/mcf`) — drag/scale/reposition everything, "Hide in Lock" panel, syncs with Blizzard's Edit Mode
-- **Setup Wizard** (`/mcfsetup`) — first-run walkthrough, optionally applies bundled profiles
-- **Preset system** — save/load/export/import the whole config as a string
+- **Рамки персонажей:** игрок, цель, цель цели, питомец, фокус, боссы, группа и арена.
+- **Рамки рейда:** до 40 игроков; появляются в рейдах и на полях боя, размер и расположение настраиваются.
+- **Ресурсы класса:** например, очки серии приёмов, сила Света, ци, осколки душ, чародейские заряды, руны, сущность и другие классовые ресурсы.
+- **Портреты:** 3D-модель или значок класса, рамка, фон и значки роли, лидера и метки рейда.
+- **Эффекты на персонажах:** значки положительных и отрицательных эффектов. Их можно показывать при наведении курсора; для игрока и цели они видны всегда.
+- **Индикаторы рамок:** затемнение при выходе союзника из зоны действия и полоса поглощения урона для игрока, цели, фокуса, группы и арены.
+- **Контроль персонажа:** значок и таймер оглушения, немоты, обездвиживания и страха на портрете игрока.
+- **Мини-карта:** рамка, координаты, значки почты, поиска группы, транспорта и слежения, а также кольцо опыта, репутации или чести.
+- **Индикаторы противников:** оформление полос здоровья и заклинаний, фильтры эффектов, профили для разных зон и встроенный редактор.
+- **Журнал заданий:** цвет и расположение текста, автоматическое скрытие с учётом ситуации.
+- **Информационная панель:** время, календарь, зона, FPS и задержка.
+- **Меню выхода:** оформление меню по клавише Esc.
+- **Режим исследователя:** выбранные элементы интерфейса скрываются и появляются при наведении курсора, в бою, при выборе цели или произнесении заклинания. Есть три готовых профиля:
+  - **Исследование** — скрывает почти всё, оставляя мини-карту, рамку игрока, портрет, информационную панель и мини-меню.
+  - **Бой** — скрывает только панели способностей; показывает их при вступлении в бой.
+  - **Минимум** — скрывает все элементы, включённые в режим исследователя.
+  
+  Выбор профиля меняет только список управляемых элементов. Условия появления, прозрачность и ограничения по зонам остаются такими, как ты их настроил.
+- **Другие элементы:** мини-меню, текст облачков чата, режим обзора от первого лица, таймеры дыхания и усталости, подсказки и дополнительная кнопка действия.
+- **Перемещение и изменение размера:** команда /mcf. Режим синхронизируется со встроенным режимом редактирования WoW.
+- **Мастер настройки:** команда /mcfsetup. Помогает настроить аддоны и профили.
+- **Профили:** сохранить, загрузить, экспортировать и импортировать все настройки одной строкой.
 
-## What's *not* inside
+## Чего в аддоне нет
 
-So you know before installing. None of this is planned — it's here to set expectations, not
-as a roadmap.
+- **Собственных панелей способностей.** MyCustomFrames меняет размер и положение панелей Bartender4. Без Bartender4 остаются стандартные панели WoW.
+- **Замены чата, сумок или измерителя урона.** Для чата можно использовать Chattynator.
+- **Связи с DBM или BigWigs.** Полосы босс-модов не оформляются и не перемещаются.
+- **Нового оформления большой карты и журнала подземелий.** Меняется только мини-карта.
+- **Индикатора расстояния и поглощения урона на рейдовых рамках из 40 игроков.** Эти индикаторы работают на персональных рамках, рамках группы и арены.
+- **Индикатора угрозы.** Несколько вариантов пробовали, но они не давали надёжного результата.
+- **Цветовой подсветки типа рассеивания на рамках персонажей.** На индикаторах противников эффекты могут фильтроваться и окрашиваться по типу рассеивания.
+- **Белого и чёрного списка эффектов на рамках персонажей.** Можно выбрать число и порядок значков, но нельзя отфильтровать их по отдельным заклинаниям.
+- **Отдельных профилей для каждого персонажа или специализации.** Настройки общие для учётной записи; для другого варианта можно сохранить отдельный профиль.
+- **Готовой подгонки под любое разрешение.** Профиль рассчитан на 16:9 и масштаб 100%; на других экранах может понадобиться ручная перестановка элементов.
 
-- **No action bars.** This preset positions and scales Bartender4's bars; it doesn't provide
-  any. Without Bartender4 you keep Blizzard's default bars.
-- **No chat, bag, or damage-meter replacement.** Pairs with Chattynator for chat; bags and
-  meters are your own choice.
-- **No boss-mod integration.** DBM/BigWigs bars aren't skinned or repositioned.
-- **No world map or dungeon-journal reskin.** Only the minimap is themed.
-- **No range or dispel indicators on the 40-player raid frames.** The range fade and shield
-  bar only cover the individual frames (player/target/focus/party/arena).
-- **No threat/aggro indicator.** Attempted several ways and dropped — see the Midnight
-  limits below.
-- **No dispel-type highlight on unit frames.** Nameplates do filter and colour auras by
-  dispel type; unit frames only colour the aura icon's own border.
-- **No aura whitelist/blacklist on unit frames.** You choose how many icons and how they
-  sort, not which specific spells appear. Nameplates *do* have real filtering.
-- **English is the source language.** This branch also includes Russian (`ruRU`) translations.
-- **No profile-per-character or per-spec.** One config per account, plus the preset
-  save/load system.
-- **Tuned for 16:9 at 100% UI scale.** Other aspect ratios or a custom UI scale will need
-  manual repositioning.
+## Ограничения клиента Midnight 12.0
 
-## Midnight (12.0) API limits that shape this addon
+Эти ограничения задаёт клиент игры, а не аддон. В бою некоторые данные нельзя прочитать напрямую: их можно передать стандартным элементам интерфейса, но нельзя сравнивать или вычислять.
 
-Midnight wraps a lot of combat data in "secret values" — an addon can pass them to Blizzard
-widgets but can't read, compare, or do maths on them. These are limits of the client, not
-bugs to report, and every one below was confirmed in-game on 12.0.7:
+- **Здоровье и ресурс других персонажей.** Полоса получает значение напрямую от игры, а текст показывает процент. Точные числа здоровья и ресурса других персонажей недоступны.
+- **Таймеры эффектов на других персонажах.** Аддон передаёт длительность стандартному таймеру игры. Сортировка по времени окончания точно работает только для собственных эффектов; у остальных сохраняется порядок игры.
+- **Число зарядов и тип рассеивания.** Эти значения обрабатываются специальными функциями клиента, без прямого чтения.
+- **Расстояние до союзников группы и арены.** Клиент скрывает точное состояние некоторых проверок расстояния, поэтому затемнение рамки может не работать в этих случаях. В открытом мире оно работает.
+- **Определение существ внутри подземелий.** Клиент скрывает некоторые сведения о существах. Из-за этого фильтрация объектов на индикаторах использует запасные способы определения, а противников арены нельзя однозначно определить по GUID.
+- **Боевой журнал.** Событие COMBAT_LOG_EVENT_UNFILTERED недоступно аддонам. Трекер аренных аксессуаров использует обновления эффектов; функции, которым необходим боевой журнал, реализовать нельзя.
+- **Индикатор угрозы.** Надёжного способа показать его не нашлось, поэтому он не включён.
+- **Значки на мини-карте.** Они не всегда подчиняются прозрачности родительской рамки. Поэтому скрытие мини-карты в режиме исследователя может происходить мгновенно.
+- **Защищённые элементы в бою.** Некоторые изменения интерфейса игра разрешает применить только после боя. Поэтому часть настроек может сработать с небольшой задержкой.
+- **Ауры на индикаторах противников.** В версии 12.0.7 нет виджета AuraContainer; классификация использует уже подготовленные игрой списки.
 
-- **Health and power of other units are unreadable.** Bars are filled by handing the secret
-  straight to a `StatusBar`; text uses `UnitHealthPercent`, which stays readable. Exact
-  values (`123456 / 200000`) are not obtainable for anyone but yourself.
-- **Aura timers on other units are secret.** `expirationTime`/`duration` can't be read, so
-  the countdown is drawn by Blizzard's own cooldown widget from a duration object. The
-  "sort by time remaining" option therefore only truly reorders *your own* auras; elsewhere
-  it falls back to the game's native order.
-- **Stack counts and dispel types are secret.** Dispel colouring goes through
-  `C_UnitAuras.GetAuraDispelTypeColor` / `IsAuraFilteredOutByInstanceID` instead of reading
-  the type directly.
-- **`UnitInRange` returns secret booleans for party and arena units.** The range fade
-  simply won't show for those units rather than guessing — it works in open world.
-- **`UnitGUID`, `UnitCreatureType` and `UnitReaction` go secret inside dungeons**
-  (anti-scouting). This is why filtering nameplates off world objects needs a fallback
-  chain, and why arena opponents can't be identified by GUID.
-- **`COMBAT_LOG_EVENT_UNFILTERED` is gone for addons.** The arena trinket tracker detects
-  the buff via `UNIT_AURA` instead; anything that genuinely needs the combat log can't be
-  done.
-- **Threat data proved unusable for a visible indicator.** Four different approaches, none
-  produced a reliable on-screen change — Blizzard's own recolouring reasserts on its own
-  schedule and the native highlight rarely fires. Dropped rather than shipped half-working.
-- **Native minimap pins ignore parent alpha** (`SetIgnoreParentAlpha`), so Explorer can't
-  fade them — it moves the minimap off-screen instead. That makes minimap hiding snap
-  instantly rather than fade.
-- **Many calls are blocked in combat**, including `SetCVar`, `EnableMouse`, `Show`/`Hide`
-  and `SetPoint` on protected frames, and `Minimap:ClearAllPoints()`. Anything that lands
-  mid-combat is deferred to when you leave combat, so a few changes apply a moment late.
-- **The `AuraContainer` widget doesn't exist on 12.0.7** — it's from a later build — so
-  nameplate aura classification leans on Blizzard's own already-computed lists.
+## Команды чата
 
-## Slash commands
-
-| Command | Effect |
+| Команда | Что делает |
 |---|---|
-| `/mcf` | Toggle Move/Lock (edit mode) |
-| `/mcfmenu` | Open the options panel |
-| `/mcfsetup` | Reopen the setup wizard |
-| `/mcfnpdesigner` | Open the in-game nameplate designer |
-| `/mcfundo` | Restore the auto-backup taken before the last Reset ALL or profile apply (one level of undo) |
-| `/mcfskincheck` | Check the active skin ships every file it needs — a missing one renders **invisible**, with no other clue |
-| `/mcfhud` | Show the Blizzard Edit Mode HUD code (import manually via Esc > Edit Mode > Import Layout) |
+| /mcf | Включает или выключает режим перемещения |
+| /mcfmenu | Открывает настройки |
+| /mcfsetup | Запускает мастер настройки |
+| /mcfnpdesigner | Открывает редактор индикаторов противников |
+| /mcfundo | Отменяет последний сброс всех настроек или применение профиля |
+| /mcfskincheck | Проверяет, на месте ли файлы выбранной темы |
+| /mcfhud | Показывает код макета встроенного интерфейса WoW для ручного импорта |
 
-A few elements have no menu section yet and are driven from chat instead:
+Эти команды не имеют отдельного раздела в меню:
 
-| Command | Effect |
+| Команда | Что делает |
 |---|---|
-| `/mcfmirror <toggle\|width\|height\|offsetx\|offsety>` | Mirror timer (breath / fatigue bar) |
-| `/mcftooltip <toggle\|scale>` | Tooltip reskin |
-| `/mcfextrabtn border` | Extra action button border |
-| `/mcfminimapbtnslist` | List the minimap buttons the collector picked up |
-| `/mcfminimapbtnsignore <name>` | Exclude one of them from the collector |
-| `/mcfminimapbtnsreset` | Reset the collector trigger's position and scale |
+| /mcfmirror toggle, width, height, offsetx или offsety | Управляет таймером дыхания и усталости |
+| /mcftooltip toggle или scale | Включает подсказки или меняет их размер |
+| /mcfextrabtn border | Меняет рамку дополнительной кнопки действия |
+| /mcfminimapbtnslist | Показывает найденные кнопки аддонов у мини-карты |
+| /mcfminimapbtnsignore ИМЯ | Исключает кнопку с указанным именем |
+| /mcfminimapbtnsreset | Сбрасывает расположение и размер панели кнопок мини-карты |
 
-## Diagnostics
+## Диагностика
 
-**`/mcfdiag` is the index for everything below — you don't need this table.** It lists every
-diagnostic and preview grouped by type, plus the commands that aren't run through it, and
-`/mcfdiag <name>` runs one. The table here is a reference for reading on the web.
+Команда /mcfdiag выводит список проверок и примеров. Команда /mcfdiag ИМЯ запускает выбранную проверку. Тесты-предпросмотры выключаются повторным запуском той же команды.
 
-Diagnostics dump what a subsystem is *actually* seeing right now, which usually beats guessing.
-Previews (`/mcfdiag test…`) are toggles — run them again to turn them off.
-
-| Command | Reports on |
+| Команда | Что показывает |
 |---|---|
-| `/mcfscaledump` | Position and scale of every element at the current resolution — the tool for checking the 16:9 auto-scale |
-| `/mcfbt4diag` | Which Bartender4 bar frames exist and under what names |
-| `/mcfaurasdiag` | Aura data for the current target |
-| `/mcfnpdiag`, `/mcfcastwatch` | Nameplates; `castwatch` toggles live cast logging |
-| `/mcfnpobjdiag` | Per-nameplate unit/GUID/creature-type dump — for chasing nameplates that shouldn't be there (world objects, furniture) |
-| `/mcfmmdiag`, `/mcfringdiag`, `/mcfmapiconsdiag` | Minimap: general state, XP/reputation/honor/renown rings, icons |
-| `/mcfpartytest`, `/mcfarenaauratest`, `/mcffocusauratest`, `/mcfplayerauratest`, `/mcftargetauratest` | Toggle the party / arena / focus / player / target hover aura previews for placement without a real group, match or target |
-| `/mcfaurahoverdiag [key]` | Live internal state of a hover aura group (hover/target/combat/cast/gate/alpha) |
-| `/mcfindicatortest` | Force the range fade and shield bar on every tracked unit, to preview them without being out of range or shielded |
-| `/mcfloctest` | Fake a Loss of Control icon on the player portrait, to preview it without a real stun |
-| `/mcftrinkettest` | Fake the arena trinket cooldown on the 3 arena enemy frames (needs `/mcf` to see them outside a match). Tests the icon only, not detection |
-| `/mcfarenadiag` | Which arena-detection method is returning what |
-| `/mcfclasspowerdiag` | Class resource detection for your class and spec |
-| `/mcfmirrordiag`, `/mcfmirrortargetdiag` | Mirror timer, and the mirrored-target portrait |
-| `/mcfpaneldiag` | Mouse dead-zones over the options panel — run it while standing on the stuck spot |
-| `/mcfmenudiag` | Texture paths the Game Menu (Esc) skin resolves |
-| `/mcftrackerdump` | Quest tracker text classification |
-| `/mcfchar` | The portrait's "open character panel" button |
+| /mcfscaledump | Координаты и размер элементов при текущем разрешении |
+| /mcfbt4diag | Какие панели Bartender4 найдены и как они называются |
+| /mcfaurasdiag | Сведения об эффектах текущей цели |
+| /mcfnpdiag, /mcfcastwatch | Состояние индикаторов противников; castwatch включает журнал заклинаний |
+| /mcfnpobjdiag | Сведения об объектах на индикаторах, включая GUID и тип существа |
+| /mcfmmdiag, /mcfringdiag, /mcfmapiconsdiag | Мини-карта, кольца опыта и репутации, значки |
+| /mcfpartytest, /mcfarenaauratest, /mcffocusauratest, /mcfplayerauratest, /mcftargetauratest | Предпросмотр рамок эффектов группы, арены, фокуса, игрока и цели |
+| /mcfaurahoverdiag [имя] | Состояние группы эффектов при наведении курсора |
+| /mcfindicatortest | Предпросмотр затемнения рамок и полосы поглощения урона |
+| /mcfloctest | Предпросмотр значка потери контроля |
+| /mcftrinkettest | Предпросмотр таймера аренного аксессуара |
+| /mcfarenadiag | Способы определения арены и их результаты |
+| /mcfclasspowerdiag | Определение ресурса класса и специализации |
+| /mcfmirrordiag, /mcfmirrortargetdiag | Таймеры дыхания и усталости |
+| /mcfpaneldiag | Области панели настроек, где курсор может перестать нажиматься |
+| /mcfmenudiag | Пути текстур оформления меню выхода |
+| /mcftrackerdump | Как аддон распознаёт текст журнала заданий |
+| /mcfchar | Работает ли кнопка открытия окна персонажа на портрете |
 
-## Installation
+## Совместимость и установка
 
-### WoW Forever — установка для новичков
+> **Важно про WoW Forever:** эта ветка добавляет русский перевод README и интерфейса, но сама по себе не переносит код аддона на WoW Forever. Файл MyCustomFrames.toc указывает интерфейсы 12.0.7 и 12.1.0. Папка _forever_ — только место установки; она не гарантирует совместимость. Сначала нужна сборка, проверенная на клиенте Forever. Если игра не показывает аддон или выдаёт ошибки Lua, проблема не в том, куда ты его скопировал.
 
-1. Открой [ветку с русской локализацией](https://github.com/Nospire/MyCustomFrames/tree/ruRU-localization). На странице нажми зелёную кнопку **Code**, затем **Download ZIP**.
-2. Распакуй ZIP. Внутри будет папка с названием вроде `MyCustomFrames-ruRU-localization`.
-3. Переименуй эту папку ровно в **`MyCustomFrames`**. Проверь, что внутри неё сразу виден файл `MyCustomFrames.toc`. Не должно получиться двух вложенных папок `MyCustomFrames/MyCustomFrames`.
-4. Найди папку WoW Forever. В ней открой `Interface`, затем `AddOns`. Скопируй туда папку `MyCustomFrames`. Итоговый путь должен выглядеть так:
-   - **Windows:** `…\World of Warcraft\_forever_\Interface\AddOns\MyCustomFrames\MyCustomFrames.toc`
-   - **macOS:** `…/World of Warcraft/_forever_/Interface/AddOns/MyCustomFrames/MyCustomFrames.toc`
-5. Если игра открыта, полностью выйди из неё. Запусти именно WoW Forever снова.
-6. На экране выбора персонажа нажми **Модификации / AddOns**. Убедись, что `MyCustomFrames` включён. Если игра предлагает загрузить устаревшие модификации, включи эту опцию.
-7. Войди персонажем. Мастер настройки откроется сам. Чтобы запустить его позже, введи в чат игры `/mcfsetup`.
+### Как установить, когда есть сборка для твоего клиента
 
-**Частые ошибки:** не клади аддон в `_retail_`; для Forever нужна папка `_forever_`. Не оставляй архив ZIP внутри `AddOns` и не создавай лишний уровень вложенности. Для русских надписей выбери русский язык клиента игры.
+### 1. Скачай архив
 
-### English
+Открой [ветку с русским переводом](https://github.com/Nospire/MyCustomFrames/tree/ruRU-localization), нажми зелёную кнопку **Code**, затем **Download ZIP**. Или скачай [ZIP-архив напрямую](https://github.com/Nospire/MyCustomFrames/archive/refs/heads/ruRU-localization.zip).
 
-1. Click **Code → Download ZIP** above and extract the archive.
-2. Rename the extracted folder to **`MyCustomFrames`** (it must match the `.toc` filename).
-3. Move that folder into the AddOns directory for the WoW client you use. For WoW Forever, the path is `World of Warcraft/_forever_/Interface/AddOns/MyCustomFrames/`.
-4. Restart WoW, enable the addon in the AddOns list at the character screen, and log in.
-5. The Setup Wizard opens automatically. To reopen it later, type `/mcfsetup`.
+### 2. Распакуй архив и проверь папку
 
-## Credits
+После распаковки переименуй папку в **MyCustomFrames**. Открой её и убедись, что внутри сразу есть файл MyCustomFrames.toc. Если сначала видна ещё одна папка MyCustomFrames, перемести внутреннюю папку уровнем выше. Лишняя вложенность — частая причина, по которой игра не видит аддон.
 
-- **[AzeriteUI](https://github.com/AzeriteTeam/Azerite5)** by Daniel Troko and Lars Norberg — original source of the textures/visual language this preset is built on, including the bundled "Azerite HEX" Masque skin (ported from their `Masque_Azerite_Hex`, same assets). Wouldn't exist without it.
-- **[AzeriteUI JuNNeZ Edition (Midnight)](https://www.curseforge.com/wow/addons/azeriteui-junnez-edition-wow12)** — the Midnight-compatible fork this preset was originally built to run on.
-- **[Plumber](https://github.com/Peterodox/Plumber)** by Peterodox — menu styling, using real assets from its `Art/` folder. This project ships under **Plumber's license (GPLv3)** as a result.
-- **[W2UI](https://www.curseforge.com/wow/addons/w2ui)** — the micro menu icons come from its `Media/MenuBar` set.
-- **M33kAuras** — player-rest flipbook animation data.
-- **["You've got mail!"](https://wago.io/1wKfUxJ8U)** WeakAura — inspired the new-mail banner, rebuilt with native Blizzard textures.
-- **[Platynator](https://www.curseforge.com/wow/addons/platynator)** — the idea for the Nameplate Designer. No code from it was used.
+### 3. Скопируй аддон в папку игры
 
-## License
+Открой папку, где установлен нужный клиент WoW, затем зайди в Interface → AddOns и помести туда папку MyCustomFrames. Для WoW Forever путь выглядит так:
 
-GNU General Public License v3.0 — see [LICENSE](LICENSE).
+- **Windows:** World of Warcraft\_forever_\Interface\AddOns\MyCustomFrames\MyCustomFrames.toc
+- **macOS:** World of Warcraft/_forever_/Interface/AddOns/MyCustomFrames/MyCustomFrames.toc
 
-## Note
+Не клади аддон в папку _retail_ и не копируй ZIP-архив в AddOns.
 
-Claude (Anthropic) helped organize the git repository and this README.
+### 4. Включи аддон в игре
+
+Полностью закрой WoW Forever, если он был запущен, и запусти снова. На экране выбора персонажа нажми **Модификации / AddOns** и поставь галочку рядом с MyCustomFrames. Если игра предлагает разрешить устаревшие аддоны, включи эту настройку.
+
+### 5. Запусти мастер настройки
+
+Войди в игру. Мастер настройки появится автоматически. Если нужно открыть его позже, введи в игровой чат команду /mcfsetup.
+
+Для русских надписей выбери русский язык клиента игры.
+
+## Благодарности
+
+- **[AzeriteUI](https://github.com/AzeriteTeam/Azerite5)** — Даниэлю Троко и Ларсу Норбергу за исходный стиль и текстуры, на которых основан интерфейс, включая стиль Masque Azerite HEX.
+- **[AzeriteUI JuNNeZ Edition (Midnight)](https://www.curseforge.com/wow/addons/azeriteui-junnez-edition-wow12)** — совместимая с Midnight версия интерфейса, с которой начался этот профиль.
+- **[Plumber](https://github.com/Peterodox/Plumber)** — за оформление меню и текстуры из папки Art. Поэтому на проект распространяется лицензия GPLv3.
+- **[W2UI](https://www.curseforge.com/wow/addons/w2ui)** — за значки мини-меню из набора MenuBar.
+- **M33kAuras** — за данные анимации отдыха персонажа.
+- **[You've got mail!](https://wago.io/1wKfUxJ8U)** — источник идеи баннера о новой почте; баннер собран заново на стандартных текстурах игры.
+- **[Platynator](https://www.curseforge.com/wow/addons/platynator)** — источник идеи редактора индикаторов противников. Код оттуда не использовался.
+
+## Лицензия
+
+GNU General Public License версии 3.0. Подробнее — в файле LICENSE.
+
+## Примечание
+
+Claude (Anthropic) помогал упорядочить репозиторий и оформить README.
