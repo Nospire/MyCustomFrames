@@ -95,6 +95,18 @@ ns.TEX_SKINS = {
     -- por perfil).
     { folder = "",          label = "Default", msqSkin = "Azerite HEX" },
 
+    -- Feral: archivos internos seleccionados; colores de energia/ira se
+    -- aplican por unidad en Units.lua y respetan el color manual del usuario.
+    { folder = "Feral\\", label = "Друид — Feral (кошка/медведь)", id = "feral",
+      msqSkin = "Azerite HEX", files = {
+        ["hp_low_case.tga"] = true, ["hp_low_case_miror_s.tga"] = true,
+        ["hp_low_case_mirror.tga"] = true, ["hp_low_case_mirror_b.tga"] = true,
+        ["hp_party_cage.tga"] = true, ["hp_pet_cage.tga"] = true,
+        ["power_low_case_s.tga"] = true, ["orb_case_low.tga"] = true,
+        ["portrait_frame_lo.tga"] = true,
+        ["actionbutton-border square.tga"] = true, ["actionbutton-border.tga"] = true,
+      } },
+
     -- { folder = "Neon\\",  label = "Neon", msqSkin = "Nombre del skin de Masque" },
     -- Las skins como addons separados (ej. MyCustomFrames_Murloc) se agregan
     -- SOLAS via _G.MCF_RegisterSkin, no hace falta declararlas aca.
@@ -203,7 +215,9 @@ local function SkinResolve(filename)
     local base = ns.ActiveSkinBasePath
     if base then return base .. filename end
     local folder = ns.ActiveSkinFolder or ""
-    if folder ~= "" then return A .. folder .. filename end
+    if folder ~= "" and ns.ActiveSkinFiles and ns.ActiveSkinFiles[filename] then
+        return A .. folder .. filename
+    end
     return A .. filename
 end
 ns.SkinResolve = SkinResolve
@@ -284,6 +298,8 @@ ns.ApplySkin = function(skin)
     end
     ns.ActiveSkinFolder = skin.folder or ""
     ns.ActiveSkinBasePath = skin.basePath   -- nil para skins internas (folder) o Default
+    ns.ActiveSkinFiles = skin.files
+    ns.ActiveSkinId = skin.id
     local db = ns.GetDB and ns.GetDB()
     if not db then return end
     db.activeSkinLabel = skin.label

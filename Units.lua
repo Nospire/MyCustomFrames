@@ -31,6 +31,17 @@ local function UnitColor(u)
     if u.kind == "power" then
         local okP, pType, token = pcall(UnitPowerType, u.unit)
         if okP and not (issecretvalue and (issecretvalue(pType) or issecretvalue(token))) then
+            -- La energia del gato queda ambar y la ira del oso en borgona
+            -- solo con el tema Feral. UnitPowerType cambia al cambiar de forma.
+            -- Los colores manuales del usuario ya se resolvieron arriba.
+            if ns.ActiveSkinId == "feral" and (token == "ENERGY" or token == "RAGE") then
+                local okC, _, class = pcall(UnitClass, u.unit)
+                if okC and type(class) == "string"
+                    and not (issecretvalue and issecretvalue(class)) and class == "DRUID" then
+                    if token == "ENERGY" then return 0.95, 0.63, 0.12 end -- F2A11F
+                    if token == "RAGE" then return 0.38, 0.055, 0.13 end -- 610E21
+                end
+            end
             local col = (token and ns.POWER_COLORS[token]) or (token and PowerBarColor[token])
                 or (pType and PowerBarColor[pType])
             if col then return col.r, col.g, col.b end
