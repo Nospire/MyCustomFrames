@@ -36,7 +36,7 @@ local A = "Interface\\AddOns\\MyCustomFrames\\Assets\\"
 local function SkinTex(filename)
     return (ns.SkinResolve and ns.SkinResolve(filename)) or (A .. filename)
 end
-local BAR_TEX = A .. "nameplate_bar.tga" -- color de vida sigue viniendo del StatusBar
+local function BAR_TEX() return SkinTex("nameplate_bar.tga") end -- el color sigue viniendo del StatusBar
 local BAR_TEXCOORD = { 14/256, 242/256, 14/64, 50/64 }
 local BACKDROP_TEX = function() return SkinTex("nameplate_backdrop.tga") end
 
@@ -538,7 +538,7 @@ local function CreatePlateFrame()
     f:Hide()
 
     f.health = CreateFrame("StatusBar", nil, f)
-    f.health:SetStatusBarTexture(BAR_TEX)
+    f.health:SetStatusBarTexture(BAR_TEX())
     local tex = f.health:GetStatusBarTexture()
     if tex then tex:SetTexCoord(unpack(BAR_TEXCOORD)) end
     f.health:SetMinMaxValues(0, 100)
@@ -579,7 +579,7 @@ local function CreatePlateFrame()
     f.name = f:CreateFontString(nil, "OVERLAY")
 
     f.cast = CreateFrame("StatusBar", nil, f)
-    f.cast:SetStatusBarTexture(BAR_TEX)
+    f.cast:SetStatusBarTexture(BAR_TEX())
     local ctex = f.cast:GetStatusBarTexture()
     if ctex then ctex:SetTexCoord(unpack(BAR_TEXCOORD)) end
     f.cast:SetMinMaxValues(0, 1)
@@ -1135,6 +1135,16 @@ end
 function ns.RefreshNameplateSkin()
     for unit, f in pairs(ns.plates or {}) do
         if f then
+            if f.health then
+                f.health:SetStatusBarTexture(BAR_TEX())
+                local healthTex = f.health:GetStatusBarTexture()
+                if healthTex then healthTex:SetTexCoord(unpack(BAR_TEXCOORD)) end
+            end
+            if f.cast then
+                f.cast:SetStatusBarTexture(BAR_TEX())
+                local castTex = f.cast:GetStatusBarTexture()
+                if castTex then castTex:SetTexCoord(unpack(BAR_TEXCOORD)) end
+            end
             if f.healthBG then f.healthBG:SetTexture(BACKDROP_TEX()) end
             if f.highlight then f.highlight:SetTexture(SkinTex("nameplate_outline.tga")) end
             if f.glow then f.glow:SetTexture(SkinTex("nameplate_glow.tga")) end

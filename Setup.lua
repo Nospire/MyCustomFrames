@@ -15,22 +15,35 @@ local ADDON, ns = ...
 -- con varios widgets empaquetados (se veian rotos al estirarlos) y se descartaron: solo se
 -- usan aca piezas simples de un solo sprite (divisor, icono, check verde).
 local A = "Interface\\AddOns\\MyCustomFrames\\Assets\\"
+local setupTextureRegions = setmetatable({}, { __mode = "k" })
+local function TexturePath(name)
+    return (ns.SkinResolve and ns.SkinResolve(name)) or (A .. name)
+end
+local function SetSetupTexture(region, name)
+    if not region then return end
+    region:SetTexture(TexturePath(name))
+    setupTextureRegions[region] = name
+end
+ns.RefreshSetupSkin = function()
+    for region, name in pairs(setupTextureRegions) do
+        if region and region.SetTexture then region:SetTexture(TexturePath(name)) end
+    end
+end
 local ART = {
-    DIVIDER     = A .. "Setup_Divider.tga",
-    CHECK_ICON  = A .. "Setup_ChecklistIcon.png",
-    CHECK_GREEN = A .. "Setup_CheckmarkGreen.blp",
-    CHECKBOX    = A .. "Setup_Checkbox.png",
+    DIVIDER     = "Setup_Divider.tga",
+    CHECK_ICON  = "Setup_ChecklistIcon.png",
+    CHECK_GREEN = "Setup_CheckmarkGreen.blp",
+    CHECKBOX    = "Setup_Checkbox.png",
 }
 
 -- Assets PROPIOS del usuario para este wizard (carpeta "Setup Assets").
-local U = A .. "Setup Assets\\"
 local CUSTOM = {
-    BG       = U .. "Background_Setup.tga",
-    EXIT     = U .. "Exit_Button.tga",
-    APPLY    = U .. "Apply_Button.tga",
-    NAVBTN   = U .. "skip_next_back_finish_Button.tga",
-    PAGE     = U .. "Page.tga",
-    PAGE_CUR = U .. "Curret_Page.tga",
+    BG       = "Setup Assets\\Background_Setup.tga",
+    EXIT     = "Setup Assets\\Exit_Button.tga",
+    APPLY    = "Setup Assets\\Apply_Button.tga",
+    NAVBTN   = "Setup Assets\\skip_next_back_finish_Button.tga",
+    PAGE     = "Setup Assets\\Page.tga",
+    PAGE_CUR = "Setup Assets\\Curret_Page.tga",
 }
 
 -- Ancho de contenido comun a las 3 paginas (con margen respecto al marco del fondo propio).
@@ -73,9 +86,12 @@ end
 local function TexButton(parent, texturePath, w, h, text, fontSize)
     local b = CreateFrame("Button", nil, parent)
     b:SetSize(w, h)
-    b:SetNormalTexture(texturePath)
-    b:SetHighlightTexture(texturePath, "ADD")
-    b:SetPushedTexture(texturePath)
+    b:SetNormalTexture(TexturePath(texturePath))
+    SetSetupTexture(b:GetNormalTexture(), texturePath)
+    b:SetHighlightTexture(TexturePath(texturePath), "ADD")
+    SetSetupTexture(b:GetHighlightTexture(), texturePath)
+    b:SetPushedTexture(TexturePath(texturePath))
+    SetSetupTexture(b:GetPushedTexture(), texturePath)
     local pt = b:GetPushedTexture()
     if pt then pt:SetVertexColor(0.75, 0.75, 0.75) end
     if text then
@@ -95,22 +111,22 @@ end
 -- la textura de nav (pill grande para Skip/Back/Next) se veia rara achicada a tamaño de
 -- dropdown, asi que este usa el mismo patron 3-slice + texcoords que Plumber usa para SU
 -- propio dropdown (fondo BACKGROUND recortado en 3 franjas + highlight ADD al pasar el mouse).
-local DROPDOWN_TEX = "Interface\\AddOns\\MyCustomFrames\\Assets\\Setup_Dropdown.png"
+local DROPDOWN_TEX = "Setup_Dropdown.png"
 local function DropdownButton(parent, w, h, text, fontSize)
     local b = CreateFrame("Button", nil, parent)
     b:SetSize(w, h)
     local capW = 16
     local function slice(layer, top, bottom)
         local left = b:CreateTexture(nil, layer)
-        left:SetTexture(DROPDOWN_TEX)
+        SetSetupTexture(left, DROPDOWN_TEX)
         left:SetPoint("TOPLEFT"); left:SetPoint("BOTTOMLEFT"); left:SetWidth(capW)
         left:SetTexCoord(0, 32 / 256, top, bottom)
         local right = b:CreateTexture(nil, layer)
-        right:SetTexture(DROPDOWN_TEX)
+        SetSetupTexture(right, DROPDOWN_TEX)
         right:SetPoint("TOPRIGHT"); right:SetPoint("BOTTOMRIGHT"); right:SetWidth(capW)
         right:SetTexCoord(176 / 256, 1, top, bottom)
         local mid = b:CreateTexture(nil, layer)
-        mid:SetTexture(DROPDOWN_TEX)
+        SetSetupTexture(mid, DROPDOWN_TEX)
         mid:SetPoint("TOPLEFT", left, "TOPRIGHT"); mid:SetPoint("BOTTOMRIGHT", right, "BOTTOMLEFT")
         mid:SetTexCoord(32 / 256, 176 / 256, top, bottom)
         return { left, mid, right }
@@ -174,12 +190,12 @@ local function Toggle(parent, label, x, y, getf, setf)
     -- cuadrante superior-izquierdo, tilde en el sub-cuadrante superior-derecho del inferior-
     -- derecho. Mas limpio que el "UI-Checkbox-Check" de Blizzard que usa el panel principal.
     if cb.box then
-        cb.box:SetTexture(ART.CHECKBOX)
+        SetSetupTexture(cb.box, ART.CHECKBOX)
         cb.box:SetTexCoord(0, 0.5, 0, 0.5)
         cb.box:SetSize(22, 22)
     end
     if cb.check then
-        cb.check:SetTexture(ART.CHECKBOX)
+        SetSetupTexture(cb.check, ART.CHECKBOX)
         cb.check:SetTexCoord(0.5, 0.75, 0.5, 0.75)
         -- Plumber usa box=32/check=16 (mitad exacta); nuestro box=22 => check~11 mantiene la
         -- misma proporcion. El tilde se veia corrido porque antes era desproporcionadamente
@@ -276,7 +292,7 @@ local function BuildFrame()
     -- El fondo del usuario (Background_Setup.tga) ya trae su propio marco ornamentado
     -- horneado en la imagen: no se le agrega un borde separado encima.
     local bg = f:CreateTexture(nil, "BACKGROUND")
-    bg:SetTexture(CUSTOM.BG)
+    SetSetupTexture(bg, CUSTOM.BG)
     bg:SetAllPoints()
 
     local title = f:CreateFontString(nil, "ARTWORK")
@@ -286,7 +302,7 @@ local function BuildFrame()
     title:SetText(T("Welcome to Gonkast Preset"))
 
     local tdiv = f:CreateTexture(nil, "ARTWORK")
-    tdiv:SetTexture(ART.DIVIDER)
+    SetSetupTexture(tdiv, ART.DIVIDER)
     tdiv:SetPoint("TOP", title, "BOTTOM", 0, 2)
     tdiv:SetSize(680, 16)
     tdiv:SetVertexColor(COLOR_LINE[1], COLOR_LINE[2], COLOR_LINE[3])
@@ -315,7 +331,7 @@ local function BuildFrame()
         local d = f:CreateTexture(nil, "OVERLAY")
         d:SetSize(20, 20)
         d:SetPoint("BOTTOM", f, "BOTTOM", (i - (PAGE_COUNT + 1) / 2) * 24, 104)
-        d:SetTexture(CUSTOM.PAGE)
+        SetSetupTexture(d, CUSTOM.PAGE)
         pageDots[i] = d
     end
 
@@ -358,7 +374,7 @@ local EXTRAS_LINE = "Extras — minimap and nameplate reskins, mouselook, hide B
 
 local function FeatureCard(parent, x, y, w, title, desc)
     local icon = parent:CreateTexture(nil, "ARTWORK")
-    icon:SetTexture(ART.CHECK_ICON)
+    SetSetupTexture(icon, ART.CHECK_ICON)
     icon:SetSize(15, 15)
     icon:SetPoint("TOPLEFT", x, y)
 
@@ -399,7 +415,7 @@ local function BuildPage1(content)
 
     local divY = extrasY - 46
     local div = p:CreateTexture(nil, "ARTWORK")
-    div:SetTexture(ART.DIVIDER)
+    SetSetupTexture(div, ART.DIVIDER)
     div:SetSize(CONTENT_W, 16)
     div:SetPoint("TOPLEFT", 0, divY)
     div:SetVertexColor(COLOR_LINE[1], COLOR_LINE[2], COLOR_LINE[3])
@@ -414,7 +430,7 @@ local function BuildPage2(content)
     local p = CreateFrame("Frame", nil, content)
     p:SetAllPoints()
     local icon = p:CreateTexture(nil, "ARTWORK")
-    icon:SetTexture(ART.CHECK_ICON)
+    SetSetupTexture(icon, ART.CHECK_ICON)
     icon:SetSize(18, 18)
     icon:SetPoint("TOPLEFT", 0, 1)
     Header(p, "Bundled profiles for other addons", 22, -2, CONTENT_W - 20)
@@ -476,7 +492,7 @@ local function RefreshPage2(p)
         -- (ART.CHECKBOX, texcoords del glifo en Toggle) en vez de Setup_CheckmarkGreen.blp, para
         -- que combine con la paleta del resto del wizard.
         local detected = p:CreateTexture(nil, "ARTWORK")
-        detected:SetTexture(ART.CHECKBOX)
+        SetSetupTexture(detected, ART.CHECKBOX)
         detected:SetTexCoord(0.5, 0.75, 0.5, 0.75)
         detected:SetSize(16, 16)
         detected:SetPoint("LEFT", p, "LEFT", 380, 0)
@@ -539,7 +555,7 @@ local function BuildPage3(content)
     -- toggles y dejaba un vacio grande hasta el final — un divisor + nota, igual que las paginas
     -- 1 y 6, cierra la pagina en vez de terminar en la nada.
     local div = p:CreateTexture(nil, "ARTWORK")
-    div:SetTexture(ART.DIVIDER)
+    SetSetupTexture(div, ART.DIVIDER)
     div:SetSize(CONTENT_W, 16)
     div:SetPoint("TOPLEFT", 0, -150)
     div:SetVertexColor(COLOR_LINE[1], COLOR_LINE[2], COLOR_LINE[3])
@@ -623,7 +639,7 @@ local function BuildPage4(content)
     end
 
     local div = p:CreateTexture(nil, "ARTWORK")
-    div:SetTexture(ART.DIVIDER)
+    SetSetupTexture(div, ART.DIVIDER)
     div:SetSize(CONTENT_W, 16)
     div:SetPoint("TOPLEFT", 0, -270)
     div:SetVertexColor(COLOR_LINE[1], COLOR_LINE[2], COLOR_LINE[3])
@@ -889,7 +905,7 @@ function ns.SetupGoTo(page)
         if i == page then FadeIn(f) else f:Hide() end
     end
     for i, d in ipairs(pageDots) do
-        d:SetTexture(i == page and CUSTOM.PAGE_CUR or CUSTOM.PAGE)
+        SetSetupTexture(d, i == page and CUSTOM.PAGE_CUR or CUSTOM.PAGE)
     end
     stepLabel:SetText(T("Step ") .. page .. " из " .. PAGE_COUNT)
     backBtn:SetShown(page > 1)

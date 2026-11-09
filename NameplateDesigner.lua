@@ -67,22 +67,30 @@ local function clamp(v, lo, hi) return math.max(lo, math.min(hi, v)) end
 -- 3-slice ("Setup_Dropdown.png") y patron boton+lista que DropdownButton en
 -- Setup.lua, copiado aca en vez de expuesto porque Setup.lua depende de
 -- locals propios (SF/COLOR_OPTION) que no estan en ns.
-local DROPDOWN_TEX = "Interface\\AddOns\\MyCustomFrames\\Assets\\Setup_Dropdown.png"
+local dropdownTextures = setmetatable({}, { __mode = "k" })
+local function SetDesignerTexture(region, name)
+    local path = (ns.SkinResolve and ns.SkinResolve(name)) or (A .. name)
+    region:SetTexture(path)
+    dropdownTextures[region] = name
+end
+ns.RefreshNameplateDesignerSkin = function()
+    for region, name in pairs(dropdownTextures) do SetDesignerTexture(region, name) end
+end
 local function MakeDropdownButton(parent, w, h, text)
     local b = CreateFrame("Button", nil, parent)
     b:SetSize(w, h)
     local capW = 16
     local function slice(layer, top, bottom)
         local left = b:CreateTexture(nil, layer)
-        left:SetTexture(DROPDOWN_TEX)
+        SetDesignerTexture(left, "Setup_Dropdown.png")
         left:SetPoint("TOPLEFT"); left:SetPoint("BOTTOMLEFT"); left:SetWidth(capW)
         left:SetTexCoord(0, 32 / 256, top, bottom)
         local right = b:CreateTexture(nil, layer)
-        right:SetTexture(DROPDOWN_TEX)
+        SetDesignerTexture(right, "Setup_Dropdown.png")
         right:SetPoint("TOPRIGHT"); right:SetPoint("BOTTOMRIGHT"); right:SetWidth(capW)
         right:SetTexCoord(176 / 256, 1, top, bottom)
         local mid = b:CreateTexture(nil, layer)
-        mid:SetTexture(DROPDOWN_TEX)
+        SetDesignerTexture(mid, "Setup_Dropdown.png")
         mid:SetPoint("TOPLEFT", left, "TOPRIGHT"); mid:SetPoint("BOTTOMRIGHT", right, "BOTTOMLEFT")
         mid:SetTexCoord(32 / 256, 176 / 256, top, bottom)
         return { left, mid, right }
@@ -559,7 +567,7 @@ local function CreateDesigner()
     local bg = root:CreateTexture(nil, "BACKGROUND")
     bg:SetAllPoints()
     if ns.PL and ns.PL.BG then
-        bg:SetTexture(ns.PL.BG)
+        SetDesignerTexture(bg, "SettingsPanelBackground.jpg")
         bg:SetVertexColor(1, 1, 1, 0.92)
     else
         bg:SetColorTexture(0, 0, 0, 0.35)
@@ -925,7 +933,7 @@ local function CreateDesigner()
     local function Divider(y)
         local d = root:CreateTexture(nil, "ARTWORK")
         if ns.PL and ns.PL.DIV_H then
-            d:SetTexture(ns.PL.DIV_H)
+            SetDesignerTexture(d, "Divider_Gradient_Horizontal.tga")
         else
             d:SetColorTexture(1, 0.88, 0.6, 0.25)
         end

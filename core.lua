@@ -135,6 +135,26 @@ ns.TEX_SKINS = {
         ["icon_classification_generic.tga"] = true, ["icon_classification_rare.tga"] = true,
         ["icon-combat.tga"] = true, ["icon_skull_dead.tga"] = true,
         ["icon_exit_flight.tga"] = true,
+        ["raid_target_icons.tga"] = true, ["raid_target_icons_small.tga"] = true,
+        ["hp_lowmid_bar_miror_s.tga"] = true, ["hp_lowmid_bar_miror_b.tga"] = true,
+        ["hp_cap_bar.tga"] = true, ["hp_cap_bar mirror.tga"] = true,
+        ["power_cap_s.tga"] = true, ["hp_party_bar.tga"] = true,
+        ["hp_pet_bar.tga"] = true, ["cast_bar.tga"] = true,
+        ["nameplate_bar.tga"] = true,
+        ["actionbutton-border square2.tga"] = true,
+        ["actionbutton-border square highlight.tga"] = true,
+        ["cursor-highlight.tga"] = true,
+        ["SettingsPanelBackground.jpg"] = true, ["SettingsPanelWidget.png"] = true,
+        ["PlumberSettingsPanel.png"] = true,
+        ["Setup_Dropdown.png"] = true, ["Setup_Checkbox.png"] = true,
+        ["Setup_ChecklistIcon.png"] = true, ["Setup_Divider.tga"] = true,
+        ["Divider_Gradient_Horizontal.tga"] = true, ["Divider_DropShadow_Vertical.tga"] = true,
+        ["Setup Assets\\Background_Setup.tga"] = true,
+        ["Setup Assets\\Exit_Button.tga"] = true,
+        ["Setup Assets\\Apply_Button.tga"] = true,
+        ["Setup Assets\\Apply_Button_highlight.tga"] = true,
+        ["Setup Assets\\skip_next_back_finish_Button.tga"] = true,
+        ["Setup Assets\\Page.tga"] = true, ["Setup Assets\\Curret_Page.tga"] = true,
       } },
 
     -- { folder = "Neon\\",  label = "Neon", msqSkin = "Nombre del skin de Masque" },
@@ -142,7 +162,7 @@ ns.TEX_SKINS = {
     -- SOLAS via _G.MCF_RegisterSkin, no hace falta declararlas aca.
 }
 ns.TEX_LIB = {
-    bar          = { "hp_lowmid_bar_miror_s.tga", "hp_lowmid_bar_miror_b.tga", "power_cap_s.tga", "hp_cap_bar.tga", "hp_cap_bar mirror.tga", "hp_pet_bar.tga", "hp_party_bar.tga", },
+    bar          = { "hp_lowmid_bar_miror_s.tga", "hp_lowmid_bar_miror_b.tga", "power_cap_s.tga", "hp_cap_bar.tga", "hp_cap_bar mirror.tga", "hp_pet_bar.tga", "hp_party_bar.tga", "cast_bar.tga", "nameplate_bar.tga", },
     cage         = { "hp_low_case.tga", "hp_low_case_mirror.tga", "hp_low_case_miror_s.tga", "hp_pet_cage.tga", "cast_back.tga",
                      "hp_low_case_mirror_b.tga", "power_low_case_s.tga", "hp_party_cage.tga", },
     portraitbg   = { "Circle_Smooth_Border.tga" },
@@ -207,11 +227,14 @@ ns.TEX_LIB = {
 -- ==========================================================================
 local SKINNABLE = {}
 for _, f in ipairs({
-    -- Unitframes: cages / capsulas (las BARRAS de relleno no se reskinean a
-    -- proposito -- pedido del usuario, ver la lista SKINNABLE en STRUCTURE.md).
+    -- Unitframes: cages / capsulas y rellenos. Las barras conservan su alfa
+    -- y el tinte dinamico de salud/poder/casteo.
     "hp_low_case.tga", "hp_low_case_miror_s.tga", "hp_low_case_mirror.tga",
     "hp_low_case_mirror_b.tga", "hp_party_cage.tga", "hp_pet_cage.tga",
     "power_low_case_s.tga", "cast_back.tga", "cast_back_outline.tga",
+    "hp_lowmid_bar_miror_s.tga", "hp_lowmid_bar_miror_b.tga",
+    "hp_cap_bar.tga", "hp_cap_bar mirror.tga", "power_cap_s.tga",
+    "hp_party_bar.tga", "hp_pet_bar.tga", "cast_bar.tga", "nameplate_bar.tga",
     -- Portraits
     "orb_case_low.tga", "portrait_frame_lo.tga",
     -- Auras / action buttons
@@ -248,6 +271,17 @@ for _, f in ipairs({
     "icon_classification_boss.tga", "icon_classification_elite.tga",
     "icon_classification_generic.tga", "icon_classification_rare.tga",
     "icon-combat.tga", "icon_skull_dead.tga", "icon_exit_flight.tga",
+    "raid_target_icons.tga", "raid_target_icons_small.tga",
+    "actionbutton-border square2.tga", "actionbutton-border square highlight.tga",
+    "cursor-highlight.tga",
+    -- Options panel and first-run wizard.
+    "SettingsPanelBackground.jpg", "SettingsPanelWidget.png", "PlumberSettingsPanel.png",
+    "Setup_Dropdown.png", "Setup_Checkbox.png", "Setup_ChecklistIcon.png", "Setup_Divider.tga",
+    "Divider_Gradient_Horizontal.tga", "Divider_DropShadow_Vertical.tga",
+    "Setup Assets\\Background_Setup.tga", "Setup Assets\\Exit_Button.tga",
+    "Setup Assets\\Apply_Button.tga", "Setup Assets\\Apply_Button_highlight.tga",
+    "Setup Assets\\skip_next_back_finish_Button.tga", "Setup Assets\\Page.tga",
+    "Setup Assets\\Curret_Page.tga",
 }) do SKINNABLE[f] = true end
 ns.SKINNABLE = SKINNABLE
 
@@ -368,6 +402,11 @@ ns.ApplySkin = function(skin)
     ns.AURA_BORDER = SkinResolve("actionbutton-border square.tga")
     ns.RAIDTARGET_TEX = SkinResolve("raid_target_icons.tga")
     ns.INFOBAR_BG_TEX = SkinResolve("info_bg.tga")
+    if ns.PL then
+        ns.PL.BG = SkinResolve("SettingsPanelBackground.jpg")
+        ns.PL.DIV_H = SkinResolve("Divider_Gradient_Horizontal.tga")
+        ns.PL.DIV_V = SkinResolve("Divider_DropShadow_Vertical.tga")
+    end
     ns.BADGE_ALLIANCE = SkinResolve("icon_badges_alliance.tga")
     ns.BADGE_HORDE = SkinResolve("icon_badges_horde.tga")
     ns.BADGE_ALLIANCE_WAR = SkinResolve("icon_badges_alliance_war_on.tga")
@@ -392,6 +431,9 @@ ns.ApplySkin = function(skin)
     if ns.RefreshMirrorTimers then ns.RefreshMirrorTimers() end
     if ns.RefreshMinimapButtons then ns.RefreshMinimapButtons() end
     if ns.RefreshMainMenuSkin then ns.RefreshMainMenuSkin() end
+    if ns.RefreshOptionsSkin then ns.RefreshOptionsSkin() end
+    if ns.RefreshSetupSkin then ns.RefreshSetupSkin() end
+    if ns.RefreshNameplateDesignerSkin then ns.RefreshNameplateDesignerSkin() end
     if ns.RefreshNameplateSkin then ns.RefreshNameplateSkin() end
     if ns.RefreshNPAurasNextSkin then ns.RefreshNPAurasNextSkin() end
     if ns.RefreshTooltipSkin then ns.RefreshTooltipSkin() end

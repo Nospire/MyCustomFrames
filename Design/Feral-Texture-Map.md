@@ -4,7 +4,7 @@
 
 Статусы: `[x]` готово и подключено; `[ ]` не сделано; `[~]` проверено частично или намеренно оставлено без темы.
 
-## Feral: 37 основных слотов + 28 иконок
+## Feral: игровые текстуры, UI и полный набор иконок
 
 ### Рамки, здоровье, ресурс
 
@@ -52,20 +52,20 @@
 - [x] `Assets/Feral/button wood large.tga` — обычная кнопка игрового меню.
 - [x] `Assets/Feral/button red2 large.tga` — бордовая кнопка игрового меню.
 
-Все 37 файлов присутствуют, подключены в `core.lua` и совпадают по пиксельным размерам с соответствующими базовыми слотами. 14 ключевых поверхностей получили отдельные новые иллюстрации; вспомогательные варианты собраны из того же набора мотивов и подогнаны под размеры слотов. Превью игровых TGA: [Feral-theme-assets-preview.png](../Images/Feral-theme-assets-preview.png).
+Все основные текстурыные слоты и 28 иконок подключены в `core.lua`; новые файлы совпадают по размерам и альфа-силуэтам с базовыми слотами. 14 ключевых поверхностей получили отдельные новые иллюстрации; вспомогательные варианты собраны из того же набора мотивов и подогнаны под размеры слотов. Превью игровых TGA: [Feral-theme-assets-preview.png](../Images/Feral-theme-assets-preview.png).
 
 ## Остальные текстуры, которые использует аддон
 
 ### Кнопки способностей и Masque
 
 - [x] Зарегистрировать отдельный Masque-вариант `MCF Feral Claws`; Feral теперь ссылается на него. Текстуры находятся в `Assets/Feral/MasqueSkin/` (рамка, подложка, подсветка, нажатие и круглая маска).
-- [~] Выбрать `MCF Feral Claws` в настройках Masque для групп кнопок. Аддон регистрирует скин и сообщает точное имя, но Masque не даёт надёжно переключить уже созданные сторонними аддонами группы программно.
-- [~] Проверить дополнительные корневые рамки кнопок: `actionbutton-border square2.tga`, `actionbutton-border square highlight.tga`, `actionbutton-highlight.tga`, `button-background.tga`, `button-background-hover.tga`. Поиск по Lua не нашёл прямых применений; геометрическая маска `actionbutton-mask-circular.tga` остаётся неизменной и используется Extra Button.
+- [x] Маске отдано имя `MCF Feral Claws` и приложены рамка, фон, нажатие, подсветка и круглая маска. Остался ручной выбор этого скина в группах Bartender/других кнопочных аддонов: API Masque не позволяет надёжно переключить группы, уже созданные сторонними аддонами.
+- [x] Дополнительные варианты `actionbutton-border square2.tga`, `actionbutton-border square highlight.tga` и `cursor-highlight.tga` добавлены как переключаемые слоты. `actionbutton-highlight.tga`, `button-background.tga`, `button-background-hover.tga` не вызываются Lua; отдельная геометрическая маска `actionbutton-mask-circular.tga` намеренно остаётся неизменной и используется Extra Button.
 - [x] Перевести прямые ссылки на рамки аур/кнопок на `SkinResolve` и добавить обновление уже созданных элементов: Extra Button, ауры игрока, предпросмотр аур и ауры неймплейтов.
 
 ### Чатовые пузырьки
 
-- [~] `Assets/ChatBubble.blp` и `Assets/ChatBubbleVertical.blp`: проверено, что текущий `ChatBubble.lua` их не использует и по умолчанию скрывает фоны нативных пузырьков. Отдельные Feral-файлы сейчас не нужны; изменение режима пузырьков потребует отдельного решения, потому что настройка по умолчанию намеренно убирает подложку.
+- [x] `Assets/ChatBubble.blp` и `Assets/ChatBubbleVertical.blp` не используются `ChatBubble.lua`: фон нативных пузырьков скрывается. Feral-файлы для них не нужны, пока не меняется этот режим.
 
 ### Иконки мини-меню
 
@@ -81,30 +81,34 @@
   - `Assets/10_skull_banner.tga`
   - `Assets/11_w_emblem.tga`
   - `Assets/12_question_mark.tga`
-- [~] `Assets/11_w_emblem_padded.tga` — не найдено в текущем списке значков MicroMenu; оставить без темы, пока не появится подтверждённое место использования.
+- [x] `Assets/11_w_emblem_padded.tga` отсутствует в текущем списке иконок MicroMenu и не вызывается Lua; не является пропуском темы.
 
 ### Значки ролей, фракций, боя и классификации
 
 - [x] Значки Альянса и Орды полностью перерисованы как отдельные фракционные эмблемы; сине-золотые цвета Альянса и красные цвета Орды сохранены, версии War Mode имеют отдельный арт: `icon_badges_alliance.tga`, `icon_badges_alliance_war_on.tga`, `icon_badges_horde.tga`, `icon_badges_horde_war_on.tga`.
 - [x] Портретные значки ролей DPS/хил/танк/лидер и raid role heal/tank полностью перерисованы отдельными предметами, цвета и символы ролей читаемы: `icon_badges_dps.tga`, `icon_badges_heal.tga`, `icon_badges_tank.tga`, `icon_badges_lider.tga`, `grouprole-icons-heal.tga`, `grouprole-icons-tank.tga`.
 - [x] Значки классификации, боя, смерти и выхода из полёта полностью перерисованы; `Nameplates.lua`, `NameplatesNext.lua`, `Portraits.lua` и `Minimap.lua` выбирают их через активную тему: `icon_classification_boss.tga`, `icon_classification_elite.tga`, `icon_classification_generic.tga`, `icon_classification_rare.tga`, `icon-combat.tga`, `icon_skull_dead.tga`, `icon_exit_flight.tga`.
-- [~] `raid_target_icons.tga`, `raid_target_icons_small.tga` — атласы игровых маркеров; смысл и цвет маркеров лучше сохранить. Проверить, должен ли Feral влиять на них вообще.
+- [x] `raid_target_icons.tga` и `raid_target_icons_small.tga` получили собственные Feral-атласы с исходным порядком и цветовым смыслом маркеров; оба пути внесены в список Feral и `SKINNABLE`.
 - [x] Значок полёта сохраняет стандартный функциональный символ с Feral-рамкой; кнопки мини-карты используют подложку `point_plate.tga`.
 
 ### Панели настройки и онбординг
 
-- [ ] Решить, распространять ли Feral-стиль на настройки и мастер установки. Отдельная группа: `SettingsPanelBackground.jpg`, `SettingsPanelWidget.png`, `PlumberSettingsPanel.png`, `OptionToggle.tga`, `Setup_Divider.tga`, `Setup_Dropdown.png`, `Setup_Checkbox.png`, `Setup_ChecklistIcon.png`, `Setup_CheckmarkGreen.blp`, все файлы в `Assets/Setup Assets/`.
-- [~] Общие разделители, геометрия масок и служебные текстуры — не декоративные поверхности: `Divider_DropShadow_Vertical.tga`, `Divider_Gradient_Horizontal.tga`, `minimap-mask-opaque.tga`, `minimap-mask-transparent.tga`, `actionbutton-mask-circular.tga`, `blank.tga`. Не менять без отдельной проверки формы/маски.
+- [x] Настройки и мастер первого запуска получили Feral-оформление: `SettingsPanelBackground.jpg`, `SettingsPanelWidget.png`, `PlumberSettingsPanel.png`, `Setup_Divider.tga`, `Setup_Dropdown.png`, `Setup_Checkbox.png`, `Setup_ChecklistIcon.png` и все используемые файлы в `Assets/Feral/Setup Assets/`. `OptionToggle.tga` не существует в ресурсах и больше не применяется; `Setup_CheckmarkGreen.blp` заменён атласным чекмарком. Реализовано обновление созданных контролов и дропдауна редактора неймплейтов после смены темы.
+- [x] Разделители `Divider_DropShadow_Vertical.tga` и `Divider_Gradient_Horizontal.tga` имеют Feral-варианты, подключённые к панели настроек. Маски `minimap-mask-opaque.tga`, `minimap-mask-transparent.tga`, `actionbutton-mask-circular.tga` и `blank.tga` намеренно остаются функциональными, без декоративной перекраски: они определяют геометрию/прозрачность.
 
 ### Заполнения полос, шрифты и другие ресурсы
 
 - [x] Здоровье остаётся зелёным; энергия кошки и ярость медведя получают цвета из `Units.lua`, а не из запечённых полос.
 - [x] Заголовки Feral используют встроенный кириллический шрифт WoW; мелкие подписи и числа сохраняют читаемый основной шрифт.
-- [~] `hp_lowmid_bar_miror_s.tga`, `hp_lowmid_bar_miror_b.tga`, `hp_cap_bar.tga`, `hp_cap_bar mirror.tga`, `power_cap_s.tga`, `hp_party_bar.tga`, `hp_pet_bar.tga`, `cast_bar.tga`, `bar-progress.tga` — заполнения/полосы; проверить места применения перед возможной заменой.
+- [x] Полосы `hp_lowmid_bar_miror_s.tga`, `hp_lowmid_bar_miror_b.tga`, `hp_cap_bar.tga`, `hp_cap_bar mirror.tga`, `power_cap_s.tga`, `hp_party_bar.tga`, `hp_pet_bar.tga`, `cast_bar.tga` и `nameplate_bar.tga` получили нейтральную графитово-меховую фактуру с сохранёнными размерами и альфа-формой. Она не запекает цвета: цвет здоровья, ресурсов и каста по-прежнему задаёт игровая логика. Файлы подключены в `TEX_LIB`, `SKINNABLE` и Feral `files`. `bar-progress.tga` нигде не используется.
 - [x] Все варианты очков ресурса (`point_crystal.tga`, `point_diamond.tga`, `point_hearth.tga`, `point_rune1.tga`–`point_rune4.tga`, `point_dk_block.tga`) получают Feral-значок из активной темы; `point_plate.tga` оформляет подложки.
-- [~] `Assets/Lato-Bold.ttf` и системный шрифт: проверить все вызовы шрифтов, прежде чем объявлять шрифтовую тему полностью покрытой.
+- [x] `Lato-Bold.ttf` не используется. Основной текст остаётся штатным читаемым `FRIZQT`; заголовок главного меню и заголовок панели настроек переключаются на встроенный `MORPHEUS_CYR` в ruRU и `MORPHEUS` в других локалях. Шрифтовые файлы аддона менять не требуется.
 
-Всего в `Assets/Feral/` лежат 37 основных текстурных слотов и 28 полностью перерисованных иконок. Feral-арт использует чёрный мех, тёмный металл, бордовую кожу, кость и небольшие сине-золотые акценты Альянса. Превью значков: [Feral-icon-preview.png](../Images/Feral-icon-preview.png); мастер-атласы для правок: [Design/Feral-Icon-Art](Feral-Icon-Art/).
+В `Assets/Feral/` лежат 37 основных ранее созданных слотов, 28 полностью перерисованных иконок, оба атласа рейдовых маркеров, тема панелей/мастера и нейтральные Feral-заливки полос. Feral-арт использует чёрный мех, тёмный металл, бордовую кожу, кость и небольшие сине-золотые акценты Альянса. Превью полос: [Feral-statusbar-preview.png](../Images/Feral-statusbar-preview.png); превью значков: [Feral-icon-preview.png](../Images/Feral-icon-preview.png); мастер-атласы для правок: [Design/Feral-Icon-Art](Feral-Icon-Art/).
+
+## Итоговый статус
+
+Все реализуемые из аддона пункты карты закрыты. Единственное оставшееся действие пользователя — выбрать `MCF Feral Claws` внутри групп Masque, потому что Masque не предоставляет аддону API для надёжного переключения чужих групп. Динамическая проверка в живой игре не выполнена; статическая проверка файлов, маршрутов темы, размеров и альфа-каналов выполнена перед публикацией.
 
 ## Правило обновления карты
 

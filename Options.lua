@@ -7,9 +7,36 @@
 local ADDON, ns = ...
 local PL = ns.PL
 local FONT = PL.FONT
+local ASSET_ROOT = "Interface\\AddOns\\" .. ADDON .. "\\Assets\\"
+local skinnedRegions = setmetatable({}, { __mode = "k" })
+local themedTitles = setmetatable({}, { __mode = "k" })
+local function AssetPath(name)
+    return (ns.SkinResolve and ns.SkinResolve(name)) or (ASSET_ROOT .. name)
+end
+local function SetSkinnedTexture(region, name)
+    if not region then return end
+    region:SetTexture(AssetPath(name))
+    skinnedRegions[region] = name
+end
+ns.RefreshOptionsSkin = function()
+    for region, name in pairs(skinnedRegions) do
+        if region and region.SetTexture then region:SetTexture(AssetPath(name)) end
+    end
+    for region, spec in pairs(themedTitles) do
+        if region and region.SetFont then
+            region:SetFont(ns.ActiveSkinTitleFont or FONT, spec.size, spec.flags)
+        end
+    end
+end
 
 local function setFont(fs, size, flags)
     if not fs:SetFont(FONT, size, flags or "") then fs:SetFontObject("GameFontNormal") end
+end
+
+local function setTitleFont(fs, size, flags)
+    local font, style = ns.ActiveSkinTitleFont or FONT, flags or ""
+    if not fs:SetFont(font, size, style) then fs:SetFontObject("GameFontNormal") end
+    themedTitles[fs] = { size = size, flags = style }
 end
 
 -- ==========================================================================
@@ -84,25 +111,25 @@ local COLOR_GROUP  = { 235 / 255, 175 / 255, 90 / 255 }    -- dorado-ambar vivo,
 -- ==========================================================================
 -- WIDGETS ESTILO PLUMBER (usan los assets reales de Plumber\Art)
 -- ==========================================================================
-local WIDGET = "Interface\\AddOns\\MyCustomFrames\\Assets\\SettingsPanelWidget.png"
+local WIDGET = "SettingsPanelWidget.png"
 -- Atlas 1024x1024 copiado DIRECTO del Plumber real (Modules/ControlCenter/SettingsPanelNew.lua,
 -- Def.TextureFile) — usado SOLO para el buscador (pildora con borde limpio + lupa), que el
 -- usuario pidio explicitamente igualar (2026-07-15). Coords tomadas 1:1 del código fuente de
 -- Plumber (SetTexCoord ahi divide todo por 1024, mismo atlas cuadrado).
-local PLB = "Interface\\AddOns\\MyCustomFrames\\Assets\\PlumberSettingsPanel.png"
+local PLB = "PlumberSettingsPanel.png"
 
 -- Fondo 3-slice del atlas de Plumber (cap izq/der + centro estirado).
 local function ThreeSlice(frame, capW)
     local left = frame:CreateTexture(nil, "BACKGROUND")
-    left:SetTexture(WIDGET)
+    SetSkinnedTexture(left, WIDGET)
     left:SetPoint("TOPLEFT"); left:SetPoint("BOTTOMLEFT"); left:SetWidth(capW)
     left:SetTexCoord(36 / 512, 68 / 512, 0, 80 / 512)
     local right = frame:CreateTexture(nil, "BACKGROUND")
-    right:SetTexture(WIDGET)
+    SetSkinnedTexture(right, WIDGET)
     right:SetPoint("TOPRIGHT"); right:SetPoint("BOTTOMRIGHT"); right:SetWidth(capW)
     right:SetTexCoord(132 / 512, 164 / 512, 0, 80 / 512)
     local mid = frame:CreateTexture(nil, "BACKGROUND")
-    mid:SetTexture(WIDGET)
+    SetSkinnedTexture(mid, WIDGET)
     mid:SetPoint("TOPLEFT", left, "TOPRIGHT"); mid:SetPoint("BOTTOMRIGHT", right, "BOTTOMLEFT")
     mid:SetTexCoord(68 / 512, 132 / 512, 0, 80 / 512)
     return { left, mid, right }
@@ -116,7 +143,7 @@ local function StyleButton(b, w, h)
     -- Highlight en capa ARTWORK (debajo del texto OVERLAY) con blend aditivo,
     -- para que el glow NO tape el texto. Se muestra con hover.
     local hl = b:CreateTexture(nil, "ARTWORK")
-    hl:SetTexture(WIDGET)
+    SetSkinnedTexture(hl, WIDGET)
     hl:SetTexCoord(168 / 512, 296 / 512, 0, 80 / 512)
     hl:SetPoint("TOPLEFT", -6, 3); hl:SetPoint("BOTTOMRIGHT", 6, -3)
     hl:SetBlendMode("ADD")
@@ -177,7 +204,7 @@ local function MakeTabButton(parent, text, w, h, flipY)
 
     local function tex(coords)
         local t = b:CreateTexture(nil, "BACKGROUND")
-        t:SetTexture(PLB)
+        SetSkinnedTexture(t, PLB)
         local y1, y2 = TAB_UNSEL.y[1], TAB_UNSEL.y[2]
         if flipY then y1, y2 = y2, y1 end
         t:SetTexCoord(coords[1] / 1024, coords[2] / 1024, y1 / 1024, y2 / 1024)
@@ -240,7 +267,7 @@ local function MakeListItem(parent, text, w, h, prominent)
 
     local function pillPiece(x1, x2)
         local t = b:CreateTexture(nil, "ARTWORK")
-        t:SetTexture(PLB)
+        SetSkinnedTexture(t, PLB)
         t:SetTexCoord(x1 / 1024, x2 / 1024, 0 / 1024, 80 / 1024)
         return t
     end
@@ -323,7 +350,7 @@ local function MakeHeader(parent, text, x, y, width)
     diamond:SetRotation(math.rad(45))
     diamond:SetPoint("CENTER", fs, "LEFT", -6, 0)
     local div = parent:CreateTexture(nil, "ARTWORK")
-    div:SetTexture(PL.DIV_H)
+    SetSkinnedTexture(div, "Divider_Gradient_Horizontal.tga")
     div:SetSize((width or 250) - 12, 8)
     div:SetPoint("TOPLEFT", x + 12, y - 16)
     div:SetVertexColor(COLOR_LINE[1], COLOR_LINE[2], COLOR_LINE[3], 0.4)
@@ -1408,14 +1435,14 @@ local function BuildPanel()
     -- velo negro de aca, sidebar (sbBg) y preview (pvBg) suman SUS PROPIOS
     -- overlays negros encima, y se acumulan. Se aclaran los tres a la vez.
     local bg = panel:CreateTexture(nil, "BACKGROUND")
-    bg:SetTexture(PL.BG)
+    SetSkinnedTexture(bg, "SettingsPanelBackground.jpg")
     bg:SetPoint("TOPLEFT", 4, -4); bg:SetPoint("BOTTOMRIGHT", -4, 4)
     bg:SetAlpha(1)
     local shade = panel:CreateTexture(nil, "BACKGROUND", nil, 1)
     shade:SetAllPoints(bg); shade:SetColorTexture(0, 0, 0, 0.08)
 
     local title = panel:CreateFontString(nil, "ARTWORK")
-    setFont(title, 16)
+    setTitleFont(title, 16)
     title:SetPoint("TOP", panel, "TOP", 0, -16)
     title:SetTextColor(COLOR_TITLE[1], COLOR_TITLE[2], COLOR_TITLE[3])
     title:SetText(ns.T("AzeriteUI |cffffcc00—|r Gonkast Preset"))
@@ -1596,20 +1623,20 @@ local function BuildPanel()
     -- Vertex color mas fuerte (2026-07-16: el usuario pidio un borde mas visible/grande,
     -- comparando contra el buscador real de Plumber) para que el marco se note mas.
     local sbLeft = searchBox:CreateTexture(nil, "BACKGROUND")
-    sbLeft:SetTexture(PLB); sbLeft:SetTexCoord(0 / 1024, 32 / 1024, 0 / 1024, 80 / 1024)
+    SetSkinnedTexture(sbLeft, PLB); sbLeft:SetTexCoord(0 / 1024, 32 / 1024, 0 / 1024, 80 / 1024)
     sbLeft:SetSize(17, 34); sbLeft:SetPoint("LEFT", -3, 0)
     sbLeft:SetVertexColor(1.35, 1.2, 0.95)
     local sbRight = searchBox:CreateTexture(nil, "BACKGROUND")
-    sbRight:SetTexture(PLB); sbRight:SetTexCoord(160 / 1024, 192 / 1024, 0 / 1024, 80 / 1024)
+    SetSkinnedTexture(sbRight, PLB); sbRight:SetTexCoord(160 / 1024, 192 / 1024, 0 / 1024, 80 / 1024)
     sbRight:SetSize(17, 34); sbRight:SetPoint("RIGHT", 3, 0)
     sbRight:SetVertexColor(1.35, 1.2, 0.95)
     local sbMid = searchBox:CreateTexture(nil, "BACKGROUND")
-    sbMid:SetTexture(PLB); sbMid:SetTexCoord(32 / 1024, 160 / 1024, 0 / 1024, 80 / 1024)
+    SetSkinnedTexture(sbMid, PLB); sbMid:SetTexCoord(32 / 1024, 160 / 1024, 0 / 1024, 80 / 1024)
     sbMid:SetPoint("TOPLEFT", sbLeft, "TOPRIGHT", -3, 0); sbMid:SetPoint("BOTTOMRIGHT", sbRight, "BOTTOMLEFT", 3, 0)
     sbMid:SetVertexColor(1.35, 1.2, 0.95)
 
     local sbMag = searchBox:CreateTexture(nil, "OVERLAY")
-    sbMag:SetTexture(PLB); sbMag:SetTexCoord(984 / 1024, 1024 / 1024, 0 / 1024, 40 / 1024)
+    SetSkinnedTexture(sbMag, PLB); sbMag:SetTexCoord(984 / 1024, 1024 / 1024, 0 / 1024, 40 / 1024)
     sbMag:SetSize(15, 15); sbMag:SetPoint("LEFT", 6, 0)
     sbMag:SetVertexColor(0.85, 0.78, 0.62)
 
@@ -1652,7 +1679,7 @@ local function BuildPanel()
         { key = "extras",   label = "Extras" },
     }
     local navDiv = sidebar:CreateTexture(nil, "ARTWORK")
-    navDiv:SetTexture(PL.DIV_H)
+    SetSkinnedTexture(navDiv, "Divider_Gradient_Horizontal.tga")
     navDiv:SetHeight(6)
     navDiv:SetVertexColor(COLOR_LINE[1], COLOR_LINE[2], COLOR_LINE[3], 0.4)
 
@@ -1710,7 +1737,7 @@ local function BuildPanel()
         local btn = CreateFrame("Button", nil, sidebar)
         btn:SetSize(ARROW, ARROW)
         local tex = btn:CreateTexture(nil, "ARTWORK")
-        tex:SetAllPoints(); tex:SetTexture(WIDGET); tex:SetTexCoord(0 / 512, 32 / 512, y1 / 512, y2 / 512)
+        tex:SetAllPoints(); SetSkinnedTexture(tex, WIDGET); tex:SetTexCoord(0 / 512, 32 / 512, y1 / 512, y2 / 512)
         tex:SetVertexColor(COLOR_TITLE[1], COLOR_TITLE[2], COLOR_TITLE[3])
         btn.tex = tex
         btn:SetScript("OnEnter", function() tex:SetVertexColor(1, 0.9, 0.45) end)
@@ -1731,14 +1758,14 @@ local function BuildPanel()
     track:SetPoint("TOPRIGHT", upBtn, "BOTTOMRIGHT", 0, -2)
     track:SetPoint("BOTTOMRIGHT", downBtn, "TOPRIGHT", 0, 2)
     local rail = track:CreateTexture(nil, "BACKGROUND")
-    rail:SetAllPoints(); rail:SetTexture(WIDGET)
+    rail:SetAllPoints(); SetSkinnedTexture(rail, WIDGET)
     rail:SetTexCoord(0 / 512, 32 / 512, 0 / 512, 128 / 512)
     rail:SetVertexColor(COLOR_LINE[1], COLOR_LINE[2], COLOR_LINE[3], 0.4)
 
     local thumb = CreateFrame("Button", nil, track)
     thumb:SetPoint("TOP"); thumb:SetSize(BAR_W, 40)
     local tt = thumb:CreateTexture(nil, "ARTWORK")
-    tt:SetAllPoints(); tt:SetTexture(WIDGET); tt:SetTexCoord(0 / 512, 32 / 512, 132 / 512, 260 / 512)
+    tt:SetAllPoints(); SetSkinnedTexture(tt, WIDGET); tt:SetTexCoord(0 / 512, 32 / 512, 132 / 512, 260 / 512)
     tt:SetVertexColor(COLOR_TITLE[1], COLOR_TITLE[2], COLOR_TITLE[3])
 
     -- Scroll SUAVE (2026-07-17): `scrollValue` es el destino, `displayValue` es la
@@ -1901,7 +1928,7 @@ local function BuildPanel()
 
     -- Divisor vertical sidebar / contenido.
     local vdiv = panel:CreateTexture(nil, "ARTWORK")
-    vdiv:SetTexture(PL.DIV_V)
+    SetSkinnedTexture(vdiv, "Divider_DropShadow_Vertical.tga")
     vdiv:SetPoint("TOPLEFT", sidebar, "TOPRIGHT", 2, 10)
     vdiv:SetPoint("BOTTOMLEFT", sidebar, "BOTTOMRIGHT", 2, -10)
     vdiv:SetWidth(16); vdiv:SetVertexColor(1, 1, 1, 0.35)
@@ -1915,7 +1942,7 @@ local function BuildPanel()
     pvBg:SetAllPoints(); pvBg:SetColorTexture(0, 0, 0, 0.16)
 
     local pvdiv = panel:CreateTexture(nil, "ARTWORK")
-    pvdiv:SetTexture(PL.DIV_V)
+    SetSkinnedTexture(pvdiv, "Divider_DropShadow_Vertical.tga")
     pvdiv:SetPoint("TOPLEFT", preview, "TOPRIGHT", -18, 10)
     pvdiv:SetPoint("BOTTOMLEFT", preview, "BOTTOMRIGHT", -18, -10)
     pvdiv:SetWidth(16); pvdiv:SetVertexColor(1, 1, 1, 0.35)
@@ -2132,12 +2159,12 @@ local function BuildPanel()
     hbTrack:SetPoint("TOPLEFT", tabScroll, "BOTTOMLEFT", 0, -2)
     hbTrack:SetPoint("TOPRIGHT", tabScroll, "BOTTOMRIGHT", 0, -2)
     hbTrack:SetHeight(3)
-    hbTrack:SetTexture(WIDGET)
+    SetSkinnedTexture(hbTrack, WIDGET)
     hbTrack:SetTexCoord(0 / 512, 0 / 512, 0 / 512, 128 / 512, 32 / 512, 128 / 512, 32 / 512, 0 / 512)
     hbTrack:SetVertexColor(COLOR_LINE[1], COLOR_LINE[2], COLOR_LINE[3], 0.4)
     local hbThumb = content:CreateTexture(nil, "OVERLAY")
     hbThumb:SetHeight(3)
-    hbThumb:SetTexture(WIDGET)
+    SetSkinnedTexture(hbThumb, WIDGET)
     hbThumb:SetTexCoord(0 / 512, 132 / 512, 0 / 512, 260 / 512, 32 / 512, 260 / 512, 32 / 512, 132 / 512)
     hbThumb:SetVertexColor(COLOR_TITLE[1], COLOR_TITLE[2], COLOR_TITLE[3], 0.9)
 
@@ -2351,7 +2378,7 @@ local function BuildPanel()
     -- (entre el titulo "Editing: X" y "Gen/Bar/Cage/..."), separandola del
     -- titulo en vez de flotar sin nada arriba.
     local tdiv = content:CreateTexture(nil, "ARTWORK")
-    tdiv:SetTexture(PL.DIV_H)
+    SetSkinnedTexture(tdiv, "Divider_Gradient_Horizontal.tga")
     tdiv:SetPoint("TOPLEFT", 0, -25); tdiv:SetPoint("TOPRIGHT", 0, -25)
     tdiv:SetHeight(6); tdiv:SetVertexColor(COLOR_TITLE[1], COLOR_TITLE[2], COLOR_TITLE[3], 0.7)
 
@@ -2446,7 +2473,7 @@ local function BuildPanel()
     end)
 
     local cdiv = secArea:CreateTexture(nil, "ARTWORK")
-    cdiv:SetTexture(PL.DIV_V)
+    SetSkinnedTexture(cdiv, "Divider_DropShadow_Vertical.tga")
     cdiv:SetPoint("TOP", secArea, "TOPLEFT", 220, -2)
     cdiv:SetHeight(330); cdiv:SetWidth(14); cdiv:SetVertexColor(1, 1, 1, 0.22)
 
@@ -4665,7 +4692,7 @@ local function BuildPanel()
             local btn = CreateFrame("Button", nil, parent)
             btn:SetSize(mssArrow, mssArrow)
             local tex = btn:CreateTexture(nil, "ARTWORK")
-            tex:SetAllPoints(); tex:SetTexture(WIDGET); tex:SetTexCoord(0 / 512, 32 / 512, y1 / 512, y2 / 512)
+            tex:SetAllPoints(); SetSkinnedTexture(tex, WIDGET); tex:SetTexCoord(0 / 512, 32 / 512, y1 / 512, y2 / 512)
             tex:SetVertexColor(COLOR_TITLE[1], COLOR_TITLE[2], COLOR_TITLE[3])
             btn.tex = tex
             btn:SetScript("OnEnter", function() tex:SetVertexColor(1, 0.9, 0.45) end)
@@ -4682,14 +4709,14 @@ local function BuildPanel()
         mssTrack:SetPoint("TOPRIGHT", mssUpBtn, "BOTTOMRIGHT", 0, -2)
         mssTrack:SetPoint("BOTTOMRIGHT", mssDownBtn, "TOPRIGHT", 0, 2)
         local mssRail = mssTrack:CreateTexture(nil, "BACKGROUND")
-        mssRail:SetAllPoints(); mssRail:SetTexture(WIDGET)
+        mssRail:SetAllPoints(); SetSkinnedTexture(mssRail, WIDGET)
         mssRail:SetTexCoord(0 / 512, 32 / 512, 0 / 512, 128 / 512)
         mssRail:SetVertexColor(COLOR_LINE[1], COLOR_LINE[2], COLOR_LINE[3], 0.4)
 
         local mssThumb = CreateFrame("Button", nil, mssTrack)
         mssThumb:SetPoint("TOP"); mssThumb:SetSize(mssBarW, 40)
         local mssThumbTex = mssThumb:CreateTexture(nil, "ARTWORK")
-        mssThumbTex:SetAllPoints(); mssThumbTex:SetTexture(WIDGET); mssThumbTex:SetTexCoord(0 / 512, 32 / 512, 132 / 512, 260 / 512)
+        mssThumbTex:SetAllPoints(); SetSkinnedTexture(mssThumbTex, WIDGET); mssThumbTex:SetTexCoord(0 / 512, 32 / 512, 132 / 512, 260 / 512)
         mssThumbTex:SetVertexColor(COLOR_TITLE[1], COLOR_TITLE[2], COLOR_TITLE[3])
 
         local function MssPositionThumb()
@@ -4976,7 +5003,7 @@ local function BuildPanel()
     -- ===== FOOTER: acciones =====
     -- Divisor Plumber separando el footer del contenido.
     local fdiv = panel:CreateTexture(nil, "ARTWORK")
-    fdiv:SetTexture(PL.DIV_H)
+    SetSkinnedTexture(fdiv, "Divider_Gradient_Horizontal.tga")
     fdiv:SetPoint("BOTTOMLEFT", 10, 42); fdiv:SetPoint("BOTTOMRIGHT", -10, 42)
     fdiv:SetHeight(8); fdiv:SetVertexColor(COLOR_TITLE[1], COLOR_TITLE[2], COLOR_TITLE[3], 0.30)
 
@@ -5118,7 +5145,7 @@ local function BuildPanel()
         title:SetTextColor(COLOR_TITLE[1], COLOR_TITLE[2], COLOR_TITLE[3])
         title:SetText(ns.T("Skins"))
         local div = p:CreateTexture(nil, "ARTWORK")
-        div:SetTexture(PL.DIV_H)
+        SetSkinnedTexture(div, "Divider_Gradient_Horizontal.tga")
         div:SetPoint("TOPLEFT", 4, -22); div:SetPoint("TOPRIGHT", -4, -22)
         div:SetHeight(4); div:SetVertexColor(COLOR_TITLE[1], COLOR_TITLE[2], COLOR_TITLE[3], 0.5)
         p.rows = {}

@@ -11,10 +11,11 @@ local ADDON, ns = ...
 
 -- ---- Assets (copiados de AzeriteUI5_JuNNeZ_Edition/Assets) ----
 local A = ns.ASSETS
-local BAR_TEX        = A .. "nameplate_bar.tga"
-local BACKDROP_TEX   = A .. "nameplate_backdrop.tga"
-local OUTLINE_TEX    = A .. "nameplate_outline.tga"
-local GLOW_TEX       = A .. "nameplate_glow.tga"
+local function ThemeTex(name) return (ns.SkinResolve and ns.SkinResolve(name)) or (A .. name) end
+local function BAR_TEX() return ThemeTex("nameplate_bar.tga") end
+local function BACKDROP_TEX() return ThemeTex("nameplate_backdrop.tga") end
+local function OUTLINE_TEX() return ThemeTex("nameplate_outline.tga") end
+local function GLOW_TEX() return ThemeTex("nameplate_glow.tga") end
 
 -- Texcoord de la barra: la textura original de AzeriteUI tiene padding en los
 -- bordes (pensada para un StatusBar de 256x64) -- hay que recortarlo o se ve
@@ -199,6 +200,10 @@ local function LockStatusBarTexture(region, texPath, texcoord)
         locking = false
     end
     hooksecurefunc(region, "SetStatusBarTexture", Reassert)
+    region._mcfSetSkinnedTexture = function(path)
+        texPath = path
+        Reassert()
+    end
     Reassert()
 end
 
@@ -667,13 +672,13 @@ local function SkinHealthBarNext(uf, hp)
     local mine = uf.mcfHealthBar
     if not mine then
         mine = CreateFrame("StatusBar", nil, uf)
-        mine:SetStatusBarTexture(BAR_TEX)
+        mine:SetStatusBarTexture(BAR_TEX())
         local tex = mine:GetStatusBarTexture()
         if tex then tex:SetTexCoord(unpack(BAR_TEXCOORD)) end
         mine:SetMinMaxValues(0, 100)
         local bg = mine:CreateTexture(nil, "BACKGROUND", nil, -1)
         bg:SetPoint("CENTER")
-        bg:SetTexture(BACKDROP_TEX)
+        bg:SetTexture(BACKDROP_TEX())
         mine.mcfBackdrop = bg
         uf.mcfHealthBar = mine
     end
@@ -729,7 +734,7 @@ local function SkinHealthBar(uf)
     -- justo el tipo de pareja que se desincroniza al primer cambio.
     local hl0 = ns.NPLayout.Health(P())
     LockBar(hp, uf, hl0.point, hl0.relPoint, hl0.x, hl0.y, GetHealthSize)
-    LockStatusBarTexture(hp, BAR_TEX, BAR_TEXCOORD)
+    LockStatusBarTexture(hp, BAR_TEX(), BAR_TEXCOORD)
     -- El "borde" nativo visible es `bgTexture` (confirmado via /mcfnpdiag en
     -- vivo -- el campo `border` no existe en este cliente, por eso no se
     -- ocultaba antes).
@@ -772,7 +777,7 @@ local function SkinHealthBar(uf)
         bg:SetPoint("CENTER")
         local w, h = GetHealthSize()
         bg:SetSize(w, h)
-        bg:SetTexture(BACKDROP_TEX)
+        bg:SetTexture(BACKDROP_TEX())
         hp.mcfBackdrop = bg
     end
 end
@@ -822,7 +827,7 @@ local function CreateCustomCastBar(uf)
     if uf.mcfCast then return uf.mcfCast end
     local cb = CreateFrame("StatusBar", nil, uf)
     cb:Hide()
-    cb:SetStatusBarTexture(BAR_TEX)
+    cb:SetStatusBarTexture(BAR_TEX())
     local tex = cb:GetStatusBarTexture()
     if tex then tex:SetTexCoord(unpack(BAR_TEXCOORD)) end
 
@@ -830,7 +835,7 @@ local function CreateCustomCastBar(uf)
     bg:SetPoint("CENTER")
     local cw, ch = GetCastSize()
     bg:SetSize(cw, ch)
-    bg:SetTexture(BACKDROP_TEX)
+    bg:SetTexture(BACKDROP_TEX())
     cb.bg = bg
 
     local text = cb:CreateFontString(nil, "OVERLAY")
@@ -1261,7 +1266,8 @@ local function SkinHighlight(uf)
     -- heredar el padre de hl.
     local mine = uf:CreateTexture(nil, (hl:GetDrawLayer()))
     mine:SetAllPoints(hl)
-    mine:SetTexture(OUTLINE_TEX)
+    mine:SetTexture(OUTLINE_TEX())
+    uf.mcfTargetOutline = mine
     -- "sale un highlight, pero no es la textura correcta" (2026-08-03):
     -- probable blend mode -- Blizzard suele dibujar este glow con blend
     -- ADD (aditivo), CreateTexture por defecto usa BLEND (alpha normal);
@@ -1344,7 +1350,7 @@ local function SkinThreat(uf)
     local th = uf.aggroHighlight
     if th and not th._mcfSkinned then
         th._mcfSkinned = true
-        th:SetTexture(GLOW_TEX)
+        th:SetTexture(GLOW_TEX())
     end
 end
 
@@ -1935,6 +1941,30 @@ local function RefreshNameplateStyle()
     end
 end
 ns.RefreshNameplateStyle = RefreshNameplateStyle
+
+-- Skin changes must also replace textures on already-visible plates. The
+-- normal style refresh only reapplies geometry, so keep this refresh explicit.
+ns.RefreshNameplateSkin = function()
+    if C_NamePlate and C_NamePlate.GetNamePlates then
+        for _, frame in ipairs(C_NamePlate.GetNamePlates()) do
+            local uf = frame.UnitFrame or frame
+            if uf then
+                local hp = uf.healthBar
+                if hp and hp._mcfSetSkinnedTexture then hp._mcfSetSkinnedTexture(BAR_TEX()) end
+                if uf.mcfHealthBar then uf.mcfHealthBar:SetStatusBarTexture(BAR_TEX()) end
+                if uf.mcfCast then uf.mcfCast:SetStatusBarTexture(BAR_TEX()) end
+                if hp and hp.mcfBackdrop then hp.mcfBackdrop:SetTexture(BACKDROP_TEX()) end
+                if uf.mcfHealthBar and uf.mcfHealthBar.mcfBackdrop then
+                    uf.mcfHealthBar.mcfBackdrop:SetTexture(BACKDROP_TEX())
+                end
+                if uf.mcfCast and uf.mcfCast.bg then uf.mcfCast.bg:SetTexture(BACKDROP_TEX()) end
+                if uf.mcfTargetOutline then uf.mcfTargetOutline:SetTexture(OUTLINE_TEX()) end
+                if uf.aggroHighlight then uf.aggroHighlight:SetTexture(GLOW_TEX()) end
+            end
+        end
+    end
+    RefreshNameplateStyle()
+end
 
 -- Aplica (o revierte) el modo "solo nombre" para UN uf -- factoreado aparte
 -- (2026-07-19, "no esta siendo inmediato, aparece el resto un milisegundo y
@@ -2586,7 +2616,7 @@ SlashCmdList["MCFNPDIAG"] = function()
                 -- alguien (Blizzard o este addon) la piso despues del skin.
                 local okP, path = pcall(tex.GetTexture, tex)
                 print("  statusBarTexture path = " .. tostring(okP and path))
-                print("  BAR_TEX esperado = " .. tostring(BAR_TEX))
+                print("  BAR_TEX esperado = " .. tostring(BAR_TEX()))
                 print("  hp._mcfTexOK (LockStatusBarTexture, ronda 2) = " .. tostring(hp._mcfTexOK))
                 print(("  statusBarTexture: w=%.1f h=%.1f texcoord=(%.3f,%.3f,%.3f,%.3f)"):format(
                     tex:GetWidth() or -1, tex:GetHeight() or -1, l or -1, r or -1, t or -1, b or -1))
